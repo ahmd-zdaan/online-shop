@@ -2,21 +2,26 @@
 $product_id = $_GET['product_id'];
 
 // $result = get('product', 'JOIN category ON product.category_id=category.category_id WHERE product_id="' . $product_id . '"');
-$result = get('product', 'WHERE product_id='.$product_id);
-$data = mysqli_fetch_assoc($result);
+$result_product = get('product', 'WHERE product_id=' . $product_id);
+$data_product = mysqli_fetch_assoc($result_product);
 
-if ($data) {
-	$name = $data['product_name'];
-	// $image = $data['image'];
-	$subcategory_id = $data['subcategory_id'];
-	$price = $data['price'];
-	$stock = $data['stock'];
-	$description = $data['description'];
-	$manifacturer = $data['manifacturer_id'];
-	$size = $data['size'];
-	$color = $data['color'];
-	$weight = $data['weight'];
+if ($data_product) {
+	$name = $data_product['product_name'];
+	$category_id = $data_product['category_id'];
+	$subcategory_id = $data_product['subcategory_id'];
+	$price = $data_product['price'];
+	$stock = $data_product['stock'];
+	$description = $data_product['description'];
+	$manifacturer_id = $data_product['manifacturer_id'];
+	$size = $data_product['size'];
+	$color = $data_product['color'];
+	$weight = $data_product['weight'];
 }
+
+$result_product_image = get('product_image', 'WHERE product_id='.$product_id);
+$data_product_image = mysqli_fetch_assoc($result_product_image);
+
+$image_name = $data_product_image['image_name'];
 ?>
 
 <!DOCTYPE html>
@@ -64,19 +69,16 @@ if ($data) {
 					<div class="all">
 						<div class="slider">
 							<div class="owl-carousel owl-theme main">
-								<img src="https://unsplash.it/50/50" alt="" class="item-box" style="object-fit: cover;">
-								<img src="https://unsplash.it/50/50" alt="" class="item-box" style="object-fit: cover;">
-								<img src="https://unsplash.it/50/50" alt="" class="item-box" style="object-fit: cover;">
+								<img src="uploads/<?=$image_name?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<img src="uploads/<?=$image_name?>" alt="" class="item-box" style="object-fit: scale-down;">
 							</div>
 							<div class="left nonl"><i class="ti-angle-left"></i></div>
 							<div class="right"><i class="ti-angle-right"></i></div>
 						</div>
 						<div class="slider-two">
 							<div class="owl-carousel owl-theme thumbs">
-								<img src="https://unsplash.it/50/50" alt="" class="item active" style="object-fit: cover;">
-								<img src="https://unsplash.it/50/50" alt="" class="item" style="object-fit: cover;">
-								<img src="https://unsplash.it/50/50" alt="" class="item" style="object-fit: cover;">
-								<img src="https://unsplash.it/50/50" alt="" class="item" style="object-fit: cover;">
+								<img src="uploads/<?=$image_name?>" alt="" class="item active" style="object-fit: cover;">
+								<img src="uploads/<?=$image_name?>" alt="" class="item" style="object-fit: cover;">
 							</div>
 							<div class="left-t nonl-t"></div>
 							<div class="right-t"></div>
@@ -104,15 +106,15 @@ if ($data) {
 							$result = get('review', 'WHERE product_id="' . $product_id . '"', 'count(rating)');
 							$data = mysqli_fetch_assoc($result);
 							$count_rating = (int)$data['count(rating)'];
-							
+
 							if ($count_rating > 0) {
 								$average_rating = $total_rating / $count_rating;
-								
+
 								for ($i = $average_rating; $i > 0; $i--) {
 									echo '<i class="icon-star voted"></i>';
 								}
 							}
-							
+
 							if ($count_rating == 0) {
 								echo '<p class="mb-0">No review</p>';
 							} else {
@@ -143,31 +145,37 @@ if ($data) {
 							<li>
 								<div class="row">
 									<div class="col-2">
+										<p class="mb-0">Manifacturer</p>
+										<p class="mb-0">Stock</p>
 										<p class="mb-0">Category</p>
 										<p class="mb-0">Subcategory</p>
-										<p class="mb-0">Stock</p>
 									</div>
 									<div class="col-1">
+										<p class="mb-0">:</p>
+										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
 									</div>
 									<div class="col-9">
 										<?php
-										$result = get('subcategory', 'WHERE subcategory_id='.$subcategory_id, 'category_id');
-										$data = mysqli_fetch_assoc($result);
-										$category_id = $data['category_id'];
-										$result = get('category', 'WHERE category_id='.$category_id, 'category_name');
+										$manifacturer = get('manifacturer', 'WHERE manifacturer_id='.$manifacturer_id, 'manifacturer_name');
+										$data_manifacturer = mysqli_fetch_assoc($manifacturer);
+										$manifacturer_name = $data_manifacturer['manifacturer_name'];
+										?>
+										<p class="mb-0"><?= $manifacturer_name ?></p>
+										<p class="mb-0"><?= $stock ?></p>
+										<?php
+										$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
 										$data = mysqli_fetch_assoc($result);
 										$category_name = $data['category_name'];
 										?>
 										<p class="mb-0"><?= $category_name ?></p>
 										<?php
-										$result = get('subcategory', 'WHERE subcategory_id='.$subcategory_id, 'subcategory_name');
+										$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id, 'subcategory_name');
 										$data = mysqli_fetch_assoc($result);
 										$subcategory_name = $data['subcategory_name'];
 										?>
 										<p class="mb-0"><?= $subcategory_name ?></p>
-										<p class="mb-0"><?= $stock ?></p>
 									</div>
 								</div>
 							</li>
@@ -221,7 +229,7 @@ if ($data) {
 						<div class="row">
 							<div class="col-lg-5 col-md-6">
 								<div class="price_main">
-									<span class="new_price">Rp<?= $price ?></span>
+									<span class="new_price"><?= rupiah($price) ?></span>
 									<!-- SALE -->
 									<!-- <span class="new_price">$148.00</span>
 									<span class="percentage">-20%</span> <span class="old_price">$160.00</span> -->
@@ -281,7 +289,10 @@ if ($data) {
 												<tbody>
 													<tr>
 														<td><strong>Manifacturer</strong></td>
-														<td><?= $manifacturer ?></td>
+														<?php
+
+														?>
+														<td><?= $manifacturer_id ?></td>
 													</tr>
 													<tr>
 														<td><strong>Size</strong></td>
@@ -340,12 +351,12 @@ if ($data) {
 															}
 														}
 														?>
-														<em><?=$rating?>.0/5.0</em>
+														<em><?= $rating ?>.0/5.0</em>
 													</span>
 													<!-- <em>Published 54 minutes ago</em> -->
 													<em><?= $date ?></em>
 												</div>
-												<h4><?=$title?></h4>
+												<h4><?= $title ?></h4>
 												<p><?= $review ?></p>
 											</div>
 										</div>

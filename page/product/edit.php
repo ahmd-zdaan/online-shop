@@ -1,3 +1,7 @@
+<?php
+check('login');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,6 +55,7 @@
 				$result = get('product', 'WHERE product_id=' . $product_id);
 				$data = mysqli_fetch_assoc($result);
 				$product_name = $data['product_name'];
+				$product_category_id = $data['category_id'];
 				$product_subcategory_id = $data['subcategory_id'];
 				$price = $data['price'];
 				$stock = $data['stock'];
@@ -61,11 +66,29 @@
 				$weight = $data['weight'];
 				?>
 
-				<form action="" method="POST">
+				<form action="" method="POST" enctype="multipart/form-data">
 					<div class="container pb-5">
 						<div class="row">
 							<div class="col-3">
-								<img src="assets/images/profile/1.jpg" alt="" width="100%">
+								<div>
+									<?php
+									$result = get('product_image', 'WHERE product_id=' . $product_id);
+									if (mysqli_num_rows($result) > 0) :
+										$data = mysqli_fetch_assoc($result);
+										$image_name = $data['image_name'];
+									?>
+										<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+									<?php
+									else :
+									?>
+										<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+									<?php endif ?>
+								</div>
+								<div class="mt-3">
+									<label class="form-label">Product Image</label>
+									<input class="form-control" type="hidden" name="image_id" value="<?=$data['id']?>">
+									<input class="form-control" type="file" name="image">
+								</div>
 							</div>
 							<div class="col-9">
 								<ul style="list-style: none;" class="pl-0">
@@ -78,9 +101,6 @@
 											<label class="form-label">Category</label>
 											<select class="form-control form-select" name="category">
 												<?php
-												$result = get('subcategory', 'WHERE subcategory_id=' . $product_subcategory_id, 'category_id');
-												$data = mysqli_fetch_assoc($result);
-												$product_category_id = $data['category_id'];
 												$result = get('category');
 												foreach ($result as $data) :
 													$category_id = $data['category_id'];
@@ -101,7 +121,7 @@
 													$subcategory_id = $data['subcategory_id'];
 													$subcategory_name = $data['subcategory_name'];
 												?>
-													<option value="<?= $subcategory_id ?>"<?= ($product_subcategory_id == $subcategory_id) ? 'selected' : '' ?>><?= $subcategory_name ?></option>
+													<option value="<?= $subcategory_id ?>" <?= ($product_subcategory_id == $subcategory_id) ? 'selected' : '' ?>><?= $subcategory_name ?></option>
 												<?php
 												endforeach
 												?>
@@ -151,7 +171,8 @@
 
 				<?php
 				if (isset($_POST['submit'])) {
-					$name = $_POST['name'];
+					$product_name = $_POST['name'];
+					$category = $_POST['category'];
 					$subcategory = $_POST['subcategory'];
 					$price = $_POST['price'];
 					$description = $_POST['description'];
@@ -164,9 +185,29 @@
 					$data = mysqli_fetch_assoc($result);
 					$manifacturer_id = $data['manifacturer_id'];
 
+					if (!empty($_FILES['image']['name'])) {
+						$image_file_name = $_FILES['image']['name'];
+						list($file_name, $extension) = explode(".", $image_file_name);
+						$image_name = time() . "." . $extension;
+						$tmp = $_FILES['image']['tmp_name'];
+
+						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
+							$image_id = $_POST['image_id'];
+
+							$query = get('product_image', 'WHERE id='.$image_id);
+							$data = mysqli_fetch_assoc($query);
+							$image_name_old = $data['image_name'];
+							unlink("uploads/" . $image_name_old);
+
+							$query = "UPDATE product_image SET image_name='".$image_name."' WHERE id=".$image_id;
+							$result = mysqli_query($connect, $query);
+						}
+					}
+
 					$query = "UPDATE product SET 
 
-					product_name=\"" . $name . "\", 
+					product_name=\"" . $product_name . "\", 
+					category_id='" . $category . "', 
 					subcategory_id='" . $subcategory . "', 
 					price='" . $price . "', 
 					description=\"" . $description . "\", 
@@ -176,7 +217,9 @@
 					weight='" . $weight . "'
 
 					WHERE product_id=" . $product_id;
+
 					// var_dump($query); die;
+
 					$result = mysqli_query($connect, $query);
 
 					if ($result) {

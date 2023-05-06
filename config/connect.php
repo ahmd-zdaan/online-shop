@@ -14,14 +14,15 @@ if (!$connect) {
 
 // ================== Function ==================
 
-function get($table, $condition='', $function='*') {
+function get($table, $condition='', $select='*') {
     global $connect;
 
-    $query = "SELECT ".$function." FROM ".$table." ".$condition;
+    $query = "SELECT ".$select." FROM ".$table." ".$condition;
     $result = mysqli_query($connect, $query);
 
     return $result; 
 }
+
 
 function login($email, $password) {
     $result = get("user","WHERE email='".$email."'");
@@ -41,19 +42,24 @@ function login($email, $password) {
     }
 }
 
-function register($nama, $email, $password, $confirmPassword, $address, $city, $country, $telephone) {
-    global $connect;
+function register($user_name, $email, $password, $confirmPassword, $address, $country_id, $telephone) {
+    // global $connect;
     
     $result = get("user","WHERE email='".$email."'");
     
     if (mysqli_num_rows($result) == 0) {
         if ($password == $confirmPassword) {
             $password_encrypt = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO user (name, email, password, address, city, country, telephone) VALUES ('$nama.', '$email.', '$password_encrypt', '$address', '$city', '$country', '$telephone')";
-            $result = mysqli_query($connect, $query);
+            $result = insert('user', [
+                'user_name' => $user_name,
+                'email' => $email,
+                'password' => $password_encrypt,
+                'address' => $address,
+                'country_id' => $country_id,
+                'telephone' => $telephone
+            ]);
             if ($result) {
                 $_SESSION['email'] = $email;
-                // echo "<script>alert('Account successfully registered!')</script>";
                 echo '<script>window.location.href = "index.php"</script>';
             }
         } else {
@@ -115,8 +121,6 @@ function insert($table, $data) {
     }
 }
 
-function update() {
-    
-}
+
 
 ?>

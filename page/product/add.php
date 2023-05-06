@@ -49,11 +49,18 @@ check('login');
 					</div>
 					<h1 class="pt-3">Add Product</h1>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST" enctype="multipart/form-data">
 					<div class="container pb-5">
 						<div class="row">
 							<div class="col-3">
-								<img src="assets/images/profile/1.jpg" alt="" width="100%">
+								<div>
+									<!-- <img src="assets/images/profile/1.jpg" alt="" width="100%"> -->
+									<img src="img/products/product_placeholder_square_medium.jpg" alt="" width="100%">
+								</div>
+								<div class="mt-3">
+									<label class="form-label">Product Image</label>
+									<input class="form-control" type="file" name="image">
+								</div>
 							</div>
 							<div class="col-9">
 								<ul style="list-style: none;" class="pl-0">
@@ -64,10 +71,9 @@ check('login');
 									<div class="row">
 										<div class="col-4">
 											<label class="form-label">Category</label>
-											<select class="form-control form-select" name="category">
+											<select id="list-category" class="form-control form-select" name="category">
+												<option selected disabled hidden>-</option>
 												<?php
-												$result = get('subcategory', '', 'category_id');
-												$data = mysqli_fetch_assoc($result);
 												$product_category_id = $data['category_id'];
 												$result = get('category');
 												foreach ($result as $data) :
@@ -82,17 +88,7 @@ check('login');
 										</div>
 										<div class="col-4">
 											<label class="form-label">Subcategory</label>
-											<select class="form-control form-select" name="subcategory">
-												<?php
-												$result = get('subcategory');
-												foreach ($result as $data) :
-													$subcategory_id = $data['subcategory_id'];
-													$subcategory_name = $data['subcategory_name'];
-												?>
-													<option value="<?= $subcategory_id ?>"><?= $subcategory_name ?></option>
-												<?php
-												endforeach
-												?>
+											<select id="list-subcategory" class="form-control form-select" name="subcategory">
 											</select>
 										</div>
 										<div class="col-4">
@@ -126,6 +122,10 @@ check('login');
 										<label class="form-label">Stock</label>
 										<input type="number" name="stock" class="form-control">
 									</li>
+									<!-- <li class="mb-2">
+										<label class="form-label">Image</label>
+										<input class="form-control" type="file" name="image">
+									</li> -->
 									<li class="mt-3">
 										<a type="submit" href="index.php?page=product_list" class="btn_1">BACK</a>
 										<button type="submit" name="submit" class="btn_1">SAVE</button>
@@ -138,7 +138,7 @@ check('login');
 				<?php
 				if (isset($_POST['submit'])) {
 					$name = $_POST['name'];
-					// $category = $_POST['category'];
+					$category = $_POST['category'];
 					$subcategory = $_POST['subcategory'];
 					$price = $_POST['price'];
 					$description = $_POST['description'];
@@ -146,8 +146,6 @@ check('login');
 					$color = $_POST['color'];
 					$weight = $_POST['weight'];
 					$stock = $_POST['stock'];
-
-					// category depends on subcategory
 
 					$manifacturer = $_POST['manifacturer'];
 					$slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $manifacturer)));
@@ -165,7 +163,7 @@ check('login');
 
 					$result = insert('product', [
 						'product_name' => $name,
-						// 'category_id' => $category,
+						'category_id' => $category,
 						'subcategory_id' => $subcategory,
 						'price' => $price,
 						'stock' => $stock,
@@ -175,6 +173,25 @@ check('login');
 						'color' => $color,
 						'weight' => $weight
 					]);
+
+					$id = $connect->insert_id;
+
+					if (!empty($_FILES['image']['name'])) {
+						$name = $_FILES['image']['name'];
+						list($file_name, $extension) = explode(".", $name);
+						$image_name = time() . "." . $extension;
+
+						$tmp = $_FILES['image']['tmp_name'];
+						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
+							$query = "INSERT INTO product_image (image_name, product_id) VALUES ('" . $image_name . "', '" . $id . "')";
+							var_dump($query);
+							$result = mysqli_query($connect, $query);
+
+							if (!$result) {
+								unlink("uploads/" . $image_name);
+							}
+						}
+					}
 
 					if ($result) {
 						echo '<script>window.location.href = "index.php?page=product_list"</script>';
@@ -189,5 +206,35 @@ check('login');
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
+
+		<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+		<script>
+			function getcategory(categoryId) {
+				$.ajax({
+					type: "get",
+					url: "page/product/data/add.php?category_id=" + categoryId,
+					dataType: "html",
+					success: function(response) {
+						// console.log(response);
+						$('#list-subcategory').html(response);
+					}
+				});
+			}
+
+			$(document).ready(function() {
+				let idcategory = $('#list-category').val();
+
+				getcategory(idcategory);
+
+				$('#list-category').change(function(e) {
+					e.preventDefault();
+					let idcategory = $('#list-category').val();
+
+					getcategory(idcategory);
+				});
+			});
+		</script>
 </body>
+
 </html>

@@ -42,16 +42,12 @@ check('login');
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
-							<li><a href="index.php">Admin</a></li>
-							<li>Product List</li>
+							<li>Wishlist</li>
 						</ul>
 					</div>
 					<div class="row">
 						<div class="col-6">
-							<h1 class="pt-3">Product List</h1>
-						</div>
-						<div class="col-6 text-right">
-							<a href="index.php?page=product_add" class="btn_1">ADD</a>
+							<h1 class="pt-3">Wishlist</h1>
 						</div>
 					</div>
 				</div>
@@ -135,8 +131,7 @@ check('login');
 								</td>
 								<td>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>
-									<a href="index.php?page=product_edit&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">EDIT</a>
-									<a href="index.php?page=product_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to DELETE this PRODUCT?')" class="btn_1 col p-3 my-1">DELETE</a>
+									<a href="index.php?page=product_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this PRODUCT?')" class="btn_1 col p-3 my-1">REMOVE</a>
 								</td>
 							</tr>
 						<?php endforeach ?>

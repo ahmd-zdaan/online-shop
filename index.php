@@ -40,10 +40,6 @@ include_once 'config/connect.php';
 	<div id="page">
 
 		<header class="version_1">
-			<div class="layer"></div><!-- Mobile menu overlay mask -->
-
-			<!-- /main_header -->
-
 			<div class="main_nav Sticky">
 				<div class="container">
 					<div class="row small-gutters">
@@ -65,7 +61,7 @@ include_once 'config/connect.php';
 										</span>
 										<div id="menu">
 											<ul>
-												<h5 class="p-3">Kategori</h5>
+												<h5 class="p-3 m-0">Categories</h5>
 												<?php
 												$result = get('category');
 												foreach ($result as $data) :
@@ -73,7 +69,7 @@ include_once 'config/connect.php';
 													$name = $data['category_name'];
 												?>
 													<li>
-														<span><a width="50px" href="index.php?page=list&category=<?= $name ?>"><?= $name ?></a></span>
+														<span><a href="index.php?page=list&category=<?= strtolower($name) ?>&view=list"><?= $name ?></a></span>
 														<?php
 														$result = get('subcategory', 'WHERE category_id=' . $category_id);
 														if (mysqli_num_rows($result) > 0) :
@@ -82,7 +78,7 @@ include_once 'config/connect.php';
 																<?php foreach ($result as $data) :
 																	$subcategory_name = $data['subcategory_name'];
 																?>
-																	<li><a href="index.php?page=list"><?= $subcategory_name ?></a></li>
+																	<li><a href="index.php?page=list&view=list"><?= $subcategory_name ?></a></li>
 																<?php endforeach ?>
 															</ul>
 														<?php endif ?>
@@ -104,72 +100,166 @@ include_once 'config/connect.php';
 						</div>
 						<div class="col-xl-3 col-lg-2 col-md-3">
 							<ul class="top_tools">
-								<li>
-									<div class="dropdown dropdown-cart">
-										<a href="index.php?page=cart" class="cart_bt">
-											<strong>2</strong>
-										</a>
-										<div class="dropdown-menu">
-											<ul>
-												<li>
-													<a href="product-detail-1.html">
-														<figure><img src="img/products/product_placeholder_square_small.jpg" data-src="img/products/shoes/thumb/1.jpg" alt="" width="50" height="50" class="lazy"></figure>
-														<strong><span>1x Armor Air x Fear</span>$90.00</strong>
-													</a>
-													<a href="#0" class="action"><i class="ti-trash"></i></a>
-												</li>
-												<li>
-													<a href="product-detail-1.html">
-														<figure><img src="img/products/product_placeholder_square_small.jpg" data-src="img/products/shoes/thumb/2.jpg" alt="" width="50" height="50" class="lazy"></figure>
-														<strong><span>1x Armor Okwahn II</span>$110.00</strong>
-													</a>
-													<a href="0" class="action"><i class="ti-trash"></i></a>
-												</li>
-											</ul>
-											<div class="total_drop">
-												<div class="clearfix"><strong>Total</strong><span>$200.00</span></div>
-												<a href="index.php?page=cart" class="btn_1 outline">View Cart</a>
-												<a href="index.php?page=checkout" class="btn_1">Checkout</a>
-											</div>
+								<?php
+								if (isset($_SESSION['email'])) :
+									$email = $_SESSION['email'];
+
+									$result = get('user', 'WHERE email="' . $email . '"');
+									$data = mysqli_fetch_assoc($result);
+									$user_id = $data['user_id'];
+								?>
+									<li>
+										<div class="dropdown dropdown-cart">
+											<a href="index.php?page=cart_list" class="cart_bt">
+												<?php
+												$result = get('cart', 'WHERE user_id="' . $user_id . '"', 'count(product_id)');
+												$data = mysqli_fetch_assoc($result);
+												$count_product = (int)$data['count(product_id)'];
+												if ($count_product > 0) :
+												?>
+													<strong><?= $count_product ?></strong>
+												<?php endif ?>
+											</a>
+											<?php
+											$result = get('cart', 'WHERE user_id=' . $user_id);
+
+											if (mysqli_num_rows($result) > 0) :
+											?>
+												<div class="dropdown-menu">
+													<ul>
+														<?php
+														foreach ($result as $data) :
+															$cart_id = $data['cart_id'];
+															$product_id = $data['product_id'];
+															$quantity = $data['quantity'];
+
+															$result = get('product', 'WHERE product_id=' . $product_id);
+															$data = mysqli_fetch_assoc($result);
+															$product_name = $data['product_name'];
+															$price = $data['price'];
+
+															$result = get('product_image', 'WHERE product_id=' . $product_id);
+															$data = mysqli_fetch_assoc($result);
+															if (isset($data['image_name'])) {
+																$product_image = $data['image_name'];
+															}
+
+															$subtotal_product = $quantity * $price;
+															$shipping_price = 19000;
+															$total_price = $subtotal_product + $shipping_price;
+														?>
+															<li>
+																<a href="product-detail-1.html">
+																	<figure>
+																		<?php
+																		$result = get('product_image', 'WHERE product_id=' . $product_id);
+																		if (mysqli_num_rows($result) > 0) :
+																			$data = mysqli_fetch_assoc($result);
+																			$image_name = $data['image_name'];
+																		?>
+																			<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+																		<?php else : ?>
+																			<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+																		<?php endif ?>
+																	</figure> <strong>
+																		<span><?= $quantity . 'x ' . $product_name ?></span>
+																		<?= rupiah($price) ?>
+																	</strong>
+																</a>
+																<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>$page=index" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="action">
+																	<i class="ti-trash"></i>
+																</a>
+															</li>
+														<?php endforeach ?>
+													</ul>
+													<div class="row mt-4">
+														<div class="col-6">
+															<p class="m-0">Subtotal</p>
+															<p class="m-0">Shipping</p>
+														</div>
+														<div class="col-6">
+															<span style="float: right"><?= rupiah($subtotal_product) ?></span>
+															<span style="float: right"><?= rupiah($shipping_price) ?></span>
+														</div>
+													</div>
+													<div style="font-size: large; font-weight:bold;" class="mt-2 row">
+														<div class="col-6">
+															<p class="m-0">Total</p>
+														</div>
+														<div class="col-6">
+															<span style="float: right"><?= rupiah($total_price) ?></span>
+														</div>
+													</div>
+													<a href="index.php?page=cart_list" class="btn_1 outline mt-3">View Cart</a>
+													<a href="index.php?page=checkout" class="btn_1 mt-1">Checkout</a>
+												</div>
+											<?php endif ?>
 										</div>
-									</div>
-								</li>
+									</li>
+								<?php else : ?>
+									<li>
+										<div class="dropdown dropdown-cart">
+											<a href="index.php?page=cart_list" class="cart_bt"></a>
+										</div>
+									</li>
+								<?php endif ?>
 								<li>
-									<a href="index.php?page=wishlist" class="wishlist"></a>
+									<a href="index.php?page=wishlist_list" class="wishlist"></a>
 								</li>
 								<li>
 									<div class="dropdown dropdown-access">
 										<a class="access_link"></a>
 										<div class="dropdown-menu">
 											<?php
-											if (isset($_SESSION['email'])) {
+											if (isset($_SESSION['email'])) :
 												$result = get("user", "WHERE email='" . $_SESSION['email'] . "'");
 												$result = mysqli_fetch_assoc($result);
+												$role = $result['role'];
 											?>
 												<ul class="mt-0">
 													<li>
 														<a href="index.php?page=view"><i class="ti-user"></i>Profile</a>
 													</li>
+													<?php
+													if ($role == 'admin') :
+													?>
+														<li>
+															<a href="index.php?page=admin">
+																<i>
+																	<img src="img/admin.png" alt="" width="20px" class="pb-2" draggable="false">
+																</i>
+																Admin
+															</a>
+														</li>
+													<?php endif ?>
 													<li>
-														<a href="index.php?page=order"><i class="ti-package"></i>Orders</a>
+														<a href="index.php?page=order">
+															<i class="ti-package"></i>
+															Orders
+														</a>
 													</li>
 													<li>
-														<a href="index.php?page=help"><i class="ti-help-alt"></i>Help & Faq</a>
+														<a href="index.php?page=help">
+															<i class="ti-help-alt"></i>
+															Help & Faq
+														</a>
 													</li>
 													<li>
-														<a href="index.php?page=log-out">Log Out</a>
+														<a href="index.php?page=log-out">
+															<i>
+																<img src="img/logout.png" alt="" width="21px" class="pt-0 pb-3 pl-1" draggable="false">
+															</i>
+															Log Out
+														</a>
 													</li>
 												</ul>
-											<?php
-											} else {
-												echo '<a href="index.php?page=login" class="btn_1">Sign In or Register</a>';
-											}
-											?>
+											<?php else : ?>
+												<a href="index.php?page=login" class="btn_1">
+													<b>Sign In</b> or <b>Register</b>
+												</a>
+											<?php endif ?>
 										</div>
 									</div>
-								</li>
-								<li>
-									<a href="javascript:void(0);" class="btn_search_mob"><span>Search</span></a>
 								</li>
 								<li>
 									<a href="#menu" class="btn_cat_mob">
@@ -205,9 +295,9 @@ include_once 'config/connect.php';
 							<ul>
 								<li><a href="index.php?page=account">My account</a></li>
 								<li><a href="index.php?page=about">About us</a></li>
-								<li><a href="help.html">Help & Faq</a></li>
-								<!-- <li><a href="blog.html">Blog</a></li>
-								<li><a href="contacts.html">Contacts</a></li> -->
+								<li><a href="index.php?page=help">Help & Faq</a></li>
+								<li><a href="index.php?blog">Blog</a></li>
+								<!-- <li><a href="contacts.html">Contacts</a></li> -->
 							</ul>
 						</div>
 					</div>
@@ -215,12 +305,13 @@ include_once 'config/connect.php';
 						<h3 data-target="#collapse_2">Categories</h3>
 						<div class="collapse dont-collapse-sm links" id="collapse_2">
 							<ul>
-								<li><a href="listing-grid-1-full.html">Clothes</a></li>
-								<li><a href="listing-grid-2-full.html">Electronics</a></li>
-								<li><a href="listing-grid-1-full.html">Furniture</a></li>
-								<li><a href="listing-grid-3.html">Glasses</a></li>
-								<li><a href="listing-grid-1-full.html">Shoes</a></li>
-								<li><a href="listing-grid-1-full.html">Watches</a></li>
+								<?php
+								$result = get('category');
+								foreach ($result as $data) :
+									$category_name = $data['category_name'];
+								?>
+									<li><a href="index.php?page=list&view=list"><?= $category_name ?></a></li>
+								<?php endforeach ?>
 							</ul>
 						</div>
 					</div>
@@ -230,7 +321,7 @@ include_once 'config/connect.php';
 							<ul>
 								<li><i class="ti-home"></i>97845 Baker st. 567<br>Malang - Indonesia</li>
 								<li><i class="ti-headphone-alt"></i>+00 123-456-789</li>
-								<li><i class="ti-email"></i><a href="#0">email@email.com</a></li>
+								<li><i class="ti-email"></i><a href="#">email@email.com</a></li>
 							</ul>
 						</div>
 					</div>
@@ -286,7 +377,7 @@ include_once 'config/connect.php';
 						<ul class="additional_links">
 							<li><a href="#0">Terms and conditions</a></li>
 							<li><a href="#0">Privacy</a></li>
-							<li><span>© 2020 Allaia</span></li>
+							<li><span>&copy; 2023 Online_Shop</span></li>
 						</ul>
 					</div>
 				</div>

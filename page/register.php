@@ -26,57 +26,54 @@ check('register');
 					<form action="" method="POST">
 						<div class="form_container">
 							<div class="form-group">
-								<input type="text" class="form-control" name="name" placeholder="Name">
+								<input type="text" class="form-control" name="name" required placeholder="Name">
 							</div>
 							<div class="form-group">
-								<input type="email" class="form-control" name="email" placeholder="Email">
+								<input type="email" class="form-control" name="email" required placeholder="Email">
 							</div>
 							<div class="private box">
 								<div class="row no-gutters">
 									<div class="col-6 pr-1">
 										<div class="form-group">
-											<input type="password" class="form-control" name="password" value="" placeholder="Password">
+											<input type="password" class="form-control" required name="password" value="" placeholder="Password">
 										</div>
 									</div>
 									<div class="col-6 pr-1">
 										<div class="form-group">
-											<input type="password" class="form-control" name="confirm_password" value="" placeholder="Confirm Password">
+											<input type="password" class="form-control" required name="confirm_password" value="" placeholder="Confirm Password">
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
-								<input type="text" class="form-control" name="address" placeholder="Full Address">
+								<input type="text" class="form-control" name="address" required placeholder="Full Address">
 							</div>
 							<div class="private box">
 								<div class="row no-gutters">
 									<div class="col-6 pr-1">
 										<div class="form-group">
 											<div class="custom-select-form">
-												<select class="wide add_bottom_10" name="country" id="country_2">
-													<option value="" selected>Country</option>
-													<option value="Indonesia">Indonesia</option>
-													<option value="Singapore">Singapore</option>
-													<option value="Malaysia">Malaysia</option>
-													<option value="Australia">Australia</option>
-													<option value="Japan">Japan</option>
+												<select class="wide add_bottom_10" required name="country">
+													<option selected disabled hidden>Country</option>
+													<option value="1">Indonesia</option>
+													<option value="2">Singapore</option>
+													<option value="3">Malaysia</option>
+													<option value="4">Australia</option>
+													<option value="5">Japan</option>
 												</select>
 											</div>
 										</div>
 									</div>
 									<div class="col-6 pr-1">
 										<div class="form-group">
-											<input type="number" class="form-control" name="telephone" placeholder="Telephone">
+											<input type="number" class="form-control" required name="telephone" placeholder="Telephone">
 										</div>
 									</div>
 								</div>
 							</div>
-
-
-							<hr>
-
-							<div class="form-group">
-								<label class="container_check">Accept <a href="#0">Terms and conditions</a>
+							<div class="form-group mt-2 mb-3">
+								<label class="container_check">Accept
+									<a href="#0">Terms and conditions</a>
 									<input type="checkbox">
 									<span class="checkmark"></span>
 								</label>
@@ -86,17 +83,22 @@ check('register');
 							</div>
 						</div>
 
+						<div class="text-center mt-3">
+							<span>Already have an account?</span>
+							<a href="index.php?page=login">Sign in</a>
+						</div>
+
 						<?php
 						if (isset($_POST['submit'])) {
-							$name = $_POST['name'];
+							$user_name = $_POST['name'];
 							$email = $_POST['email'];
 							$password = $_POST['password'];
 							$confirm_password = $_POST['confirm_password'];
 							$address = $_POST['address'];
-							$country = $_POST['country'];
+							$country_id = $_POST['country'];
 							$telephone = $_POST['telephone'];
 
-							register($name, $email, $password, $confirm_password, $address, $city, $country, $telephone);
+							register($user_name, $email, $password, $confirm_password, $address, $country_id, $telephone);
 						}
 						?>
 

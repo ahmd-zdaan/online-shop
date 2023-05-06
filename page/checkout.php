@@ -1,3 +1,7 @@
+<?php
+check('login');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,12 +42,12 @@
 				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
-							<li><a href="#">Home</a></li>
-							<li><a href="#">Category</a></li>
-							<li>Page active</li>
+							<li><a href="index.php">Home</a></li>
+							<li><a href="index.php?page=cart_list">Cart</a></li>
+							<li>Checkout</li>
 						</ul>
 					</div>
-					<h1>Sign In or Create an Account</h1>
+					<h1>Checkout</h1>
 
 				</div>
 				<div class="row">
@@ -79,7 +83,7 @@
 							<div class="payment_info d-none d-sm-block">
 								<figure><img src="img/cards_all.svg" alt=""></figure>
 								<p>
-									Sensibus reformidans interpretaris sit ne, nec errem nostrum et, te nec meliore philosophia. At vix quidam periculis. Solet tritani ad pri, no iisque definitiones sea.
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae adipisci fugit labore rerum quibusdam neque, exercitationem unde similique pariatur quia, distinctio aspernatur. Quisquam voluptate magni esse molestias laborum deserunt earum.
 								</p>
 							</div>
 						</div>
@@ -112,28 +116,66 @@
 					<div class="col-lg-4 col-md-6">
 						<div class="step last">
 							<h3>2. Order Summary</h3>
-							<div class="box_general summary">
-								<ul>
-									<li class="clearfix"><em>1x Armor Air X Fear</em> <span>$145.00</span></li>
-									<li class="clearfix"><em>2x Armor Air Zoom Alpha</em> <span>$115.00</span></li>
-								</ul>
-								<ul>
-									<li class="clearfix"><em><strong>Subtotal</strong></em> <span>$450.00</span></li>
-									<li class="clearfix"><em><strong>Shipping</strong></em> <span>$0</span></li>
-								</ul>
-								<ul>
-									<div class="form-group">
-										<label class="container_check">Shipping insurance
-											<input type="checkbox">
-											<span class="checkmark"></span>
-										</label>
+							<?php
+							$email = $_SESSION['email'];
+
+							$result = get('user', 'WHERE email="' . $email . '"');
+							$data = mysqli_fetch_assoc($result);
+							$user_id = $data['user_id'];
+
+							$result = get('cart', 'WHERE user_id=' . $user_id);
+							if (mysqli_num_rows($result) > 0) :
+							?>
+								<div class="box_general summary">
+									<?php
+									foreach ($result as $data) :
+										$cart_id = $data['cart_id'];
+										$product_id = $data['product_id'];
+										$quantity = $data['quantity'];
+
+										$result = get('product', 'WHERE product_id=' . $product_id);
+										$data = mysqli_fetch_assoc($result);
+										$product_name = $data['product_name'];
+										$price = $data['price'];
+
+										$subtotal_product = $quantity * $price;
+										$subtotal_price = $subtotal_product;
+										$shipping_price = 15000;
+										$total_price = $subtotal_price + $shipping_price;
+									?>
+										<ul>
+											<li class="clearfix">
+												<em><?= $quantity . 'x ' . $product_name ?></em>
+												<span><?= rupiah($price) ?></span>
+											</li>
+										</ul>
+									<?php endforeach ?>
+									<ul>
+										<div class="row mb-3" style="font-weight: bold;">
+											<div class="col-6">
+												<p class="m-0">Subtotal</p>
+												<p class="m-0">Shipping</p>
+											</div>
+											<div class="col-6">
+												<span style="float: right"><?= rupiah($subtotal_product) ?></span>
+												<span style="float: right"><?= rupiah($shipping_price) ?></span>
+											</div>
+										</div>
+									</ul>
+									<ul>
+										<div class="form-group">
+											<label class="container_check">Shipping insurance
+												<input type="checkbox">
+												<span class="checkmark"></span>
+											</label>
+										</div>
+									</ul>
+									<div class="total clearfix">TOTAL
+										<span><?= rupiah($total_price) ?></span>
 									</div>
-								</ul>
-								<div class="total clearfix">TOTAL
-									<span>$450.00</span>
+									<button type="submit" name="submit" class="text-center btn_1 full-width">Confirm and Pay</button>
 								</div>
-								<button type="submit" name="submit" class="text-center btn_1 full-width">Confirm and Pay</button>
-							</div>
+							<?php endif ?>
 						</div>
 					</div>
 				</div>
@@ -141,7 +183,6 @@
 		</main>
 
 		<div id="toTop"></div><!-- Back to top button -->
-		<!-- Modal Payments Method-->
 		<div class="modal fade" id="payments_method" tabindex="-1" role="dialog" aria-labelledby="payments_method_title" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
