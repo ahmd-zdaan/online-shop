@@ -47,8 +47,15 @@ check('login');
 							<li>Page active</li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Add Subcategory</h1>
+					<h1 class="pt-3">Edit Manifacturer</h1>
 				</div>
+
+				<?php
+				$manifacturer_id = $_GET['manifacturer_id'];
+				$result = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
+				$data = mysqli_fetch_assoc($result);
+				$manifacturer_name = $data['manifacturer_name'];
+				?>
 
 				<form action="" method="POST">
 					<div class="container pb-5">
@@ -59,30 +66,11 @@ check('login');
 							<div class="col-9">
 								<ul style="list-style: none;" class="pl-0">
 									<li class="mb-2">
-										<div class="row">
-											<div class="col-6">
-												<label class="form-label">Subcategory Name</label>
-												<input type="text" name="name" class="form-control">
-											</div>
-											<div class="col-6">
-											<label class="form-label">Category</label>
-												<select class="form-control form-select" name="category">
-													<?php
-													$result = get('category');
-													foreach ($result as $data) :
-														$category_id = $data['category_id'];
-														$category_name = $data['category_name'];
-													?>
-														<option value="<?= $category_id ?>"><?= $category_name ?></option>
-													<?php
-													endforeach
-													?>
-												</select>
-											</div>
-										</div>
+										<label class="form-label">Manifacturer Name</label>
+										<input type="text" name="name" value="<?=$manifacturer_name?>" class="form-control">
 									</li>
 									<li class="mt-3">
-										<a type="submit" href="index.php?page=subcategory_list" class="btn_1">BACK</a>
+										<a type="submit" href="index.php?page=manifacturer_list" class="btn_1">BACK</a>
 										<button type="submit" name="submit" class="btn_1">SAVE</button>
 									</li>
 								</ul>
@@ -96,13 +84,10 @@ check('login');
 					$name = $_POST['name'];
 					$category = $_POST['category'];
 
-					$result = insert('subcategory', [
-						'subcategory_name' => $name,
-						'category_id' => $category
-					]);
+					$query = 'UPDATE manifacturer SET manifacturer_name="' . $name . '" WHERE manifacturer_id=' . $manifacturer_id;
 
-					if ($result) {
-						echo '<script>window.location.href = "index.php?page=subcategory_list"</script>';
+					if (mysqli_query($connect, $query)) {
+						echo '<script>window.location.href = "index.php?page=manifacturer_list"</script>';
 					}
 				}
 				?>

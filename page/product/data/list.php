@@ -19,8 +19,18 @@ foreach ($result as $data) :
 
     $category_id = $data['category_id'];
     $result_category = get('category', 'WHERE category_id=' . $category_id);
-    $data = mysqli_fetch_assoc($result_category);
-    $category_name = $data['category_name'];
+    $data_category = mysqli_fetch_assoc($result_category);
+    $category_name = $data_category['category_name'];
+    
+    $subcategory_id = $data['subcategory_id'];
+    $result_subcategory = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id);
+    $data_subcategory = mysqli_fetch_assoc($result_subcategory);
+    $subcategory_name = $data_subcategory['subcategory_name'];
+    
+    $manifacturer_id = $data['manifacturer_id'];
+    $result_manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
+    $data_manifacturer = mysqli_fetch_assoc($result_manifacturer);
+    $manifacturer_name = $data_manifacturer['manifacturer_name'];
 
     $result_image = get('product_image', 'WHERE product_id=' . $product_id);
     $data_image = mysqli_fetch_assoc($result_image);
@@ -32,7 +42,7 @@ foreach ($result as $data) :
         $product_image = "default.jpg";
     }
 ?>
-    <li class="mb-3" style="list-style: none">
+    <li class="shadow mb-3" style="list-style: none">
         <a href="index.php?page=product_view&product_id=<?= $product_id ?>">
             <div class="row">
                 <div class="col-3">
@@ -41,11 +51,13 @@ foreach ($result as $data) :
                 <div class="col">
                     <h3><?= $product_name ?></h3>
                     <div class="price_box">
-                        <span class="new_price">Rp<?= $price ?></span>
+                        <span class="new_price"><?= rupiah($price) ?></span>
                     </div>
                     <br>
+                    <p class="m-0">Details:</p>
                     <p><?= $description ?></p>
-                    <p><?= $category_name ?></p>
+                    <p><?= $manifacturer_name ?></p>
+                    <p><?= $category_name ?> > <?= $subcategory_name ?></p>
                 </div>
             </div>
         </a>

@@ -1,5 +1,5 @@
 <?php
-check('login')
+check('login');
 ?>
 
 <!DOCTYPE html>
@@ -43,30 +43,55 @@ check('login')
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="#">Home</a></li>
-							<li><a href="#">Admin</a></li>
-							<li>Dashboard</li>
+							<li><a href="#">Category</a></li>
+							<li>Page active</li>
 						</ul>
 					</div>
-					<h1 class="pt-3 mb-5">Dashboard</h1>
-					<div>
-						<ul>
-							<li>
-								<a href="index.php?page=product_list">Product List</a>
-							</li>
-							<li>
-								<a href="index.php?page=category_list">Category List</a>
-							</li>
-							<li>
-								<a href="index.php?page=subcategory_list">Subcategory List</a>
-							</li>
-							<li>
-								<a href="index.php?page=manifacturer_list">Manifacturer List</a>
-							</li>
-						</ul>
-					</div>
+					<h1 class="pt-3">Add Manifacturer</h1>
 				</div>
+
+				<form action="" method="POST">
+					<div class="container pb-5">
+						<div class="row">
+							<!-- <div class="col-3">
+								<img src="assets/images/profile/1.jpg" alt="" width="100%">
+							</div> -->
+							<div class="col-9">
+								<ul style="list-style: none;" class="pl-0">
+									<li class="mb-2">
+										<label class="form-label">Manifacturer Name</label>
+										<input type="text" name="name" class="form-control">
+									</li>
+									<li class="mt-3">
+										<a type="submit" href="index.php?page=manifacturer_list" class="btn_1">BACK</a>
+										<button type="submit" name="submit" class="btn_1">SAVE</button>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</form>
+
+				<?php
+				if (isset($_POST['submit'])) {
+					$name = $_POST['name'];
+					$category = $_POST['category'];
+
+					$result = insert('manifacturer', [
+						'manifacturer_name' => $name
+					]);
+
+					if ($result) {
+						echo '<script>window.location.href = "index.php?page=manifacturer_list"</script>';
+					}
+				}
+				?>
 			</div>
 		</main>
+
+		<!-- COMMON SCRIPTS -->
+		<script src="js/common_scripts.min.js"></script>
+		<script src="js/main.js"></script>
 </body>
 
 </html>

@@ -98,9 +98,25 @@ switch ($page) {
     case 'wishlist_list':
         include 'page/wishlist/list.php';
         break;
-    case 'wishlist_delete':
-        include 'page/wishlist/delete';
+    case 'wishlist_add':
+        include 'page/wishlist/add.php';
         break;
+    case 'wishlist_delete':
+        include 'page/wishlist/delete.php';
+        break;
+
+        case 'manifacturer_list':
+            include 'page/manifacturer/list.php';
+            break;
+        case 'manifacturer_add':
+            include 'page/manifacturer/add.php';
+            break;
+        case 'manifacturer_edit':
+            include 'page/manifacturer/edit.php';
+            break;
+        case 'manifacturer_delete':
+            include 'page/manifacturer/delete.php';
+            break;
     
     //  BLOG
     case 'blog':

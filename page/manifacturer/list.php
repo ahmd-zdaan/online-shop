@@ -24,15 +24,14 @@ check('login')
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
 
 	<!-- BASE CSS -->
-	<link href="css/bootstrap.custom.min.css" rel="stylesheet">
+	<link href="../../../css/bootstrap.custom.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 
 	<!-- SPECIFIC CSS -->
 	<link href="css/cart.css" rel="stylesheet">
 
 	<!-- YOUR CUSTOM CSS -->
-	<link href="css/custom.css" rel="stylesheet">
-
+	<link href="../../../css/custom.css" rel="stylesheet">
 </head>
 
 <body>
@@ -43,28 +42,52 @@ check('login')
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="#">Home</a></li>
-							<li><a href="#">Admin</a></li>
-							<li>Dashboard</li>
+							<li><a href="#">Subcategory</a></li>
+							<li>List</li>
 						</ul>
 					</div>
-					<h1 class="pt-3 mb-5">Dashboard</h1>
-					<div>
-						<ul>
-							<li>
-								<a href="index.php?page=product_list">Product List</a>
-							</li>
-							<li>
-								<a href="index.php?page=category_list">Category List</a>
-							</li>
-							<li>
-								<a href="index.php?page=subcategory_list">Subcategory List</a>
-							</li>
-							<li>
-								<a href="index.php?page=manifacturer_list">Manifacturer List</a>
-							</li>
-						</ul>
+					<div class="row">
+						<div class="col-6">
+							<h1 class="pt-3">Manifacturer List</h1>
+						</div>
+						<div class="col-6 text-right">
+							<a href="index.php?page=manifacturer_add" class="btn_1">ADD MANIFACTURER</a>
+						</div>
 					</div>
 				</div>
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th scope="col">
+								ID
+							</th>
+							<th scope="col">
+								Manifacturer Name
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						$result = get('manifacturer');
+						foreach ($result as $data) :
+							$manifacturer_id = $data['manifacturer_id'];
+							$manifacturer_name = $data['manifacturer_name'];
+						?>
+							<tr>
+								<td>
+									<p><?= $manifacturer_id ?></p>
+								</td>
+								<td>
+									<p><?= $manifacturer_name ?></p>
+								</td>
+								<td class="row">
+									<a href="index.php?page=manifacturer_edit&manifacturer_id=<?= $manifacturer_id ?>" class="btn_1 col p-3 my-1">EDIT</a>
+									<a href="index.php?page=manifacturer_delete&manifacturer_id=<?= $manifacturer_id ?>" onclick="return confirm('Are you sure you want to DELETE this manifacturer?')" class="btn_1 col p-3 my-1">DELETE</a>
+								</td>
+							</tr>
+						<?php endforeach ?>
+					</tbody>
+				</table>
 			</div>
 		</main>
 </body>

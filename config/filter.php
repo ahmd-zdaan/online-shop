@@ -1,4 +1,18 @@
 <script>
+    function load_product(category_data = 0, subcategory_data = 0) {
+        $.ajax({
+            type: "get",
+            url: `page/product/data/list.php?category_id=${category_data}&subcategory_id=${subcategory_data}`,
+            dataType: "html",
+            success: function(response) {
+                $('#list-product').children().remove();
+                $('#list-product').append(response);
+            }
+        });
+    }
+
+    load_product();
+
     $(document).ready(function() {
         let category = [];
         let subcategory = [];
@@ -34,15 +48,7 @@
                     "\nsubcategory_data:", subcategory_data
                 );
 
-                $.ajax({
-                    type: "get",
-                    url: "page/product/data/list.php?category_id=" + category_data + "&subcategory_id=" + subcategory_data,
-                    dataType: "html",
-                    success: function(response) {
-                        $('#list-product').children().remove();
-                        $('#list-product').append(response);
-                    }
-                });
+                load_product(category_data, subcategory_data);
             });
         });
 

@@ -69,7 +69,9 @@ include_once 'config/connect.php';
 													$name = $data['category_name'];
 												?>
 													<li>
-														<span><a href="index.php?page=list&category=<?= strtolower($name) ?>&view=list"><?= $name ?></a></span>
+														<span>
+															<a href="index.php?page=list&view=list"><?= $name ?></a>
+														</span>
 														<?php
 														$result = get('subcategory', 'WHERE category_id=' . $category_id);
 														if (mysqli_num_rows($result) > 0) :

@@ -54,8 +54,8 @@ check('login');
 				$product_id = $_GET['product_id'];
 
 				$result = get('product', 'WHERE product_id=' . $product_id);
-
 				$data = mysqli_fetch_assoc($result);
+				// var_dump($data);
 
 				$product_name = $data['product_name'];
 				$product_category_id = $data['category_id'];
@@ -75,11 +75,12 @@ check('login');
 							<div class="col-3">
 								<div>
 									<?php
-									$result = get('product_image', 'WHERE product_id=' . $product_id);
-									var_dump(mysqli_fetch_assoc($result));
-									if (mysqli_num_rows($result) > 0) :
-										$data = mysqli_fetch_assoc($result);
-										$image_name = $data['image_name'];
+									$result_image = get('product_image', 'WHERE product_id=' . $product_id);
+									if (mysqli_num_rows($result_image) > 0) :
+										$data_image = mysqli_fetch_assoc($result_image);
+										var_dump($data_image);
+										$image_id = $data_image['id'];
+										$image_name = $data_image['image_name'];
 									?>
 										<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
 									<?php
@@ -90,7 +91,7 @@ check('login');
 								</div>
 								<div class="mt-3">
 									<label class="form-label">Product Image</label>
-									<input class="form-control" type="hidden" name="image_id" value="<?=$image_name?>">
+									<!-- <input class="form-control" type="hidden" name="image_id" value="<?=$image_id?>"> -->
 									<input class="form-control" type="file" name="image">
 								</div>
 							</div>
@@ -191,20 +192,33 @@ check('login');
 
 					if (!empty($_FILES['image']['name'])) {
 						$image_file_name = $_FILES['image']['name'];
+						var_dump($image_file_name); die;
 						list($file_name, $extension) = explode(".", $image_file_name);
 						$image_name = time() . "." . $extension;
 						$tmp = $_FILES['image']['tmp_name'];
 
 						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
-							$image_id = $_POST['image_id'];
+							$result_image = get('product_image', 'WHERE product_id=' . $product_id);
+							if (mysqli_num_rows($result_image) > 0) {
+								$data_image = mysqli_fetch_assoc($result_image);
+								$image_id = $data_image['id'];
+								// $image_name = $data_image['image_name'];
 
-							$query = get('product_image', 'WHERE id='.$image_id);
-							$data = mysqli_fetch_assoc($query);
-							$image_name_old = $data['image_name'];
-							unlink("uploads/" . $image_name_old);
+								// $image_id = $_POST['image_id'];
 
-							$query = "UPDATE product_image SET image_name='".$image_name."' WHERE id=".$image_id;
-							$result = mysqli_query($connect, $query);
+								$query = get('product_image', 'WHERE id='.$image_id);
+								$data = mysqli_fetch_assoc($query);
+								$image_name_old = $data['image_name'];
+								unlink("uploads/" . $image_name_old);
+	
+								$query = "UPDATE product_image SET image_name='".$image_name."' WHERE id=".$image_id;
+								$result = mysqli_query($connect, $query);	
+							} else {
+								insert("image_product",
+									"image_name" => $
+								)
+							}
+
 						}
 					}
 

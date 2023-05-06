@@ -76,14 +76,25 @@ check('login');
 					</thead>
 					<tbody>
 						<?php
-						$result = get('product');
+						$user_email = $_SESSION['email'];
+						$result = get('user', 'WHERE email="' . $user_email . '"');
+						$data = mysqli_fetch_assoc($result);
+
+						$user_id = $data['user_id'];
+
+						$result = get('wishlist', 'WHERE user_id=' . $user_id);
 						foreach ($result as $data) :
 							$product_id = $data['product_id'];
-							$product_name = $data['product_name'];
-							$category_id = $data['category_id'];
-							$subcategory_id = $data['subcategory_id'];
-							$price = $data['price'];
-							$description = $data['description'];
+
+							$result_product = get('product', 'WHERE product_id='.$product_id);
+							$data_product = mysqli_fetch_assoc($result_product);
+							
+							$product_id = $data_product['product_id'];
+							$product_name = $data_product['product_name'];
+							$category_id = $data_product['category_id'];
+							$subcategory_id = $data_product['subcategory_id'];
+							$price = $data_product['price'];
+							$description = $data_product['description'];
 						?>
 							<tr style="font-size: medium;">
 								<td>
@@ -131,7 +142,7 @@ check('login');
 								</td>
 								<td>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>
-									<a href="index.php?page=product_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this PRODUCT?')" class="btn_1 col p-3 my-1">REMOVE</a>
+									<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this PRODUCT?')" class="btn_1 col p-3 my-1">REMOVE</a>
 								</td>
 							</tr>
 						<?php endforeach ?>

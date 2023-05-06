@@ -244,7 +244,9 @@ $image_name = $data_product_image['image_name'];
 					<div class="product_actions">
 						<ul>
 							<li>
-								<a href="index.php?page=add_wishlist"><i class="ti-heart"></i><span>Add to Wishlist</span></a>
+								<a href="index.php?page=wishlist_add&product_id=<?=$product_id?>">
+									<i class="ti-heart"></i>
+								<span>Add to Wishlist</span></a>
 							</li>
 						</ul>
 					</div>
