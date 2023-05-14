@@ -81,6 +81,9 @@ switch ($page) {
     case 'cart_list':
         include 'page/cart/list.php';
         break;
+    case 'cart_add':
+        include 'page/cart/add.php';
+        break;
     case 'cart_delete':
         include 'page/cart/delete.php';
         break;

@@ -94,37 +94,42 @@ check('login')
 								?>
 									<tr>
 										<td>
-											<div class="thumb_cart">
-												<?php
+											<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+												<div class="thumb_cart">
+													<?php
 												$result = get('product_image', 'WHERE product_id=' . $product_id);
 												if (mysqli_num_rows($result) > 0) :
 													$data = mysqli_fetch_assoc($result);
 													$image_name = $data['image_name'];
-												?>
-													<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
-												<?php
+													?>
+													<img src="uploads/<?= $image_name ?>" class="lazy" alt="image">
+													<?php
 												else :
-												?>
-													<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
-												<?php endif ?>
-											</div>
-											<span class="item_cart"><?= $product_name ?></span>
+													?>
+													<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="image">
+													<?php endif ?>
+												</div>
+											</a>
+											<span class="item_cart">
+												<a href="index.php?page=product_view&product_id=<?= $product_id ?>"><?= $product_name ?></a>
+											</span>
 										</td>
 										<td>
 											<strong><?= rupiah($price) ?></strong>
 										</td>
 										<td>
-											<div class="numbers-row">
+											<strong><?= $quantity ?></strong>
+											<!-- <div class="numbers-row">
 												<input type="text" value="<?= $quantity ?>" id="quantity_1" class="qty2" name="quantity_1">
 												<div class="inc button_inc">+</div>
 												<div class="dec button_inc">-</div>
-											</div>
+											</div> -->
 										</td>
 										<td class="text-center">
 											<strong><?= rupiah($subtotal_product) ?></strong>
 										</td>
 										<td class="options">
-											<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>$page=cart" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="ti-trash"></a>
+											<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>&page=cart" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="ti-trash"></a>
 										</td>
 									</tr>
 								<?php

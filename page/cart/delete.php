@@ -11,4 +11,6 @@ if (mysqli_query($connect, $query)) {
         echo "<script>window.location.href = 'index.php?page=cart_list'</script>";
     }
 }
+
+// page doesnt work
 ?>

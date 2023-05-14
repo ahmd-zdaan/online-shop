@@ -18,7 +18,7 @@ if ($data_product) {
 	$weight = $data_product['weight'];
 }
 
-$result_product_image = get('product_image', 'WHERE product_id='.$product_id);
+$result_product_image = get('product_image', 'WHERE product_id=' . $product_id);
 $data_product_image = mysqli_fetch_assoc($result_product_image);
 
 $image_name = $data_product_image['image_name'];
@@ -69,16 +69,16 @@ $image_name = $data_product_image['image_name'];
 					<div class="all">
 						<div class="slider">
 							<div class="owl-carousel owl-theme main">
-								<img src="uploads/<?=$image_name?>" alt="" class="item-box" style="object-fit: scale-down;">
-								<img src="uploads/<?=$image_name?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<img src="uploads/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<img src="uploads/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
 							</div>
 							<div class="left nonl"><i class="ti-angle-left"></i></div>
 							<div class="right"><i class="ti-angle-right"></i></div>
 						</div>
 						<div class="slider-two">
 							<div class="owl-carousel owl-theme thumbs">
-								<img src="uploads/<?=$image_name?>" alt="" class="item active" style="object-fit: cover;">
-								<img src="uploads/<?=$image_name?>" alt="" class="item" style="object-fit: cover;">
+								<img src="uploads/<?= $image_name ?>" alt="" class="item active" style="object-fit: cover;">
+								<img src="uploads/<?= $image_name ?>" alt="" class="item" style="object-fit: cover;">
 							</div>
 							<div class="left-t nonl-t"></div>
 							<div class="right-t"></div>
@@ -158,7 +158,7 @@ $image_name = $data_product_image['image_name'];
 									</div>
 									<div class="col-9">
 										<?php
-										$manifacturer = get('manifacturer', 'WHERE manifacturer_id='.$manifacturer_id, 'manifacturer_name');
+										$manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id, 'manifacturer_name');
 										$data_manifacturer = mysqli_fetch_assoc($manifacturer);
 										$manifacturer_name = $data_manifacturer['manifacturer_name'];
 										?>
@@ -194,7 +194,9 @@ $image_name = $data_product_image['image_name'];
 									</ul>
 								</div>
 							</div> -->
+							<!-- PAYMENT -->
 							<form action="" method="POST">
+								<input type="text" hidden name="product_id" value="<?=$product_id?>">
 								<div class="row">
 									<label class="col-xl-5 col-lg-5 col-md-6 col-6">
 										<strong>Size</strong> - Size Guide
@@ -213,40 +215,64 @@ $image_name = $data_product_image['image_name'];
 										</div>
 									</div>
 								</div>
-							</form>
-							<div class="row">
-								<label class="col-xl-5 col-lg-5  col-md-6 col-6">
-									<strong>Quantity</strong>
-								</label>
-								<div class="col-xl-4 col-lg-5 col-md-6 col-6">
-									<div class="numbers-row">
-										<input type="number" value="1" class="qty2">
+								<div class="row">
+									<label class="col-xl-5 col-lg-5  col-md-6 col-6">
+										<strong>Quantity</strong>
+									</label>
+									<div class="col-xl-4 col-lg-5 col-md-6 col-6">
+										<div class="numbers-row">
+											<input type="number" name="quantity" value="1" class="qty2">
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						<!-- PAYMENT -->
-						<div class="row">
-							<div class="col-lg-5 col-md-6">
-								<div class="price_main">
-									<span class="new_price"><?= rupiah($price) ?></span>
-									<!-- SALE -->
-									<!-- <span class="new_price">$148.00</span>
-									<span class="percentage">-20%</span> <span class="old_price">$160.00</span> -->
+								<div class="row">
+									<div class="col-lg-5 col-md-6">
+										<div class="price_main">
+											<span class="new_price"><?= rupiah($price) ?></span>
+											<!-- SALE -->
+											<!-- <span class="new_price">$148.00</span>
+											<span class="percentage">-20%</span> <span class="old_price">$160.00</span> -->
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-6">
+										<div class="btn_add_to_cart">
+											<button type="submit" name="submit" class="btn_1 px-5" style="font-size:15px">Add to Cart</button>
+											<!-- <a href="index.php?page=cart_add" class="btn_1">Add to Cart</a> -->
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="col-lg-4 col-md-6">
-								<div class="btn_add_to_cart"><a href="index.php?page=checkout" class="btn_1">Add to Cart</a></div>
-							</div>
+							</form>
+							<?php
+							if (isset($_POST['submit'])) {
+								$quantity = $_POST['quantity'];
+								
+								$user_email = $_SESSION['email'];
+								$result = get('user', 'WHERE email="'.$user_email.'"');
+								$data = mysqli_fetch_assoc($result);
+								
+								$user_id = $data['user_id'];
+								
+								$result_add_to_cart = insert('cart', [
+									'user_id' => $user_id,
+									'product_id' => $product_id,
+									'quantity' => $quantity
+								]);
+								
+								if ($result_add_to_cart) {
+									echo '<script>window.location.href = "index.php?page=cart_list"</script>';
+								}
+							}
+							?>
 						</div>
 					</div>
 
 					<div class="product_actions">
 						<ul>
 							<li>
-								<a href="index.php?page=wishlist_add&product_id=<?=$product_id?>">
+								<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>">
 									<i class="ti-heart"></i>
-								<span>Add to Wishlist</span></a>
+									<span>Add to Wishlist</span>
+								</a>
 							</li>
 						</ul>
 					</div>

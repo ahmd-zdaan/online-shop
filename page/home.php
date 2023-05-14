@@ -51,8 +51,8 @@
 			<a href="index.php?page=list" class="img_container">
 				<img src="img/banners_cat_placeholder.jpg" data-src="img/banner_1.jpg" alt="" class="lazy">
 				<div class="short_info opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.5)">
-					<h3>Men's Collection</h3>
-					<div><span class="btn_1">Shop Now</span></div>
+					<h3>FASHION</h3>
+					<div><span class="btn_1">Browse Category</span></div>
 				</div>
 			</a>
 		</li>
@@ -60,8 +60,8 @@
 			<a href="index.php?page=list" class="img_container">
 				<img src="img/banners_cat_placeholder.jpg" data-src="img/banner_2.jpg" alt="" class="lazy">
 				<div class="short_info opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.5)">
-					<h3>Womens's Collection</h3>
-					<div><span class="btn_1">Shop Now</span></div>
+					<h3>ELECTRONICS</h3>
+					<div><span class="btn_1">Browse Category</span></div>
 				</div>
 			</a>
 		</li>
@@ -69,14 +69,12 @@
 			<a href="index.php?page=list" class="img_container">
 				<img src="img/banners_cat_placeholder.jpg" data-src="img/banner_3.jpg" alt="" class="lazy">
 				<div class="short_info opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.5)">
-					<h3>Kids's Collection</h3>
-					<div><span class="btn_1">Shop Now</span></div>
+					<h3>KITCHEN</h3>
+					<div><span class="btn_1">Browse Category</span></div>
 				</div>
 			</a>
 		</li>
 	</ul>
-	<!--/banners_grid -->
-
 	<div class="container margin_60_35">
 		<div class="main_title">
 			<h2>Top Selling</h2>

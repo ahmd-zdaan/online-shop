@@ -76,7 +76,7 @@ check('login');
 								<div>
 									<?php
 									$result = get('product_image', 'WHERE product_id=' . $product_id);
-									var_dump(mysqli_fetch_assoc($result));
+
 									if (mysqli_num_rows($result) > 0) :
 										$data = mysqli_fetch_assoc($result);
 										$image_name = $data['image_name'];
@@ -90,7 +90,7 @@ check('login');
 								</div>
 								<div class="mt-3">
 									<label class="form-label">Product Image</label>
-									<input class="form-control" type="hidden" name="image_id" value="<?=$image_name?>">
+									<input class="form-control" type="hidden" name="image_id" value="<?= $image_name ?>">
 									<input class="form-control" type="file" name="image">
 								</div>
 							</div>
@@ -196,15 +196,23 @@ check('login');
 						$tmp = $_FILES['image']['tmp_name'];
 
 						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
-							$image_id = $_POST['image_id'];
+							$image_name_new = $_POST['image_id'];
 
-							$query = get('product_image', 'WHERE id='.$image_id);
-							$data = mysqli_fetch_assoc($query);
-							$image_name_old = $data['image_name'];
-							unlink("uploads/" . $image_name_old);
+							// Deletes previous image
+							$old_image = get('product_image', 'WHERE product_id=' . $product_id);
+							if (mysqli_num_rows($old_image) > 0) {
+								$data = mysqli_fetch_assoc($old_image);
+								$image_name_old = $data['image_name'];
+								unlink("uploads/" . $image_name_old);
 
-							$query = "UPDATE product_image SET image_name='".$image_name."' WHERE id=".$image_id;
-							$result = mysqli_query($connect, $query);
+								$query = "UPDATE product_image SET image_name='" . $image_name_new . "' WHERE product_id=" . $product_id;
+								$result = mysqli_query($connect, $query);
+							} else {
+								insert('product_image', [
+									'image_name' => $image_name,
+									'product_id' => $product_id
+								]);
+							}
 						}
 					}
 
@@ -221,8 +229,6 @@ check('login');
 					weight='" . $weight . "'
 
 					WHERE product_id=" . $product_id;
-
-					// var_dump($query); die;
 
 					$result = mysqli_query($connect, $query);
 

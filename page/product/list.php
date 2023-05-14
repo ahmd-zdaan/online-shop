@@ -131,7 +131,14 @@ check('login');
 									<p><?= $subcategory_name ?></p>
 								</td>
 								<td>
-									<p><?= $description ?></p>
+									<p><?php
+									if (strlen($description) > 200) {
+										echo substr($description, 0, 200);
+										echo ' ...';
+									} else {
+										echo $description;
+									}
+									?></p>
 								</td>
 								<td>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>

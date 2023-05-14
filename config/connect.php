@@ -23,7 +23,6 @@ function get($table, $condition='', $select='*') {
     return $result; 
 }
 
-
 function login($email, $password) {
     $result = get("user","WHERE email='".$email."'");
 
@@ -120,7 +119,3 @@ function insert($table, $data) {
         return false;
     }
 }
-
-
-
-?>

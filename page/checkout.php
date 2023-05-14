@@ -48,7 +48,6 @@ check('login');
 						</ul>
 					</div>
 					<h1>Checkout</h1>
-
 				</div>
 				<div class="row">
 					<div class="col-lg-4 col-md-6">

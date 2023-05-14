@@ -41,12 +41,12 @@
                     subcategory_data = subcategory.join()
                 }
 
-                console.log(
-                    "category:", category,
-                    "\nsubcategory:", subcategory,
-                    "\ncategory_data:", category_data,
-                    "\nsubcategory_data:", subcategory_data
-                );
+                // console.log(
+                //     "category:", category,
+                //     "\nsubcategory:", subcategory,
+                //     "\ncategory_data:", category_data,
+                //     "\nsubcategory_data:", subcategory_data
+                // );
 
                 load_product(category_data, subcategory_data);
             });

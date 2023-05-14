@@ -184,7 +184,7 @@ check('login');
 						$tmp = $_FILES['image']['tmp_name'];
 						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
 							$query = "INSERT INTO product_image (image_name, product_id) VALUES ('" . $image_name . "', '" . $id . "')";
-							var_dump($query);
+							// var_dump($query);
 							$result = mysqli_query($connect, $query);
 
 							if (!$result) {

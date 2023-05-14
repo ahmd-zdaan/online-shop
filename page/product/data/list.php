@@ -21,12 +21,12 @@ foreach ($result as $data) :
     $result_category = get('category', 'WHERE category_id=' . $category_id);
     $data_category = mysqli_fetch_assoc($result_category);
     $category_name = $data_category['category_name'];
-    
+
     $subcategory_id = $data['subcategory_id'];
     $result_subcategory = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id);
     $data_subcategory = mysqli_fetch_assoc($result_subcategory);
     $subcategory_name = $data_subcategory['subcategory_name'];
-    
+
     $manifacturer_id = $data['manifacturer_id'];
     $result_manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
     $data_manifacturer = mysqli_fetch_assoc($result_manifacturer);
@@ -35,7 +35,6 @@ foreach ($result as $data) :
     $result_image = get('product_image', 'WHERE product_id=' . $product_id);
     $data_image = mysqli_fetch_assoc($result_image);
 
-    // product image default nggak muncul
     if (mysqli_num_rows($result_image) > 0) {
         $product_image = $data_image['image_name'];
     } else {
@@ -53,11 +52,18 @@ foreach ($result as $data) :
                     <div class="price_box">
                         <span class="new_price"><?= rupiah($price) ?></span>
                     </div>
-                    <br>
-                    <p class="m-0">Details:</p>
-                    <p><?= $description ?></p>
-                    <p><?= $manifacturer_name ?></p>
-                    <p><?= $category_name ?> > <?= $subcategory_name ?></p>
+                    <p class="mt-2 mb-0" style="color:black"><?= $manifacturer_name ?></p>
+                    <hr class="hr hr-blurry mt-2 mb-3">
+                    <p class="m-0" style="color:black">Details:</p>
+                    <p style="color:black"><?php
+                        if (strlen($description) > 200) {
+                            echo substr($description, 0, 200);
+                            echo ' ...';
+                        } else {
+                            echo $description;
+                        }
+                        ?></p>
+                    <p style="color:#c1c1c1"><?= $category_name ?> > <?= $subcategory_name ?></p>
                 </div>
             </div>
         </a>
@@ -68,6 +74,6 @@ endforeach;
 if (mysqli_num_rows($result) == 0) :
 ?>
     <li class="mb-3" style="list-style: none">
-        <p>Produk tidak ditemukan</p>
+        <p class="m-5" style="color: #c1c1c1; font-size:20px">Produk tidak ditemukan</p>
     </li>
 <?php endif ?>
