@@ -105,7 +105,7 @@ check('login');
 											$data = mysqli_fetch_assoc($result);
 											$image_name = $data['image_name'];
 										?>
-											<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+											<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
 										<?php
 										else :
 										?>

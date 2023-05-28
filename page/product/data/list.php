@@ -1,15 +1,21 @@
 <?php
 include_once '../../../config/connect.php';
 
+$search = $_GET['search'];
+
 $filter_subcategory_id = $_GET['subcategory_id'];
 $filter_category_id = $_GET['category_id'];
-$where = ($filter_subcategory_id != 0) ? 'WHERE subcategory_id IN (' . $filter_subcategory_id . ')' : 'WHERE category_id IN (' . $filter_category_id . ')';
+$where = ($filter_subcategory_id != 0) ? 'WHERE subcategory_id IN (' . $filter_subcategory_id . ') AND product_name LIKE "%'.$search.'%"' : 'WHERE category_id IN (' . $filter_category_id . ') AND product_name LIKE "%'.$search.'%"';
 
 if ($filter_category_id == 0 and $filter_subcategory_id == 0) {
-    $result = get('product');
+    $result = get('product', 'WHERE product_name LIKE "%'.$search.'%"');
 } else {
     $result = get('product', $where);
 }
+
+// if ($search != '') {
+//     $result = get('product', 'WHERE product_name LIKE "%'.$search.'%"');
+// }
 
 foreach ($result as $data) :
     $product_id = $data['product_id'];
@@ -45,7 +51,7 @@ foreach ($result as $data) :
         <a href="index.php?page=product_view&product_id=<?= $product_id ?>">
             <div class="row">
                 <div class="col-3">
-                    <img class="img-fluid lazy" src="uploads/<?= $product_image ?>" alt="product_image" width="100%">
+                    <img class="img-fluid lazy" src="uploads/product/<?= $product_image ?>" alt="product_image" width="100%">
                 </div>
                 <div class="col">
                     <h3><?= $product_name ?></h3>
@@ -63,7 +69,7 @@ foreach ($result as $data) :
                             echo $description;
                         }
                         ?></p>
-                    <p style="color:#c1c1c1"><?= $category_name ?> > <?= $subcategory_name ?></p>
+                    <p style="color:#9d9d9d"><?= $category_name ?> > <?= $subcategory_name ?></p>
                 </div>
             </div>
         </a>

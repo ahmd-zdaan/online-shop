@@ -16,11 +16,14 @@ switch ($page) {
     case 'log-out':
         log_out();
         break;
-    case 'view':
+    case 'view_profile':
         include 'page/profile/view.php';
         break;
-    case 'edit':
+    case 'edit_profile':
         include 'page/profile/edit.php';
+        break;
+    case 'delete_profile':
+        include 'page/profile/delete.php';
         break;
 
         // ADMIN
@@ -94,8 +97,15 @@ switch ($page) {
         case 'checkout':
             include 'page/checkout.php';
             break;
+        case 'checkout_confirm':
+            include 'page/checkout_confirm.php';
+            break;
+
         case 'review':
-            include 'page/review.php';
+            include 'page/review/review.php';
+            break;
+        case 'review_submit':
+            include 'page/review/submit.php';
             break;
 
     case 'wishlist_list':

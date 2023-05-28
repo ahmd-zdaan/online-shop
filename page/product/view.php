@@ -22,6 +22,14 @@ $result_product_image = get('product_image', 'WHERE product_id=' . $product_id);
 $data_product_image = mysqli_fetch_assoc($result_product_image);
 
 $image_name = $data_product_image['image_name'];
+
+$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
+$data = mysqli_fetch_assoc($result);
+$category_name = $data['category_name'];
+
+$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id, 'subcategory_name');
+$data = mysqli_fetch_assoc($result);
+$subcategory_name = $data['subcategory_name'];
 ?>
 
 <!DOCTYPE html>
@@ -69,16 +77,16 @@ $image_name = $data_product_image['image_name'];
 					<div class="all">
 						<div class="slider">
 							<div class="owl-carousel owl-theme main">
-								<img src="uploads/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
-								<img src="uploads/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
 							</div>
 							<div class="left nonl"><i class="ti-angle-left"></i></div>
 							<div class="right"><i class="ti-angle-right"></i></div>
 						</div>
 						<div class="slider-two">
 							<div class="owl-carousel owl-theme thumbs">
-								<img src="uploads/<?= $image_name ?>" alt="" class="item active" style="object-fit: cover;">
-								<img src="uploads/<?= $image_name ?>" alt="" class="item" style="object-fit: cover;">
+								<img src="uploads/product/<?= $image_name ?>" alt="" class="item active" style="object-fit: cover;">
+								<img src="uploads/product/<?= $image_name ?>" alt="" class="item" style="object-fit: cover;">
 							</div>
 							<div class="left-t nonl-t"></div>
 							<div class="right-t"></div>
@@ -90,13 +98,15 @@ $image_name = $data_product_image['image_name'];
 						<ul>
 							<li><a href="index.php">Home</a></li>
 							<li><a href="#">Product</a></li>
+							<li><a href="#"><?= $category_name ?></a></li>
+							<li><a href="#"><?= $subcategory_name ?></a></li>
 							<li><?= $name ?></li>
 						</ul>
 					</div>
 					<!-- PRODUCT -->
 					<div class="prod_info">
 						<h1><?= $name ?></h1>
-						<span class="rating">
+						<span class="rating my-0">
 							<?php
 							// Rating
 							$result = get('review', 'WHERE product_id="' . $product_id . '"', 'sum(rating)');
@@ -108,13 +118,13 @@ $image_name = $data_product_image['image_name'];
 							$count_rating = (int)$data['count(rating)'];
 
 							if ($count_rating > 0) {
-								$average_rating = $total_rating / $count_rating;
-
+								$average_rating = round($total_rating / $count_rating);
+								
 								for ($i = $average_rating; $i > 0; $i--) {
 									echo '<i class="icon-star voted"></i>';
 								}
 							}
-
+							
 							if ($count_rating == 0) {
 								echo '<p class="mb-0">No review</p>';
 							} else {
@@ -122,6 +132,7 @@ $image_name = $data_product_image['image_name'];
 								for ($i = $n; $i > 0; $i--) {
 									echo '<i class="icon-star"></i>';
 								}
+								echo '<p class="ml-2" style="float: right">( '.$average_rating.' / 5 )</p>';
 							}
 
 							// Reviews
@@ -139,7 +150,7 @@ $image_name = $data_product_image['image_name'];
 								<p><?= $description ?></p>
 							</li>
 							<hr class="hr m-0 mb-3">
-							<p class="mb-1">
+							<p class="mb-2">
 								<strong>Details</strong>
 							</p>
 							<li>
@@ -164,17 +175,7 @@ $image_name = $data_product_image['image_name'];
 										?>
 										<p class="mb-0"><?= $manifacturer_name ?></p>
 										<p class="mb-0"><?= $stock ?></p>
-										<?php
-										$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
-										$data = mysqli_fetch_assoc($result);
-										$category_name = $data['category_name'];
-										?>
 										<p class="mb-0"><?= $category_name ?></p>
-										<?php
-										$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id, 'subcategory_name');
-										$data = mysqli_fetch_assoc($result);
-										$subcategory_name = $data['subcategory_name'];
-										?>
 										<p class="mb-0"><?= $subcategory_name ?></p>
 									</div>
 								</div>
@@ -196,7 +197,7 @@ $image_name = $data_product_image['image_name'];
 							</div> -->
 							<!-- PAYMENT -->
 							<form action="" method="POST">
-								<input type="text" hidden name="product_id" value="<?=$product_id?>">
+								<input type="text" hidden name="product_id" value="<?= $product_id ?>">
 								<div class="row">
 									<label class="col-xl-5 col-lg-5 col-md-6 col-6">
 										<strong>Size</strong> - Size Guide
@@ -245,19 +246,19 @@ $image_name = $data_product_image['image_name'];
 							<?php
 							if (isset($_POST['submit'])) {
 								$quantity = $_POST['quantity'];
-								
+
 								$user_email = $_SESSION['email'];
-								$result = get('user', 'WHERE email="'.$user_email.'"');
+								$result = get('user', 'WHERE email="' . $user_email . '"');
 								$data = mysqli_fetch_assoc($result);
-								
+
 								$user_id = $data['user_id'];
-								
+
 								$result_add_to_cart = insert('cart', [
 									'user_id' => $user_id,
 									'product_id' => $product_id,
 									'quantity' => $quantity
 								]);
-								
+
 								if ($result_add_to_cart) {
 									echo '<script>window.location.href = "index.php?page=cart_list"</script>';
 								}
@@ -265,14 +266,26 @@ $image_name = $data_product_image['image_name'];
 							?>
 						</div>
 					</div>
-
+						
 					<div class="product_actions">
 						<ul>
 							<li>
-								<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>">
-									<i class="ti-heart"></i>
-									<span>Add to Wishlist</span>
-								</a>
+								<?php
+								if (isset($user_email)) :
+									$wishlist = get('wishlist', 'WHERE user_id=' . $user_id);
+									if (mysqli_num_rows($wishlist) > 0) :
+									?>
+										<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>">
+											<i class="ti-heart"></i>
+											<span>Remove from Wishlist</span>
+										</a>
+									<?php else : ?>
+										<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>">
+											<i class="ti-heart"></i>
+											<span>Add to Wishlist</span>
+										</a>
+									<?php endif ?>
+								<?php endif ?>
 							</li>
 						</ul>
 					</div>
@@ -354,50 +367,69 @@ $image_name = $data_product_image['image_name'];
 						<div id="collapse-B" class="collapse" role="tabpanel" aria-labelledby="heading-B">
 							<div class="card-body">
 								<div class="row justify-content-between">
-									<?php
-									$result = get('review');
-									foreach ($result as $data) :
-										$product_id = $data['product_id'];
-										$user_id = $data['user_id'];
-										$title = $data['title'];
-										$rating = $data['rating'];
-										$review = $data['review'];
-										$date = $data['date'];
-									?>
-										<div class="col-lg-6">
-											<div class="review_content">
-												<div class="clearfix add_bottom_10">
-													<span class="rating">
+									<div class="col-lg-6">
+										<div class="review_content">
+											<?php
+											$review_get = get('review');
+											foreach ($review_get as $review_data) :
+												$review_user_id = $review_data['user_id'];
+												$review_user_get = get('user', 'WHERE user_id=' . $review_user_id);
+												$review_user_table = mysqli_fetch_assoc($review_user_get);
+												$review_user_name = $review_user_table['user_name'];
+
+												$rating = $review_data['rating'];
+												$review = $review_data['review'];
+												$date = $review_data['date'];
+											?>
+												<div class="row">
+													<div class="col-1 pr-3">
 														<?php
-														for ($i = $rating; $i > 0; $i--) {
-															echo '<i class="icon-star"></i>';
-														}
-														if ($rating < 5) {
-															$n = 5 - $rating;
-															for ($i = $n; $i > 0; $i--) {
-																echo '<i class="icon-star empty"></i>';
-															}
-														}
+														$result = get('user_image', 'WHERE user_id=' . $review_user_id);
+														if (mysqli_num_rows($result) > 0) :
+															$data = mysqli_fetch_assoc($result);
+															$user_image = $data['user_image'];
 														?>
-														<em><?= $rating ?>.0/5.0</em>
-													</span>
-													<!-- <em>Published 54 minutes ago</em> -->
-													<em><?= $date ?></em>
+															<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
+														<?php
+														else :
+														?>
+															<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="35px">
+														<?php endif ?>
+													</div>
+													<div class="col-10">
+														<div class="clearfix add_bottom_10">
+															<span class="rating">
+																<?php
+																// Stars
+																for ($i = $rating; $i > 0; $i--) {
+																	echo '<i class="icon-star"></i>';
+																}
+																if ($rating < 5) {
+																	$n = 5 - $rating;
+																	for ($i = $n; $i > 0; $i--) {
+																		echo '<i class="icon-star empty"></i>';
+																	}
+																}
+																?>
+																<em>( <?= $rating ?> / 5 )</em>
+															</span>
+															<em><?= $date ?></em>
+														</div>
+														<h3 style="font-weight:bold" class="mb-0"><?= $review_user_name ?></h3>
+														<p><?= $review ?></p>
+													</div>
 												</div>
-												<h4><?= $title ?></h4>
-												<p><?= $review ?></p>
-											</div>
+											<?php endforeach ?>
 										</div>
-									<?php endforeach ?>
+									</div>
 								</div>
-								<p class="text-right"><a href="index.php?page=review" class="btn_1">Leave a review</a></p>
+								<p class="text-right"><a href="index.php?page=review&product_id=<?= $product_id ?>" class="btn_1">Leave a review</a></p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<div class="container margin_60_35">
 			<div class="main_title">
 				<h2>Related</h2>
@@ -426,9 +458,7 @@ $image_name = $data_product_image['image_name'];
 							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
 						</ul>
 					</div>
-					<!-- /grid_item -->
 				</div>
-				<!-- /item -->
 				<div class="item">
 					<div class="grid_item">
 						<span class="ribbon new">New</span>
@@ -450,9 +480,7 @@ $image_name = $data_product_image['image_name'];
 							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
 						</ul>
 					</div>
-					<!-- /grid_item -->
 				</div>
-				<!-- /item -->
 				<div class="item">
 					<div class="grid_item">
 						<span class="ribbon hot">Hot</span>
@@ -474,9 +502,7 @@ $image_name = $data_product_image['image_name'];
 							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
 						</ul>
 					</div>
-					<!-- /grid_item -->
 				</div>
-				<!-- /item -->
 				<div class="item">
 					<div class="grid_item">
 						<span class="ribbon off">-30%</span>
@@ -499,9 +525,7 @@ $image_name = $data_product_image['image_name'];
 							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
 						</ul>
 					</div>
-					<!-- /grid_item -->
 				</div>
-				<!-- /item -->
 				<div class="item">
 					<div class="grid_item">
 						<span class="ribbon off">-50%</span>
@@ -524,14 +548,9 @@ $image_name = $data_product_image['image_name'];
 							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
 						</ul>
 					</div>
-					<!-- /grid_item -->
 				</div>
-				<!-- /item -->
 			</div>
-			<!-- /products_carousel -->
 		</div>
-		<!-- /container -->
-
 		<div class="feat">
 			<div class="container">
 				<ul>
@@ -656,10 +675,11 @@ $image_name = $data_product_image['image_name'];
 		</div>
 	</div>
 
+	<div id="toTop"></div><!-- Back to top button -->
+
 	<!-- COMMON SCRIPTS -->
 	<script src="js/common_scripts.min.js"></script>
 	<script src="js/main.js"></script>
-
 	<!-- SPECIFIC SCRIPTS -->
 	<script src="js/carousel_with_thumbs.js"></script>
 </body>

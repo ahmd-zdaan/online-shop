@@ -1,12 +1,22 @@
 <?php
 check('login');
 
-$result = get('user', 'JOIN country ON user.country_id=country.id_country WHERE email="' . $_SESSION['email'] . '"');
-$data = mysqli_fetch_assoc($result);
+$email = $_SESSION['email'];
 
-$user_name = $data['name_user'];
-$user_address = $data['address'];
-$user_country = $data['name_country'];
+// $result = get('user', 'JOIN country ON user.country_id=country.id_country WHERE email="' . $_SESSION['email'] . '"');
+$get_user = get('user', 'WHERE email="' . $email . '"');
+$table_user = mysqli_fetch_assoc($get_user);
+
+$user_id = $table_user['user_id'];
+$user_name = $table_user['user_name'];
+$email = $table_user['email'];
+$address = $table_user['address'];
+$user_country_id = $table_user['country_id'];
+$telephone = $table_user['telephone'];
+
+$get_country = get('country', 'WHERE country_id=' . $user_country_id);
+$table_country = mysqli_fetch_assoc($get_country);
+$user_country_name = $table_country['country_name'];
 ?>
 
 <!DOCTYPE html>
@@ -50,76 +60,119 @@ $user_country = $data['name_country'];
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="#">Home</a></li>
-							<li><a href="#">Category</a></li>
-							<li>Page active</li>
+							<li><a href="#">Profile</a></li>
+							<li>Edit</li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Profile</h1>
+					<h1 class="pt-3">Edit Profile</h1>
 				</div>
 			</div>
-
-			<form action="" method="POST">
+			<form action="" method="POST" enctype="multipart/form-data">
 				<div class="container pb-5">
 					<div class="row">
 						<div class="col-3">
-							<img src="assets/images/profile/1.jpg" alt="" width="100%">
+							<?php
+							$result = get('user_image', 'WHERE user_id=' . $user_id);
+
+							if (mysqli_num_rows($result) > 0) :
+								$data = mysqli_fetch_assoc($result);
+								$user_image = $data['user_image'];
+							?>
+								<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+							<?php
+							else :
+							?>
+								<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="100%">
+							<?php endif ?>
+							<div class="mt-3">
+								<label class="form-label">Product Image</label>
+								<input class="form-control" type="file" name="image">
+							</div>
 						</div>
 						<div class="col-9">
 							<ul style="list-style: none;" class="pl-0">
 								<li class="mb-2">
-									<label class="form-label">Name</label>
-									<input type="text" name="name" class="form-control" value="<?= $user_name ?>">
+									<label class="form-label">Product Name</label>
+									<input type="text" name="user_name" class="form-control" value="<?= $user_name ?>">
 								</li>
 								<li class="mb-2">
-									<label class="form-label">Address</label>
-									<textarea name="address" class="form-control"><?= $user_address ?></textarea>
-								</li>
-								<label class="form-label">Country</label>
+									<label class="form-label">Country</label>
 									<select class="form-control form-select" name="country">
+										<option selected disabled hidden>-</option>
 										<?php
 										$result = get('country');
-										foreach ($result as $data):
-											$country_id = $data['id_country'];
-											$country_name = $data['name_country'];
+										foreach ($result as $data) :
+											$country_id = $data['country_id'];
+											$country_name = $data['country_name'];
 										?>
-											<option value="<?=$country_id?>" <?= ($user_country == $country_name) ? 'selected' : '' ?>><?=$country_name?></option>
+											<option value="<?= $country_id ?>" <?= ($country_id == $user_country_id) ? 'selected' : '' ?>><?= $country_name ?></option>
 										<?php
 										endforeach
 										?>
 									</select>
-								<li class="mt-2">
-									<button type="submit" name="submit" class="btn_1">Submit</button>
+								</li>
+								<li class="mb-2">
+									<label class="form-label">Full Address</label>
+									<textarea name="address" class="form-control"><?= $address ?></textarea>
+								</li>
+								<li class="mb-2">
+									<label class="form-label">Telephone</label>
+									<input type="text" name="telephone" class="form-control" value="<?= $telephone ?>">
+								</li>
+								<li class="mt-3">
+									<a type="submit" href="index.php?page=view_profile" class="btn_1">BACK</a>
+									<button type="submit" name="submit" class="btn_1">SAVE</button>
 								</li>
 							</ul>
 						</div>
 					</div>
 				</div>
 			</form>
-
 			<?php
 			if (isset($_POST['submit'])) {
-				$name = $_POST['name'];
-				$address = $_POST['address'];
+				$name = $_POST['user_name'];
 				$country = $_POST['country'];
+				$address = $_POST['address'];
+				$telephone = $_POST['telephone'];
 
-				$query = "UPDATE user SET name_user='" . $name . "', address='" . $address . "', country_id='" . $country . "' WHERE email='" . $_SESSION['email'] . "'";
+				$query = "UPDATE user SET user_name='" . $name . "', address='" . $address . "', country_id='" . $country . "' WHERE email='" . $email . "'";
 				$result = mysqli_query($connect, $query);
-				
+
+				if (!empty($_FILES['image']['name'])) {
+					$name = $_FILES['image']['name'];
+					list($file_name, $extension) = explode(".", $name);
+					$new_user_image = time() . "." . $extension;
+					$tmp = $_FILES['image']['tmp_name'];
+
+					if (move_uploaded_file($tmp, "uploads/user/" . $new_user_image)) {
+						$old_user_image_get = get('user_image', 'WHERE user_id='.$user_id);
+						if (mysqli_num_rows($old_user_image_get) > 0) {
+							$old_user_image_table = mysqli_fetch_assoc($old_user_image_get);
+							$old_user_image = $old_user_image_table['user_image'];
+							unlink("uploads/user/" . $old_user_image);
+
+							$query = "UPDATE user_image SET user_image='" . $new_user_image . "' WHERE user_id=" . $user_id;
+							$result = mysqli_query($connect, $query);
+						} else {
+							$result = insert('user_image', [
+								'user_image' => $new_user_image,
+								'user_id' => $user_id
+							]);
+						}
+
+						if (!$result) {
+							unlink("uploads/user/" . $image_name);
+						}
+					}
+				}
+
 				if ($result) {
-					echo '<script>window.location.href = "index.php?page=view"</script>';
+					echo '<script>window.location.href = "index.php?page=view_profile"</script>';
 				}
 			}
 			?>
-
 		</main>
-
 		<div id="toTop"></div><!-- Back to top button -->
-
-		<!-- COMMON SCRIPTS -->
-		<script src="js/common_scripts.min.js"></script>
-		<script src="js/main.js"></script>
-
-
 </body>
 
 </html>

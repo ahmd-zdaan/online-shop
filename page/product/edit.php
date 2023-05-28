@@ -81,11 +81,11 @@ check('login');
 										$data = mysqli_fetch_assoc($result);
 										$image_name = $data['image_name'];
 									?>
-										<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+										<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
 									<?php
 									else :
 									?>
-										<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+										<img src="uploads/product/default.jpg" class="lazy" alt="Image" width="100%">
 									<?php endif ?>
 								</div>
 								<div class="mt-3">
@@ -195,7 +195,7 @@ check('login');
 						$image_name = time() . "." . $extension;
 						$tmp = $_FILES['image']['tmp_name'];
 
-						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
+						if (move_uploaded_file($tmp, "uploads/product/" . $image_name)) {
 							$image_name_new = $_POST['image_id'];
 
 							// Deletes previous image
@@ -203,7 +203,7 @@ check('login');
 							if (mysqli_num_rows($old_image) > 0) {
 								$data = mysqli_fetch_assoc($old_image);
 								$image_name_old = $data['image_name'];
-								unlink("uploads/" . $image_name_old);
+								unlink("uploads/product/" . $image_name_old);
 
 								$query = "UPDATE product_image SET image_name='" . $image_name_new . "' WHERE product_id=" . $product_id;
 								$result = mysqli_query($connect, $query);
@@ -239,14 +239,9 @@ check('login');
 				?>
 			</div>
 		</main>
-
 		<div id="toTop"></div> <!-- Back to top button -->
-
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
-
-
 </body>
-
 </html>

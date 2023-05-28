@@ -94,12 +94,17 @@ include_once 'config/connect.php';
 								</ul>
 							</nav>
 						</div>
-						<div class="col-xl-6 col-lg-7 col-md-6 d-none d-md-block">
+						<!-- SEARCH -->
+						<form id="form_search" class="col-xl-6 col-lg-7 col-md-6 d-none d-md-block" method="GET" action="">
 							<div class="custom-search-input">
-								<input type="text" placeholder="Search over 10.000 products">
-								<button type="submit"><i class="header-icon_search_custom"></i></button>
+								<input type="hidden" name="page" value="list">
+								<input type="hidden" name="view" value="list">
+								<input id="search_input" name="search_input" type="text" placeholder="Search over 10.000 products">
+								<button name="search_submit" type="submit">
+									<i class="header-icon_search_custom"></i>
+								</button>
 							</div>
-						</div>
+						</form>
 						<div class="col-xl-3 col-lg-2 col-md-3">
 							<ul class="top_tools">
 								<?php
@@ -159,16 +164,16 @@ include_once 'config/connect.php';
 																			$data = mysqli_fetch_assoc($result);
 																			$image_name = $data['image_name'];
 																		?>
-																			<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+																			<img src="uploads/product/<?= $image_name ?>" style="object-fit: scale-down" class="lazy" alt="image" width="100%">
 																		<?php else : ?>
-																			<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+																			<img src="uploads/product/default.jpg" class="lazy" alt="image" width="100%">
 																		<?php endif ?>
 																	</figure> <strong>
 																		<span><?= $quantity . 'x ' . $product_name ?></span>
 																		<?= rupiah($price) ?>
 																	</strong>
 																</a>
-																<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>$page=index" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="action">
+																<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="action">
 																	<i class="ti-trash"></i>
 																</a>
 															</li>
@@ -220,7 +225,7 @@ include_once 'config/connect.php';
 											?>
 												<ul class="mt-0">
 													<li>
-														<a href="index.php?page=view"><i class="ti-user"></i>Profile</a>
+														<a href="index.php?page=view_profile"><i class="ti-user"></i>Profile</a>
 													</li>
 													<?php
 													if ($role == 'admin') :

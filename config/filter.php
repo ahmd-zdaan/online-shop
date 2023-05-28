@@ -1,8 +1,8 @@
 <script>
-    function load_product(category_data = 0, subcategory_data = 0) {
+    function load_product(category_data = 0, subcategory_data = 0,search = '') {
         $.ajax({
             type: "get",
-            url: `page/product/data/list.php?category_id=${category_data}&subcategory_id=${subcategory_data}`,
+            url: `page/product/data/list.php?category_id=${category_data}&subcategory_id=${subcategory_data}&search=${search}`,
             dataType: "html",
             success: function(response) {
                 $('#list-product').children().remove();
@@ -16,9 +16,21 @@
     $(document).ready(function() {
         let category = [];
         let subcategory = [];
+        
+        $('#form_search').on('submit', function(event) {
+            let search_input = $('#search_input').val();
+            // let search = $('form_search :input[name="search_input"]');
+
+            $('input:checkbox').prop('checked', false); 
+
+            load_product(0, 0, search_input);
+            event.preventDefault();
+        })
 
         $('input:checkbox').change(function(e) {
             $(this).each(function() {
+                let search_input = $('#search_input').val();
+                
                 let category_id = $(this).attr("data-categoryId");
                 let subcategory_id = $(this).attr("data-subcategoryId");
 
@@ -41,14 +53,14 @@
                     subcategory_data = subcategory.join()
                 }
 
+                load_product(category_data, subcategory_data);
+
                 // console.log(
                 //     "category:", category,
                 //     "\nsubcategory:", subcategory,
                 //     "\ncategory_data:", category_data,
                 //     "\nsubcategory_data:", subcategory_data
                 // );
-
-                load_product(category_data, subcategory_data);
             });
         });
 

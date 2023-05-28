@@ -24,15 +24,15 @@
 				$image_name = $data_image['image_name'];
 			?>
 				<!-- <div class="owl-slide cover" style="background-image: url(img/slides/slide_home_2.jpg);"> -->
-				<div class="owl-slide cover" style="background-image: url(uploads/<?= $image_name ?>);background-size:contain;background-repeat: no-repeat">
+				<div class="owl-slide cover" style="background-image: url(uploads/product/<?= $image_name ?>);background-size:contain;background-repeat: no-repeat">
 					<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 						<div class="container">
 							<div class="row justify-content-center justify-content-md-end">
 								<div class="col-lg-6 static">
 									<div class="slide-text text-right white">
-										<h2 class="owl-slide-animated owl-slide-title"><?= $product_name ?></h2>
-										<p class="owl-slide-animated owl-slide-subtitle"><?= rupiah($price) ?></p>
-										<div class="owl-slide-animated owl-slide-cta">
+										<h2 class="owl-slide-title"><?= $product_name ?></h2>
+										<p class="owl-slide-subtitle"><?= rupiah($price) ?></p>
+										<div class="owl-slide-cta">
 											<a class="btn_1" href="index.php?page=product_view&product_id=<?= $product_id ?>" role="button">View Product</a>
 										</div>
 									</div>
@@ -97,14 +97,14 @@
 							<!-- <span class="ribbon new">New</span>
 							<span class="ribbon hot">Hot</span>
 							<span class="ribbon off">-30%</span> -->
-							<a href="product-detail-1.html">
+							<a href="index.php?page=product_view&product_id=<?=$product_id?>">
 								<?php
 								$result = get('product_image', 'WHERE product_id=' . $product_id);
 								if (mysqli_num_rows($result) > 0) :
 									$data = mysqli_fetch_assoc($result);
 									$image_name = $data['image_name'];
 								?>
-									<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+									<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
 								<?php
 								else :
 								?>
@@ -196,7 +196,7 @@
 									$data = mysqli_fetch_assoc($result);
 									$image_name = $data['image_name'];
 								?>
-									<img src="uploads/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+									<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
 								<?php
 								else :
 								?>

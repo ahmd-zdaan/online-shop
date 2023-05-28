@@ -122,7 +122,7 @@ check('login');
 							$data = mysqli_fetch_assoc($result);
 							$user_id = $data['user_id'];
 
-							$result = get('cart', 'WHERE user_id=' . $user_id);
+							$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,COUNT(user_id) AS total_quantity');
 							if (mysqli_num_rows($result) > 0) :
 							?>
 								<div class="box_general summary">
@@ -130,7 +130,7 @@ check('login');
 									foreach ($result as $data) :
 										$cart_id = $data['cart_id'];
 										$product_id = $data['product_id'];
-										$quantity = $data['quantity'];
+										$quantity = $data['total_quantity'];
 
 										$result = get('product', 'WHERE product_id=' . $product_id);
 										$data = mysqli_fetch_assoc($result);
@@ -142,28 +142,31 @@ check('login');
 										$shipping_price = 15000;
 										$total_price = $subtotal_price + $shipping_price;
 									?>
-										<ul>
-											<li class="clearfix">
-												<em><?= $quantity . 'x ' . $product_name ?></em>
-												<span><?= rupiah($price) ?></span>
-											</li>
-										</ul>
+										<div class="row">
+											<div class="col-6" style="font-weight: bold;">
+												<p><?= $quantity . 'x ' . $product_name ?></p>
+											</div>
+											<div class="col-6 text-right">
+												<p><?= rupiah($price) ?></p>
+											</div>
+										</div>
 									<?php endforeach ?>
+									<hr class="m-0 mb-3">
 									<ul>
 										<div class="row mb-3" style="font-weight: bold;">
 											<div class="col-6">
 												<p class="m-0">Subtotal</p>
 												<p class="m-0">Shipping</p>
 											</div>
-											<div class="col-6">
-												<span style="float: right"><?= rupiah($subtotal_product) ?></span>
-												<span style="float: right"><?= rupiah($shipping_price) ?></span>
+											<div class="col-6 text-right">
+												<span><?= rupiah($subtotal_product) ?></span>
+												<span><?= rupiah($shipping_price) ?></span>
 											</div>
 										</div>
 									</ul>
 									<ul>
 										<div class="form-group">
-											<label class="container_check">Shipping insurance
+											<label class="container_check">Shipping insurance (optional)
 												<input type="checkbox">
 												<span class="checkmark"></span>
 											</label>
@@ -172,7 +175,7 @@ check('login');
 									<div class="total clearfix">TOTAL
 										<span><?= rupiah($total_price) ?></span>
 									</div>
-									<button type="submit" name="submit" class="text-center btn_1 full-width">Confirm and Pay</button>
+									<a href="index.php?page=checkout_confirm" class="text-center btn_1 full-width">CONFIRM AND PAY</a>
 								</div>
 							<?php endif ?>
 						</div>

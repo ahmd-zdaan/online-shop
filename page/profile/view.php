@@ -1,12 +1,21 @@
 <?php
 check('login');
 
-$result = get('user', 'JOIN country ON user.country_id=country.id_country WHERE email="' . $_SESSION['email'] . '"');
-$data = mysqli_fetch_assoc($result);
+$email = $_SESSION['email'];
 
-$name = $data['name_user'];
-$address = $data['address'];
-$country = $data['name_country'];
+// $result = get('user', 'JOIN country ON user.country_id=country.id_country WHERE email="' . $_SESSION['email'] . '"');
+$get_user = get('user', 'WHERE email="' . $email . '"');
+$table_user = mysqli_fetch_assoc($get_user);
+
+$name = $table_user['user_name'];
+$email = $table_user['email'];
+$address = $table_user['address'];
+$country_id = $table_user['country_id'];
+$telephone = $table_user['telephone'];
+
+$get_country = get('country', 'WHERE country_id=' . $country_id);
+$table_country = mysqli_fetch_assoc($get_country);
+$country_name = $table_country['country_name'];
 ?>
 
 <!DOCTYPE html>
@@ -50,32 +59,43 @@ $country = $data['name_country'];
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="#">Home</a></li>
-							<li><a href="#">Category</a></li>
-							<li>Page active</li>
+							<li><a href="#">Profile</a></li>
+							<li>View</li>
 						</ul>
 					</div>
 					<h1 class="pt-3">Profile</h1>
 				</div>
 			</div>
-
-			<div class="container pb-5">
+			<div class="container pb-5 mb-5">
 				<div class="row">
 					<div class="col-3">
-						<img src="assets/images/profile/1.jpg" alt="" width="100%">
+						<?php
+						$result = get('user_image', 'WHERE user_id=' . $user_id);
+
+						if (mysqli_num_rows($result) > 0) :
+							$data = mysqli_fetch_assoc($result);
+							$user_image = $data['user_image'];
+						?>
+							<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+						<?php
+						else :
+						?>
+							<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="100%">
+						<?php endif ?>
 					</div>
 					<div class="col-9">
 						<ul style="list-style: none;" class="pl-4">
 							<li>
-								<h3><?= $name ?></h3>
+								<h1><?= $name ?></h1>
 							</li>
 							<li>
-								<p class="mb-2"><?= $address ?></p>
+								<p class="mb-0"><?= $address ?>, <?= $country_name ?></p>
 							</li>
 							<li>
-								<p><?= $country ?></p>
+								<p><?= $telephone ?></p>
 							</li>
 							<li>
-								<a href="index.php?page=edit" class="btn_1">Edit</a>
+								<a href="index.php?page=edit_profile" class="btn_1">Edit</a>
 							</li>
 						</ul>
 					</div>

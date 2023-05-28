@@ -53,8 +53,8 @@ check('register');
 									<div class="col-6 pr-1">
 										<div class="form-group">
 											<div class="custom-select-form">
-												<select class="wide add_bottom_10" required name="country">
-													<option selected disabled hidden>Country</option>
+												<select class="wide add_bottom_10" name="country" required>
+													<option selected disabled hidden value="">Country</option>
 													<option value="1">Indonesia</option>
 													<option value="2">Singapore</option>
 													<option value="3">Malaysia</option>
@@ -74,7 +74,7 @@ check('register');
 							<div class="form-group mt-2 mb-3">
 								<label class="container_check">Accept
 									<a href="#0">Terms and conditions</a>
-									<input type="checkbox">
+									<input required type="checkbox">
 									<span class="checkmark"></span>
 								</label>
 							</div>

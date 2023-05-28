@@ -99,7 +99,7 @@
 						</div>
 						<!-- PRICE -->
 						<div class="filter_type version_2">
-							<h4><a href="#filter_4" data-toggle="collapse" class="closed">Price</a></h4>
+							<h4><a href="#filter_4" data-toggle="collapse" class="opened">Price</a></h4>
 							<div class="collapse" id="filter_4">
 								<ul>
 									<li>
@@ -178,7 +178,7 @@
 						</div>
 						<!-- MANIFACTURER -->
 						<div class="filter_type version_2">
-							<h4><a href="#filter_3" data-toggle="collapse" class="closed">Brands</a></h4>
+							<h4><a href="#filter_3" data-toggle="collapse" class="opened">Manifacturer</a></h4>
 							<div class="collapse" id="filter_3">
 								<ul>
 									<?php
@@ -206,9 +206,10 @@
 								</ul>
 							</div>
 						</div>
-						<div class="buttons">
-							<a href="#0" class="btn_1">Filter</a> <a href="#0" class="btn_1 gray">Reset</a>
-						</div>
+						<!-- <div class="buttons">
+							<a href="#0" class="btn_1">Filter</a>
+							<a href="#0" class="btn_1 gray">Reset</a>
+						</div> -->
 					</div>
 				</aside>
 				<div class="col-lg-9 my-5">

@@ -54,8 +54,7 @@ check('login');
 						<div class="row">
 							<div class="col-3">
 								<div>
-									<!-- <img src="assets/images/profile/1.jpg" alt="" width="100%"> -->
-									<img src="img/products/product_placeholder_square_medium.jpg" alt="" width="100%">
+									<img src="uploads/product/default.jpg" alt="default" width="100%">
 								</div>
 								<div class="mt-3">
 									<label class="form-label">Product Image</label>
@@ -66,7 +65,7 @@ check('login');
 								<ul style="list-style: none;" class="pl-0">
 									<li class="mb-2">
 										<label class="form-label">Product Name</label>
-										<input type="text" name="name" class="form-control">
+										<input type="text" name="name" class="form-control" placeholder="-" required>
 									</li>
 									<div class="row">
 										<div class="col-4">
@@ -88,39 +87,39 @@ check('login');
 										</div>
 										<div class="col-4">
 											<label class="form-label">Subcategory</label>
-											<select id="list-subcategory" class="form-control form-select" name="subcategory">
+											<select id="list-subcategory" class="form-control form-select" name="subcategory" placeholder="-">
 											</select>
 										</div>
 										<div class="col-4">
 											<li class="mb-2">
 												<label class="form-label">Price</label>
-												<input type="text" name="price" class="form-control">
+												<input type="text" name="price" class="form-control" placeholder="-" required>
 											</li>
 										</div>
 									</div>
 									<li class="mb-2">
 										<label class="form-label">Description</label>
-										<textarea name="description" class="form-control"></textarea>
+										<textarea name="description" class="form-control" placeholder="-" required></textarea>
 									</li>
 									<li class="mb-2">
 										<label class="form-label">Manifacturer</label>
-										<input type="text" name="manifacturer" class="form-control">
+										<input type="text" name="manifacturer" class="form-control" placeholder="-" required>
 									</li>
 									<li class="mb-2">
-										<label class="form-label">Size</label>
-										<input type="text" name="size" class="form-control">
+										<label class="form-label">Size (optional)</label>
+										<input type="text" name="size" class="form-control" placeholder="-">
 									</li>
 									<li class="mb-2">
-										<label class="form-label">Color</label>
-										<input type="text" name="color" class="form-control">
+										<label class="form-label">Color (optional)</label>
+										<input type="text" name="color" class="form-control" placeholder="-">
 									</li>
 									<li class="mb-2">
-										<label class="form-label">Weight</label>
-										<input type="number" name="weight" class="form-control" placeholder="kg">
+										<label class="form-label">Weight (optional)</label>
+										<input type="number" name="weight" class="form-control" placeholder="0 kg">
 									</li>
 									<li class="mb-2">
 										<label class="form-label">Stock</label>
-										<input type="number" name="stock" class="form-control">
+										<input type="number" name="stock" class="form-control" placeholder="0" required>
 									</li>
 									<!-- <li class="mb-2">
 										<label class="form-label">Image</label>
@@ -146,6 +145,15 @@ check('login');
 					$color = $_POST['color'];
 					$weight = $_POST['weight'];
 					$stock = $_POST['stock'];
+
+					// Optional
+					if ($size == '') {
+						$size = '-';
+					} elseif ($color == '') {
+						$color = '-';
+					} elseif ($weight == '') {
+						$weight = '-';
+					}
 
 					$manifacturer = $_POST['manifacturer'];
 					$slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $manifacturer)));
@@ -174,7 +182,7 @@ check('login');
 						'weight' => $weight
 					]);
 
-					$id = $connect->insert_id;
+					$id = $connect -> insert_id;
 
 					if (!empty($_FILES['image']['name'])) {
 						$name = $_FILES['image']['name'];
@@ -182,13 +190,12 @@ check('login');
 						$image_name = time() . "." . $extension;
 
 						$tmp = $_FILES['image']['tmp_name'];
-						if (move_uploaded_file($tmp, "uploads/" . $image_name)) {
+						if (move_uploaded_file($tmp, "uploads/product/" . $image_name)) {
 							$query = "INSERT INTO product_image (image_name, product_id) VALUES ('" . $image_name . "', '" . $id . "')";
-							// var_dump($query);
 							$result = mysqli_query($connect, $query);
 
 							if (!$result) {
-								unlink("uploads/" . $image_name);
+								unlink("uploads/product/" . $image_name);
 							}
 						}
 					}
@@ -200,15 +207,11 @@ check('login');
 				?>
 			</div>
 		</main>
-
 		<div id="toTop"></div> <!-- Back to top button -->
-
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
-
 		<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-
 		<script>
 			function getcategory(categoryId) {
 				$.ajax({
@@ -216,7 +219,6 @@ check('login');
 					url: "page/product/data/add.php?category_id=" + categoryId,
 					dataType: "html",
 					success: function(response) {
-						// console.log(response);
 						$('#list-subcategory').html(response);
 					}
 				});
@@ -236,5 +238,4 @@ check('login');
 			});
 		</script>
 </body>
-
 </html>
