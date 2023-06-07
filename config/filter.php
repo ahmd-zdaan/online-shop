@@ -39,7 +39,8 @@
 
                 let category_id = $(this).attr("data-categoryId");
                 let subcategory_id = $(this).attr("data-subcategoryId");
-                console.log(category_id, subcategory_id);
+
+                // console.log(category_id, subcategory_id);
 
                 if ($(this).is(':checked')) {
                     category.push(category_id);
