@@ -11,7 +11,25 @@ include_once 'config/connect.php';
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="Ansonika">
-	<title>Online Shop</title>
+	<?php
+	if (isset($_GET['page'])) {
+		if ($_GET['page'] == 'product_view') {
+			$page_product_id = $_GET['product_id'];
+			$get_product = get('product', 'WHERE product_id='.$page_product_id);
+			$data_product = mysqli_fetch_assoc($get_product);
+			$page_product = $data_product['product_name'];
+			$page = 'Online Shop - '.$page_product;
+		} else {
+			$page = $_GET['page'];
+			$page = str_replace('_', ' ', $page);
+			$page = ucwords($page);
+			$page = 'Online Shop - '.$page;
+		}
+	} else {
+		$page = 'Online Shop - Home';
+	}
+	?>
+	<title><?=$page?></title>
 
 	<!-- Favicons-->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
@@ -119,26 +137,31 @@ include_once 'config/connect.php';
 										<div class="dropdown dropdown-cart">
 											<a href="index.php?page=cart_list" class="cart_bt">
 												<?php
-												$result = get('cart', 'WHERE user_id="' . $user_id . '"', 'count(product_id)');
-												$data = mysqli_fetch_assoc($result);
-												$count_product = (int)$data['count(product_id)'];
-												if ($count_product > 0) :
+												$result = get('cart', 'WHERE user_id=' . $user_id);
+												if (mysqli_fetch_assoc($result) > 0) :
+													$result = get('cart', 'WHERE user_id=' . $user_id, '*,SUM(quantity) AS total_quantity');
+													$data = mysqli_fetch_assoc($result);
+													$total_quantity = $data['total_quantity'];
+													if ($total_quantity > 0) :
 												?>
-													<strong><?= $count_product ?></strong>
+														<strong><?= $total_quantity ?></strong>
+													<?php endif ?>
 												<?php endif ?>
 											</a>
 											<?php
-											$result = get('cart', 'WHERE user_id=' . $user_id);
+											$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
 
 											if (mysqli_num_rows($result) > 0) :
 											?>
 												<div class="dropdown-menu">
 													<ul>
 														<?php
+														$subtotal_price = 0;
+
 														foreach ($result as $data) :
 															$cart_id = $data['cart_id'];
 															$product_id = $data['product_id'];
-															$quantity = $data['quantity'];
+															$total_quantity = $data['total_quantity'];
 
 															$result = get('product', 'WHERE product_id=' . $product_id);
 															$data = mysqli_fetch_assoc($result);
@@ -151,9 +174,8 @@ include_once 'config/connect.php';
 																$product_image = $data['image_name'];
 															}
 
-															$subtotal_product = $quantity * $price;
-															$shipping_price = 19000;
-															$total_price = $subtotal_product + $shipping_price;
+															$subtotal_product = $total_quantity * $price;
+															$subtotal_price += $subtotal_product
 														?>
 															<li>
 																<a href="product-detail-1.html">
@@ -169,23 +191,27 @@ include_once 'config/connect.php';
 																			<img src="uploads/product/default.jpg" class="lazy" alt="image" width="100%">
 																		<?php endif ?>
 																	</figure> <strong>
-																		<span><?= $quantity . 'x ' . $product_name ?></span>
+																		<span><?= $total_quantity . 'x ' . $product_name ?></span>
 																		<?= rupiah($price) ?>
 																	</strong>
 																</a>
-																<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="action">
+																<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')" class="action">
 																	<i class="ti-trash"></i>
 																</a>
 															</li>
 														<?php endforeach ?>
 													</ul>
+													<?php
+													$shipping_price = 17000;
+													$total_price = $subtotal_price + $shipping_price;
+													?>
 													<div class="row mt-4">
 														<div class="col-6">
 															<p class="m-0">Subtotal</p>
 															<p class="m-0">Shipping</p>
 														</div>
 														<div class="col-6">
-															<span style="float: right"><?= rupiah($subtotal_product) ?></span>
+															<span style="float: right"><?= rupiah($subtotal_price) ?></span>
 															<span style="float: right"><?= rupiah($shipping_price) ?></span>
 														</div>
 													</div>
@@ -326,9 +352,16 @@ include_once 'config/connect.php';
 						<h3 data-target="#collapse_3">Contacts</h3>
 						<div class="collapse dont-collapse-sm contacts" id="collapse_3">
 							<ul>
-								<li><i class="ti-home"></i>97845 Baker st. 567<br>Malang - Indonesia</li>
-								<li><i class="ti-headphone-alt"></i>+00 123-456-789</li>
-								<li><i class="ti-email"></i><a href="#">email@email.com</a></li>
+								<li>
+									<i class="ti-home"></i>12345 Jl. Jalan no. 0<br>Malang - Indonesia
+								</li>
+								<li>
+									<i class="ti-headphone-alt"></i>+00 123-456-789
+								</li>
+								<li>
+									<i class="ti-email"></i>
+									<a href="#">email@email.com</a>
+								</li>
 							</ul>
 						</div>
 					</div>

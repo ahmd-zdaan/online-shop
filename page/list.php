@@ -69,7 +69,7 @@
 												$category_count = $data['count(*)'];
 												?>
 												<small><?= $category_count ?></small>
-												<input class="category" type="checkbox" data-categoryId="<?= $category_id ?>" data-subcategoryId="0">
+												<input class="category category-checkbox" type="checkbox" data-categoryId="<?= $category_id ?>" data-subcategoryId="0">
 												<span class="checkmark"></span>
 												<?php
 												$result = get('subcategory', 'WHERE category_id=' . $category_id);

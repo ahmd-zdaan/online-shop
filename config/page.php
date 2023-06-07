@@ -81,6 +81,19 @@ switch ($page) {
             include 'page/categories/subcategory/delete.php';
             break;
 
+    case 'sale_list':
+        include 'page/sale/list.php';
+        break;
+    case 'sale_add':
+        include 'page/sale/add.php';
+        break;
+    case 'sale_edit':
+        include 'page/sale/edit.php';
+        break;
+    case 'sale_delete':
+        include 'page/sale/delete.php';
+        break;
+
     case 'cart_list':
         include 'page/cart/list.php';
         break;
@@ -101,8 +114,14 @@ switch ($page) {
             include 'page/checkout_confirm.php';
             break;
 
-        case 'review':
-            include 'page/review/review.php';
+        case 'review_add':
+            include 'page/review/add.php';
+            break;
+        case 'review_edit':
+            include 'page/review/edit.php';
+            break;
+        case 'review_delete':
+            include 'page/review/delete.php';
             break;
         case 'review_submit':
             include 'page/review/submit.php';
@@ -150,4 +169,3 @@ switch ($page) {
         include 'page/home.php';
         break;
 }
-?>

@@ -86,9 +86,9 @@ check('login');
 						foreach ($result as $data) :
 							$product_id = $data['product_id'];
 
-							$result_product = get('product', 'WHERE product_id='.$product_id);
+							$result_product = get('product', 'WHERE product_id=' . $product_id);
 							$data_product = mysqli_fetch_assoc($result_product);
-							
+
 							$product_id = $data_product['product_id'];
 							$product_name = $data_product['product_name'];
 							$category_id = $data_product['category_id'];
@@ -138,11 +138,20 @@ check('login');
 									<p><?= $subcategory_name ?></p>
 								</td>
 								<td>
-									<p><?= $description ?></p>
+									<p>
+										<?php
+										if (strlen($description) > 400) {
+											echo substr($description, 0, 400);
+											echo ' ...';
+										} else {
+											echo $description;
+										}
+										?>
+									</p>
 								</td>
 								<td>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>
-									<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this PRODUCT?')" class="btn_1 col p-3 my-1">REMOVE</a>
+									<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this PRODUCT from your wishlist?')" class="btn_1 col p-3 my-1">REMOVE</a>
 								</td>
 							</tr>
 						<?php endforeach ?>

@@ -1,6 +1,11 @@
 <?php
-$product_id = $_POST['product_id'];
-$quantity = $_POST['quantity'];
+if (isset($_GET['product_id']) && isset($_GET['quantity'])) {
+	$product_id = $_GET['product_id'];
+	$quantity = $_GET['quantity'];
+} else {
+	$product_id = $_POST['product_id'];
+	$quantity = $_POST['quantity'];
+}
 
 $user_email = $_SESSION['email'];
 $result = get('user', 'WHERE email="'.$user_email.'"');

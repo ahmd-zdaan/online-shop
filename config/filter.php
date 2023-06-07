@@ -1,5 +1,5 @@
 <script>
-    function load_product(category_data = 0, subcategory_data = 0,search = '') {
+    function load_product(category_data = 0, subcategory_data = 0, search = '') {
         $.ajax({
             type: "get",
             url: `page/product/data/list.php?category_id=${category_data}&subcategory_id=${subcategory_data}&search=${search}`,
@@ -16,12 +16,12 @@
     $(document).ready(function() {
         let category = [];
         let subcategory = [];
-        
+
         $('#form_search').on('submit', function(event) {
             let search_input = $('#search_input').val();
             // let search = $('form_search :input[name="search_input"]');
 
-            $('input:checkbox').prop('checked', false); 
+            $('input:checkbox').prop('checked', false);
 
             load_product(0, 0, search_input);
             event.preventDefault();
@@ -30,9 +30,16 @@
         $('input:checkbox').change(function(e) {
             $(this).each(function() {
                 let search_input = $('#search_input').val();
-                
+
+                let price_id = $(this).attr("price_id");
+
+                // if (price_id.length == 0) {
+                //     console.log('tes');
+                // }
+
                 let category_id = $(this).attr("data-categoryId");
                 let subcategory_id = $(this).attr("data-subcategoryId");
+                console.log(category_id, subcategory_id);
 
                 if ($(this).is(':checked')) {
                     category.push(category_id);

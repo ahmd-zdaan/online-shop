@@ -122,11 +122,14 @@ check('login');
 							$data = mysqli_fetch_assoc($result);
 							$user_id = $data['user_id'];
 
-							$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,COUNT(user_id) AS total_quantity');
+							// $result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,COUNT(user_id) AS total_quantity');
+							$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
+
 							if (mysqli_num_rows($result) > 0) :
 							?>
 								<div class="box_general summary">
 									<?php
+									$subtotal_price = 0;
 									foreach ($result as $data) :
 										$cart_id = $data['cart_id'];
 										$product_id = $data['product_id'];
@@ -137,21 +140,23 @@ check('login');
 										$product_name = $data['product_name'];
 										$price = $data['price'];
 
-										$subtotal_product = $quantity * $price;
-										$subtotal_price = $subtotal_product;
-										$shipping_price = 15000;
-										$total_price = $subtotal_price + $shipping_price;
+										$subtotal_product = $total_quantity * $price;
+										$subtotal_price += $subtotal_product;
 									?>
 										<div class="row">
 											<div class="col-6" style="font-weight: bold;">
 												<p><?= $quantity . 'x ' . $product_name ?></p>
 											</div>
 											<div class="col-6 text-right">
-												<p><?= rupiah($price) ?></p>
+												<p><?= rupiah($subtotal_product) ?></p>
 											</div>
 										</div>
 									<?php endforeach ?>
 									<hr class="m-0 mb-3">
+									<?php
+									$shipping_price = 17000;
+									$total_price = $subtotal_price + $shipping_price;
+									?>
 									<ul>
 										<div class="row mb-3" style="font-weight: bold;">
 											<div class="col-6">
@@ -159,7 +164,7 @@ check('login');
 												<p class="m-0">Shipping</p>
 											</div>
 											<div class="col-6 text-right">
-												<span><?= rupiah($subtotal_product) ?></span>
+												<span><?= rupiah($subtotal_price) ?></span>
 												<span><?= rupiah($shipping_price) ?></span>
 											</div>
 										</div>

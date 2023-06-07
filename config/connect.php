@@ -113,6 +113,7 @@ function insert($table, $data) {
     }, array_values($data));
     
     $query = "INSERT INTO $table (".implode(",", $keys).") VALUES (".implode(",", $values).")";
+    // var_dump($query); die;
     if (mysqli_query($connect, $query)) {
         return true;
     } else {

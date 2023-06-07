@@ -119,39 +119,35 @@ $subcategory_name = $data['subcategory_name'];
 
 							if ($count_rating > 0) {
 								$average_rating = round($total_rating / $count_rating);
-								
+
 								for ($i = $average_rating; $i > 0; $i--) {
 									echo '<i class="icon-star voted"></i>';
 								}
 							}
-							
+
 							if ($count_rating == 0) {
-								echo '<p class="mb-0">No review</p>';
+								echo '<p>No review</p>';
 							} else {
 								$n = 5 - $average_rating;
 								for ($i = $n; $i > 0; $i--) {
 									echo '<i class="icon-star"></i>';
 								}
-								echo '<p class="ml-2" style="float: right">( '.$average_rating.' / 5 )</p>';
+								echo '<p class="ml-2" style="float: right">( ' . $average_rating . ' / 5 )</p>';
+								echo '<em class="mx-2">' . $count_rating . ' reviews</em>';
 							}
-
-							// Reviews
-							// $result = count_col('review', 'WHERE product_id="'.$id.'"');
-							// $reviews = mysqli_fetch_assoc($result);
 							?>
-							<!-- <em><?= $reviews['count(*)'] ?> reviews</em> -->
 						</span>
 						<!-- DETAILS -->
 						<ul style="list-style: none;" class="p-0">
 							<p class="mb-1">
-								<strong>Description</strong>
+								<b>Description</b>
 							</p>
 							<li>
 								<p><?= $description ?></p>
 							</li>
 							<hr class="hr m-0 mb-3">
 							<p class="mb-2">
-								<strong>Details</strong>
+								<b>Details</b>
 							</p>
 							<li>
 								<div class="row">
@@ -161,13 +157,13 @@ $subcategory_name = $data['subcategory_name'];
 										<p class="mb-0">Category</p>
 										<p class="mb-0">Subcategory</p>
 									</div>
-									<div class="col-1">
+									<div class="col-1 pr-0">
 										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
 									</div>
-									<div class="col-9">
+									<div class="col-9 pl-0">
 										<?php
 										$manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id, 'manifacturer_name');
 										$data_manifacturer = mysqli_fetch_assoc($manifacturer);
@@ -183,7 +179,7 @@ $subcategory_name = $data['subcategory_name'];
 						</ul>
 						<hr class="hr m-0">
 						<!-- OPTIONS -->
-						<div class="prod_options">
+						<div class="prod_options pb-0">
 							<!-- COLOR -->
 							<!-- <div class="row">
 								<label class="col-xl-5 col-lg-5  col-md-6 col-6 pt-0"><strong>Color</strong></label>
@@ -229,15 +225,23 @@ $subcategory_name = $data['subcategory_name'];
 								<div class="row">
 									<div class="col-lg-5 col-md-6">
 										<div class="price_main">
-											<span class="new_price"><?= rupiah($price) ?></span>
-											<!-- SALE -->
-											<!-- <span class="new_price">$148.00</span>
-											<span class="percentage">-20%</span> <span class="old_price">$160.00</span> -->
+											<?php
+											$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+											if (mysqli_num_rows($get_sale) > 0) :
+												$data_sale = mysqli_fetch_assoc($get_sale);
+												$sale = $data_sale['sale'];
+												$price_sale = $price - $price * (int)$sale / 100;
+											?>
+												<span class="new_price"><?= rupiah($price_sale) ?></span>
+												<span style="color:#9d9d9d" class="old_price mt-2"><?= rupiah($price) ?></span>
+											<?php else : ?>
+												<span class="new_price"><?= rupiah($price) ?></span>
+											<?php endif ?>
 										</div>
 									</div>
 									<div class="col-lg-4 col-md-6">
 										<div class="btn_add_to_cart">
-											<button type="submit" name="submit" class="btn_1 px-5" style="font-size:15px">Add to Cart</button>
+											<button type="submit" name="submit" class="btn_1 px-5" style="font-size:12px">ADD TO CART</button>
 											<!-- <a href="index.php?page=cart_add" class="btn_1">Add to Cart</a> -->
 										</div>
 									</div>
@@ -245,13 +249,18 @@ $subcategory_name = $data['subcategory_name'];
 							</form>
 							<?php
 							if (isset($_POST['submit'])) {
+								if (isset($_SESSION['email'])) {
+									$user_email = $_SESSION['email'];
+									$result = get('user', 'WHERE email="' . $user_email . '"');
+									$data = mysqli_fetch_assoc($result);
+
+									$user_id = $data['user_id'];
+								} else {
+									echo '<script>window.location.href = "index.php?page=login"</script>';
+								}
+								
 								$quantity = $_POST['quantity'];
 
-								$user_email = $_SESSION['email'];
-								$result = get('user', 'WHERE email="' . $user_email . '"');
-								$data = mysqli_fetch_assoc($result);
-
-								$user_id = $data['user_id'];
 
 								$result_add_to_cart = insert('cart', [
 									'user_id' => $user_id,
@@ -266,15 +275,14 @@ $subcategory_name = $data['subcategory_name'];
 							?>
 						</div>
 					</div>
-						
 					<div class="product_actions">
 						<ul>
 							<li>
 								<?php
-								if (isset($user_email)) :
-									$wishlist = get('wishlist', 'WHERE user_id=' . $user_id);
+								if (isset($user_id)) :
+									$wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 									if (mysqli_num_rows($wishlist) > 0) :
-									?>
+								?>
 										<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>">
 											<i class="ti-heart"></i>
 											<span>Remove from Wishlist</span>
@@ -320,11 +328,15 @@ $subcategory_name = $data['subcategory_name'];
 							<div class="card-body">
 								<div class="row justify-content-between">
 									<div class="col-lg-6">
-										<h3>Description</h3>
+										<h3 class="mb-2">
+											<b>Description</b>
+										</h3>
 										<p><?= $description ?></p>
 									</div>
 									<div class="col-lg-5">
-										<h3>Specifications</h3>
+										<h3 class="mb-2">
+											<b>Specifications</b>
+										</h3>
 										<div class="table-responsive">
 											<table class="table table-sm table-striped">
 												<tbody>
@@ -371,7 +383,9 @@ $subcategory_name = $data['subcategory_name'];
 										<div class="review_content">
 											<?php
 											$review_get = get('review');
+
 											foreach ($review_get as $review_data) :
+												$review_id = $review_data['review_id'];
 												$review_user_id = $review_data['user_id'];
 												$review_user_get = get('user', 'WHERE user_id=' . $review_user_id);
 												$review_user_table = mysqli_fetch_assoc($review_user_get);
@@ -381,7 +395,7 @@ $subcategory_name = $data['subcategory_name'];
 												$review = $review_data['review'];
 												$date = $review_data['date'];
 											?>
-												<div class="row">
+												<div class="row mb-3">
 													<div class="col-1 pr-3">
 														<?php
 														$result = get('user_image', 'WHERE user_id=' . $review_user_id);
@@ -396,7 +410,7 @@ $subcategory_name = $data['subcategory_name'];
 															<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="35px">
 														<?php endif ?>
 													</div>
-													<div class="col-10">
+													<div class="col-11 mb-3">
 														<div class="clearfix add_bottom_10">
 															<span class="rating">
 																<?php
@@ -415,15 +429,25 @@ $subcategory_name = $data['subcategory_name'];
 															</span>
 															<em><?= $date ?></em>
 														</div>
-														<h3 style="font-weight:bold" class="mb-0"><?= $review_user_name ?></h3>
-														<p><?= $review ?></p>
+														<h3 style="font-weight: bold" class="mb-0"><?= $review_user_name ?></h3>
+														<p class="mb-1"><?= $review ?></p>
+														<div>
+															<?php
+															if ($review_user_id == $user_id) :
+															?>
+																<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float: right" class="ml-2">EDIT</a>
+																<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
+															<?php endif ?>
+														</div>
 													</div>
 												</div>
 											<?php endforeach ?>
 										</div>
 									</div>
 								</div>
-								<p class="text-right"><a href="index.php?page=review&product_id=<?= $product_id ?>" class="btn_1">Leave a review</a></p>
+								<p class="text-right">
+									<a href="index.php?page=review_add&product_id=<?= $product_id ?>" class="btn_1">Leave a review</a>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -433,122 +457,103 @@ $subcategory_name = $data['subcategory_name'];
 		<div class="container margin_60_35">
 			<div class="main_title">
 				<h2>Related</h2>
-				<!-- <span>Products</span> -->
-				<p>Cum doctus civibus efficiantur in imperdiet deterruisset.</p>
+				<span>Products</span>
+				<p>Discover related products.</p>
 			</div>
 			<div class="owl-carousel owl-theme products_carousel">
-				<div class="item">
-					<div class="grid_item">
-						<span class="ribbon new">New</span>
-						<figure>
-							<a href="product-detail-1.html">
-								<img class="owl-lazy" src="img/products/product_placeholder_square_medium.jpg" data-src="img/products/shoes/4.jpg" alt="">
-							</a>
-						</figure>
-						<div class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i></div>
-						<a href="product-detail-1.html">
-							<h3>ACG React Terra</h3>
-						</a>
-						<div class="price_box">
-							<span class="new_price">$110.00</span>
-						</div>
-						<ul>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="item">
-					<div class="grid_item">
-						<span class="ribbon new">New</span>
-						<figure>
-							<a href="product-detail-1.html">
-								<img class="owl-lazy" src="img/products/product_placeholder_square_medium.jpg" data-src="img/products/shoes/5.jpg" alt="">
-							</a>
-						</figure>
-						<div class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i></div>
-						<a href="product-detail-1.html">
-							<h3>Air Zoom Alpha</h3>
-						</a>
-						<div class="price_box">
-							<span class="new_price">$140.00</span>
-						</div>
-						<ul>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="item">
-					<div class="grid_item">
-						<span class="ribbon hot">Hot</span>
-						<figure>
-							<a href="product-detail-1.html">
-								<img class="owl-lazy" src="img/products/product_placeholder_square_medium.jpg" data-src="img/products/shoes/8.jpg" alt="">
-							</a>
-						</figure>
-						<div class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i></div>
-						<a href="product-detail-1.html">
-							<h3>Air Color 720</h3>
-						</a>
-						<div class="price_box">
-							<span class="new_price">$120.00</span>
-						</div>
-						<ul>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="item">
-					<div class="grid_item">
+				<?php
+				$get_product_related = get('product', 'WHERE category_id=' . $category_id);
+
+				foreach ($get_product_related as $data_related) :
+					$product_id_related = $data_related['product_id'];
+					$product_name_related = $data_related['product_name'];
+					$price_related = $data_related['price'];
+
+					$get_product_image_related = get('product_image', 'WHERE product_id=' . $product_id_related);
+					$data_product_image_related = mysqli_fetch_assoc($get_product_image_related);
+
+					$image_name_related = $data_product_image_related['image_name'];
+				?>
+					<div class="item">
+						<div class="grid_item">
+							<!-- <span class="ribbon hot">Hot</span>
 						<span class="ribbon off">-30%</span>
-						<figure>
-							<a href="product-detail-1.html">
-								<img class="owl-lazy" src="img/products/product_placeholder_square_medium.jpg" data-src="img/products/shoes/2.jpg" alt="">
+						<span class="ribbon new">New</span> -->
+							<?php
+							$get_sale = get('sale', 'WHERE product_id=' . $product_id_related);
+							if (mysqli_num_rows($get_sale) > 0) :
+								$data_sale = mysqli_fetch_assoc($get_sale);
+								$sale = $data_sale['sale'];
+								$price_sale = $price_related - $price_related * (int)$sale / 100;
+							?>
+								<span class="ribbon off">- <?= $sale ?></span>
+							<?php endif ?>
+							<figure>
+								<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
+									<img src="uploads/product/<?= $image_name_related ?>" width="100%" alt="product_image_related">
+								</a>
+							</figure>
+							<div class="rating">
+								<?php
+								// Rating
+								$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'sum(rating)');
+								$data_review_related = mysqli_fetch_assoc($get_review_related);
+								$total_rating = (int)$data_review_related['sum(rating)'];
+
+								$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'count(rating)');
+								$data_review_related = mysqli_fetch_assoc($get_review_related);
+								$count_rating = (int)$data_review_related['count(rating)'];
+
+								if ($count_rating > 0) {
+									$average_rating = round($total_rating / $count_rating);
+
+									for ($i = $average_rating; $i > 0; $i--) {
+										echo '<i class="icon-star voted"></i>';
+									}
+								}
+
+								if ($count_rating == 0) {
+									echo '<p class="mb-0">No review</p>';
+								} else {
+									$n = 5 - $average_rating;
+									for ($i = $n; $i > 0; $i--) {
+										echo '<i class="icon-star"></i>';
+									}
+								}
+								?>
+							</div>
+							<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
+								<h3><?= $product_name_related ?></h3>
 							</a>
-						</figure>
-						<div class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i></div>
-						<a href="product-detail-1.html">
-							<h3>Okwahn II</h3>
-						</a>
-						<div class="price_box">
-							<span class="new_price">$90.00</span>
-							<span class="old_price">$170.00</span>
+							<div class="price_box">
+								<?php
+								$get_sale = get('sale', 'WHERE product_id=' . $product_id_related);
+								if (mysqli_num_rows($get_sale) > 0) :
+								?>
+									<span class="new_price"><?= rupiah($price_sale) ?></span>
+									<span class="old_price" style="font-size:small"><?= rupiah($price) ?></span>
+								<?php else : ?>
+									<span class="new_price"><?= rupiah($price_sale) ?></span>
+								<?php endif ?>
+							</div>
+							<ul>
+								<li>
+									<a href="index.php?page=wishlist_add&product_id=<?= $product_id_related ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+										<i class="ti-heart"></i>
+										<span>Add to favorites</span>
+									</a>
+								</li>
+								<li>
+									<a href="index.php?page=cart_add&product_id=<?= $product_id_related ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+										<i class="ti-shopping-cart"></i>
+										<span>Add to cart</span>
+									</a>
+								</li>
+								<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
+							</ul>
 						</div>
-						<ul>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
-						</ul>
 					</div>
-				</div>
-				<div class="item">
-					<div class="grid_item">
-						<span class="ribbon off">-50%</span>
-						<figure>
-							<a href="product-detail-1.html">
-								<img class="owl-lazy" src="img/products/product_placeholder_square_medium.jpg" data-src="img/products/shoes/3.jpg" alt="">
-							</a>
-						</figure>
-						<div class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i></div>
-						<a href="product-detail-1.html">
-							<h3>Air Wildwood ACG</h3>
-						</a>
-						<div class="price_box">
-							<span class="new_price">$75.00</span>
-							<span class="old_price">$155.00</span>
-						</div>
-						<ul>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
-							<li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
-						</ul>
-					</div>
-				</div>
+				<?php endforeach ?>
 			</div>
 		</div>
 		<div class="feat">
@@ -585,7 +590,6 @@ $subcategory_name = $data['subcategory_name'];
 			</div>
 		</div>
 	</main>
-
 	<!-- SIZE -->
 	<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="size-modal" id="size-modal" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
@@ -669,14 +673,11 @@ $subcategory_name = $data['subcategory_name'];
 							</tbody>
 						</table>
 					</div>
-					<!-- /table -->
 				</div>
 			</div>
 		</div>
 	</div>
-
 	<div id="toTop"></div><!-- Back to top button -->
-
 	<!-- COMMON SCRIPTS -->
 	<script src="js/common_scripts.min.js"></script>
 	<script src="js/main.js"></script>

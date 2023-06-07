@@ -32,7 +32,6 @@ check('login')
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -57,8 +56,9 @@ check('login')
 				$data = mysqli_fetch_assoc($result);
 				$user_id = $data['user_id'];
 
-				$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,COUNT(user_id) AS total_quantity');
+				$result = get('cart', 'WHERE user_id=' . $user_id);
 				if (mysqli_num_rows($result) > 0) :
+					$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
 				?>
 					<div>
 						<table class="table table-striped cart-list">
@@ -80,17 +80,20 @@ check('login')
 							</thead>
 							<tbody>
 								<?php
+								$subtotal_price = 0;
+
 								foreach ($result as $data) :
 									$cart_id = $data['cart_id'];
 									$product_id = $data['product_id'];
-									$quantity = $data['total_quantity'];
+									$total_quantity = $data['total_quantity'];
 
 									$result = get('product', 'WHERE product_id=' . $product_id);
 									$data = mysqli_fetch_assoc($result);
 									$product_name = $data['product_name'];
 									$price = $data['price'];
 
-									$subtotal_product = $quantity * $price;
+									$subtotal_product = $total_quantity * $price;
+									$subtotal_price += $subtotal_product;
 								?>
 									<tr>
 										<td>
@@ -118,7 +121,7 @@ check('login')
 											<strong><?= rupiah($price) ?></strong>
 										</td>
 										<td>
-											<strong><?= $quantity ?></strong>
+											<strong><?= $total_quantity ?></strong>
 											<!-- <div class="numbers-row">
 												<input type="text" value="<?= $quantity ?>" id="quantity_1" class="qty2" name="quantity_1">
 												<div class="inc button_inc">+</div>
@@ -129,7 +132,7 @@ check('login')
 											<strong><?= rupiah($subtotal_product) ?></strong>
 										</td>
 										<td class="options">
-											<a href="index.php?page=cart_delete&cart_id=<?= $cart_id ?>" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" class="ti-trash"></a>
+											<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')" class="ti-trash"></a>
 										</td>
 									</tr>
 								<?php
@@ -152,8 +155,7 @@ check('login')
 						</div>
 					</div>
 					<?php
-					$subtotal_price = $subtotal_product;
-					$shipping_price = 15000;
+					$shipping_price = 17000;
 					$total_price = $subtotal_price + $shipping_price;
 					?>
 					<div class="box_cart">

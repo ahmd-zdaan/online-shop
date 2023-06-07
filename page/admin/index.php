@@ -62,6 +62,9 @@ check('login')
 							<li>
 								<a href="index.php?page=manifacturer_list">Manifacturer List</a>
 							</li>
+							<li>
+								<a href="index.php?page=sale_list">Sales List</a>
+							</li>
 						</ul>
 					</div>
 				</div>
