@@ -15,21 +15,24 @@ include_once 'config/connect.php';
 	if (isset($_GET['page'])) {
 		if ($_GET['page'] == 'product_view') {
 			$page_product_id = $_GET['product_id'];
-			$get_product = get('product', 'WHERE product_id='.$page_product_id);
+			$get_product = get('product', 'WHERE product_id=' . $page_product_id);
 			$data_product = mysqli_fetch_assoc($get_product);
 			$page_product = $data_product['product_name'];
-			$page = 'Online Shop - '.$page_product;
+			$page = 'Online Shop - ' . $page_product;
 		} else {
 			$page = $_GET['page'];
 			$page = str_replace('_', ' ', $page);
 			$page = ucwords($page);
-			$page = 'Online Shop - '.$page;
+			$page = 'Online Shop - ' . $page;
 		}
 	} else {
 		$page = 'Online Shop - Home';
 	}
 	?>
-	<title><?=$page?></title>
+	<title><?= $page ?></title>
+
+	<!-- Bootstrap -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
 	<!-- Favicons-->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
@@ -247,14 +250,35 @@ include_once 'config/connect.php';
 											if (isset($_SESSION['email'])) :
 												$result = get("user", "WHERE email='" . $_SESSION['email'] . "'");
 												$result = mysqli_fetch_assoc($result);
-												$role = $result['role'];
+
+												$user_name = $result['user_name'];
+												$user_role = $result['role'];
 											?>
 												<ul class="mt-0">
-													<li>
-														<a href="index.php?page=view_profile"><i class="ti-user"></i>Profile</a>
-													</li>
+													<div class="row">
+														<div class="col-5">
+															<a class="pl-3 pb-3" href="index.php?page=view_profile">
+																<?php
+																$result = get('user_image', 'WHERE user_id=' . $user_id);
+	
+																if (mysqli_num_rows($result) > 0) :
+																	$data = mysqli_fetch_assoc($result);
+																	$user_image = $data['user_image'];
+																?>
+																	<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+																<?php
+																else :
+																?>
+																	<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+																<?php endif ?>
+															</a>
+														</div>
+														<div class="col pl-0">
+															<h5><?= $user_name ?></h5>
+														</div>
+													</div>
 													<?php
-													if ($role == 'admin') :
+													if ($user_role == 'admin') :
 													?>
 														<li>
 															<a href="index.php?page=admin">
@@ -269,6 +293,14 @@ include_once 'config/connect.php';
 														<a href="index.php?page=order">
 															<i class="ti-package"></i>
 															Orders
+														</a>
+													</li>
+													<li>
+														<a href="index.php?page=history_list">
+															<i>
+																<img src="img/history.png" alt="" width="20px" class="pb-2" draggable="false">
+															</i>
+															History
 														</a>
 													</li>
 													<li>
@@ -288,7 +320,7 @@ include_once 'config/connect.php';
 												</ul>
 											<?php else : ?>
 												<a href="index.php?page=login" class="btn_1">
-													<b>Sign In</b> or <b>Register</b>
+													<b>Login</b> or <b>Register</b>
 												</a>
 											<?php endif ?>
 										</div>
