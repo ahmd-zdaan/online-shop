@@ -21,6 +21,10 @@ SET time_zone = "+00:00";
 -- Database: `online_shop`
 --
 
+DROP DATABASE IF EXISTS online_shop;
+CREATE DATABASE IF NOT EXISTS online_shop;
+USE online_shop;
+
 -- --------------------------------------------------------
 
 --
