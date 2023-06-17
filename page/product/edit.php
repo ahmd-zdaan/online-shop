@@ -64,8 +64,7 @@ check('login');
 				$stock = $data['stock'];
 				$description = $data['description'];
 				$manifacturer_id = $data['manifacturer_id'];
-				$size = $data['size'];
-				$color = $data['color'];
+				$variant = $data['variant'];
 				$weight = $data['weight'];
 				?>
 
@@ -103,7 +102,7 @@ check('login');
 									<div class="row">
 										<div class="col-4">
 											<label class="form-label">Category</label>
-											<select class="form-control form-select" name="category">
+											<select id="list-category" class="form-control form-select" name="category">
 												<?php
 												$result = get('category');
 												foreach ($result as $data) :
@@ -118,18 +117,7 @@ check('login');
 										</div>
 										<div class="col-4">
 											<label class="form-label">Subcategory</label>
-											<select class="form-control form-select" name="subcategory">
-												<?php
-												$result = get('subcategory');
-												foreach ($result as $data) :
-													$subcategory_id = $data['subcategory_id'];
-													$subcategory_name = $data['subcategory_name'];
-												?>
-													<option value="<?= $subcategory_id ?>" <?= ($product_subcategory_id == $subcategory_id) ? 'selected' : '' ?>><?= $subcategory_name ?></option>
-												<?php
-												endforeach
-												?>
-											</select>
+											<select id="list-subcategory" class="form-control form-select" name="subcategory"></select>
 										</div>
 										<div class="col-4">
 											<li class="mb-2">
@@ -152,16 +140,16 @@ check('login');
 										<input type="text" name="manifacturer" class="form-control" value="<?= $manifacturer_name ?>">
 									</li>
 									<li class="mb-2">
-										<label class="form-label">Size</label>
-										<input type="text" name="size" class="form-control" value="<?= $size ?>">
-									</li>
-									<li class="mb-2">
-										<label class="form-label">Color</label>
-										<input type="text" name="color" class="form-control" value="<?= $color ?>">
+										<label class="form-label">Variants</label>
+										<input type="text" name="variant" class="form-control" value="<?= $variant ?>">
 									</li>
 									<li class="mb-2">
 										<label class="form-label">Weight</label>
 										<input type="number" name="weight" class="form-control" value="<?= $weight ?>">
+									</li>
+									<li class="mb-2">
+										<label class="form-label">Stock</label>
+										<input type="number" name="stock" class="form-control" value="<?= $stock ?>">
 									</li>
 									<li class="mt-3">
 										<a type="submit" href="index.php?page=product_list" class="btn_1">BACK</a>
@@ -180,9 +168,9 @@ check('login');
 					$subcategory = $_POST['subcategory'];
 					$price = $_POST['price'];
 					$description = $_POST['description'];
-					$size = $_POST['size'];
-					$color = $_POST['color'];
+					$variant = $_POST['variant'];
 					$weight = $_POST['weight'];
+					$stock = $_POST['stock'];
 
 					$manifacturer = $_POST['manifacturer'];
 					$result = get('manifacturer', 'WHERE manifacturer_name="' . $manifacturer . '"');
@@ -224,9 +212,9 @@ check('login');
 					price='" . $price . "', 
 					description=\"" . $description . "\", 
 					manifacturer_id='" . $manifacturer_id . "', 
-					size='" . $size . "', 
-					color='" . $color . "', 
-					weight='" . $weight . "'
+					variant='" . $variant . "', 
+					weight='" . $weight . "', 
+					stock='" . $stock . "'
 
 					WHERE product_id=" . $product_id;
 
@@ -243,5 +231,31 @@ check('login');
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
+		<script>
+			function getcategory(categoryId) {
+				$.ajax({
+					type: "get",
+					url: "page/product/data/edit.php?category_id=" + categoryId,
+					dataType: "html",
+					success: function(response) {
+						$('#list-subcategory').html(response);
+					}
+				});
+			}
+
+			$(document).ready(function() {
+				let idcategory = $('#list-category').val();
+
+				getcategory(idcategory);
+
+				$('#list-category').change(function(e) {
+					e.preventDefault();
+					let idcategory = $('#list-category').val();
+
+					getcategory(idcategory);
+				});
+			});
+		</script>
 </body>
+
 </html>

@@ -87,27 +87,40 @@ check('login');
 						?>
 							<tr style="font-size: medium;">
 								<td>
-									<div class="thumb_cart">
-										<?php
-										$result = get('product_image', 'WHERE product_id=' . $product_id);
-										if (mysqli_num_rows($result) > 0) :
-											$data = mysqli_fetch_assoc($result);
-											$image_name = $data['image_name'];
-										?>
-											<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
-										<?php
-										else :
-										?>
-											<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
-										<?php endif ?>
-									</div>
-									<span class="item_cart">
-										<h5 class="mt-2"><?= $product_name ?></h5>
-									</span>
+									<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+										<div class="thumb_cart">
+											<?php
+											$result = get('product_image', 'WHERE product_id=' . $product_id);
+											if (mysqli_num_rows($result) > 0) :
+												$data = mysqli_fetch_assoc($result);
+												$image_name = $data['image_name'];
+											?>
+												<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+											<?php
+											else :
+											?>
+												<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+											<?php endif ?>
+										</div>
+										<span class="item_cart">
+											<h5 class="mt-2"><?= $product_name ?></h5>
+										</span>
+									</a>
 								</td>
 								<td>
 									<strong>
-										<p><?= rupiah($price) ?></p>
+										<?php
+										$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+										if (mysqli_num_rows($get_sale) > 0) :
+											$data_sale = mysqli_fetch_assoc($get_sale);
+											$sale = $data_sale['sale'];
+											$price_sale = $price - $price * (int)$sale / 100;
+										?>
+											<span class="new_price"><?= rupiah($price_sale) ?></span>
+											<span style="color:#9d9d9d" class="old_price mt-2"><?= rupiah($price) ?></span>
+										<?php else : ?>
+											<span class="new_price"><?= rupiah($price) ?></span>
+										<?php endif ?>
 									</strong>
 								</td>
 								<td>
@@ -127,14 +140,16 @@ check('login');
 									<p><?= $subcategory_name ?></p>
 								</td>
 								<td>
-									<p><?php
-									if (strlen($description) > 200) {
-										echo substr($description, 0, 200);
-										echo ' ...';
-									} else {
-										echo $description;
-									}
-									?></p>
+									<p>
+										<?php
+										if (strlen($description) > 200) {
+											echo substr($description, 0, 200);
+											echo ' ...';
+										} else {
+											echo $description;
+										}
+										?>
+									</p>
 								</td>
 								<td>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>

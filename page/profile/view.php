@@ -1,21 +1,38 @@
 <?php
-check('login');
+if (isset($_SESSION['email'])) {
+	$email = $_SESSION['email'];
 
-$email = $_SESSION['email'];
+	$get_user = get('user', 'WHERE email="' . $email . '"');
+	$table_user = mysqli_fetch_assoc($get_user);
 
-// $result = get('user', 'JOIN country ON user.country_id=country.id_country WHERE email="' . $_SESSION['email'] . '"');
-$get_user = get('user', 'WHERE email="' . $email . '"');
-$table_user = mysqli_fetch_assoc($get_user);
+	$name = $table_user['user_name'];
+	$email = $table_user['email'];
+	$address = $table_user['address'];
+	$country_id = $table_user['country_id'];
+	$telephone = $table_user['telephone'];
 
-$name = $table_user['user_name'];
-$email = $table_user['email'];
-$address = $table_user['address'];
-$country_id = $table_user['country_id'];
-$telephone = $table_user['telephone'];
+	$get_country = get('country', 'WHERE country_id=' . $country_id);
+	$table_country = mysqli_fetch_assoc($get_country);
+	$country_name = $table_country['country_name'];
+} elseif (isset($_GET['user_id'])) {
+	$user_id = $_GET['user_id'];
 
-$get_country = get('country', 'WHERE country_id=' . $country_id);
-$table_country = mysqli_fetch_assoc($get_country);
-$country_name = $table_country['country_name'];
+	$get_user = get('user', 'WHERE user_id="' . $user_id . '"');
+	$table_user = mysqli_fetch_assoc($get_user);
+
+	$name = $table_user['user_name'];
+	$email = $table_user['email'];
+	$address = $table_user['address'];
+	$country_id = $table_user['country_id'];
+	$telephone = $table_user['telephone'];
+
+	$get_country = get('country', 'WHERE country_id=' . $country_id);
+	$table_country = mysqli_fetch_assoc($get_country);
+	$country_name = $table_country['country_name'];
+} else {
+	check('login');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +71,7 @@ $country_name = $table_country['country_name'];
 <body>
 	<div id="page">
 		<main class="bg_gray">
-			<div class="container margin_30">
+			<div class="container margin_30 pb-0">
 				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
@@ -63,7 +80,15 @@ $country_name = $table_country['country_name'];
 							<li>View</li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Profile</h1>
+					<?php
+					if (isset($_SESSION['email'])) :
+					?>
+						<h1 class="pt-3">Your Profile</h1>
+					<?php
+					else :
+					?>
+						<h1 class="pt-3">View Profile</h1>
+					<?php endif ?>
 				</div>
 			</div>
 			<div class="container pb-5 mb-5">
@@ -86,23 +111,27 @@ $country_name = $table_country['country_name'];
 					<div class="col-9">
 						<ul style="list-style: none;" class="pl-4">
 							<li>
-								<h1><?= $name ?></h1>
+								<h1 class="mb-4"><?= $name ?></h1>
 							</li>
 							<li>
-								<p class="mb-0"><?= $address ?>, <?= $country_name ?></p>
+								<h5>Address</h5>
+								<p><?= $address ?>, <?= $country_name ?></p>
 							</li>
 							<li>
+								<h5>Telephone</h5>
 								<p><?= $telephone ?></p>
 							</li>
-							<li>
-								<a href="index.php?page=edit_profile" class="btn_1">Edit</a>
-							</li>
+							<?php
+							if (isset($_SESSION['email'])) :
+							?>
+								<li>
+									<a href="index.php?page=edit_profile" class="mt-3 btn_1">Edit</a>
+								</li>
+							<?php endif ?>
 						</ul>
 					</div>
 				</div>
 			</div>
-
-
 		</main>
 
 		<div id="toTop"></div><!-- Back to top button -->
@@ -110,8 +139,6 @@ $country_name = $table_country['country_name'];
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
-
-
 </body>
 
 </html>

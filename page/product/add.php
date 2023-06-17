@@ -65,7 +65,7 @@ check('login');
 								<ul style="list-style: none;" class="pl-0">
 									<li class="mb-2">
 										<label class="form-label">Product Name</label>
-										<input type="text" name="name" class="form-control" placeholder="-" required>
+										<input type="text" name="name" class="form-control" required>
 									</li>
 									<div class="row">
 										<div class="col-4">
@@ -73,7 +73,6 @@ check('login');
 											<select id="list-category" class="form-control form-select" name="category">
 												<option selected disabled hidden>-</option>
 												<?php
-												$product_category_id = $data['category_id'];
 												$result = get('category');
 												foreach ($result as $data) :
 													$category_id = $data['category_id'];
@@ -87,31 +86,26 @@ check('login');
 										</div>
 										<div class="col-4">
 											<label class="form-label">Subcategory</label>
-											<select id="list-subcategory" class="form-control form-select" name="subcategory" placeholder="-">
-											</select>
+											<select id="list-subcategory" class="form-control form-select" name="subcategory"></select>
 										</div>
 										<div class="col-4">
 											<li class="mb-2">
 												<label class="form-label">Price</label>
-												<input type="text" name="price" class="form-control" placeholder="-" required>
+												<input type="text" name="price" class="form-control" required>
 											</li>
 										</div>
 									</div>
 									<li class="mb-2">
 										<label class="form-label">Description</label>
-										<textarea name="description" class="form-control" placeholder="-" required></textarea>
+										<textarea name="description" class="form-control" required></textarea>
 									</li>
 									<li class="mb-2">
 										<label class="form-label">Manifacturer</label>
-										<input type="text" name="manifacturer" class="form-control" placeholder="-" required>
+										<input type="text" name="manifacturer" class="form-control" required>
 									</li>
 									<li class="mb-2">
-										<label class="form-label">Size (optional)</label>
-										<input type="text" name="size" class="form-control" placeholder="-">
-									</li>
-									<li class="mb-2">
-										<label class="form-label">Color (optional)</label>
-										<input type="text" name="color" class="form-control" placeholder="-">
+										<label class="form-label">Variants (optional)</label>
+										<input type="text" name="variant" class="form-control">
 									</li>
 									<li class="mb-2">
 										<label class="form-label">Weight (optional)</label>
@@ -140,19 +134,16 @@ check('login');
 					$category = $_POST['category'];
 					$subcategory = $_POST['subcategory'];
 					$price = $_POST['price'];
-					$description = $_POST['description'];
-					$size = $_POST['size'];
-					$color = $_POST['color'];
-					$weight = $_POST['weight'];
 					$stock = $_POST['stock'];
+					$description = $_POST['description'];
+					$variant = $_POST['variant'];
+					$weight = $_POST['weight'];
 
 					// Optional
-					if ($size == '') {
-						$size = '-';
-					} elseif ($color == '') {
-						$color = '-';
+					if ($variant == '') {
+						$variant = 1;
 					} elseif ($weight == '') {
-						$weight = '-';
+						$weight = 0;
 					}
 
 					$manifacturer = $_POST['manifacturer'];
@@ -177,8 +168,7 @@ check('login');
 						'stock' => $stock,
 						'description' => $description,
 						'manifacturer_id' => $id,
-						'size' => $size,
-						'color' => $color,
+						'variant' => $variant,
 						'weight' => $weight
 					]);
 

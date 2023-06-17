@@ -61,7 +61,7 @@
 										$category_id = $data['category_id'];
 										$category_name = $data['category_name'];
 									?>
-										<li>
+										<li class="category-group">
 											<label class="container_check"><?= $category_name ?>
 												<?php
 												$result = get('product', 'WHERE category_id="' . $category_id . '"', 'count(*)');
@@ -77,7 +77,7 @@
 													$subcategory_id = $data['subcategory_id'];
 													$subcategory_name = $data['subcategory_name'];
 												?>
-													<ul class="m-0 p-0 pt-1">
+													<ul class="m-0 p-0 pt-1 subcategory-group">
 														<li>
 															<label class="container_check m-0"><?= $subcategory_name ?>
 																<?php
@@ -86,7 +86,7 @@
 																$subcategory_count = $data['count(*)'];
 																?>
 																<small><?= $subcategory_count ?></small>
-																<input class="subcategory" type="checkbox" data-categoryId="<?= $category_id ?>" data-subcategoryId="<?= $subcategory_id ?>">
+																<input class="subcategory subcategory-checkbox" type="checkbox" data-categoryId="<?= $category_id ?>" data-subcategoryId="<?= $subcategory_id ?>">
 																<span class="checkmark"></span>
 														</li>
 													</ul>
@@ -110,7 +110,7 @@
 											$price_count = $data_price['COUNT(product_id)'];
 											?>
 											<small><?= $price_count ?></small>
-											<input class="category" type="checkbox" price_id="1">
+											<input class="category price-check" type="checkbox" data-min-price="0" data-max-price="50000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
@@ -122,7 +122,7 @@
 											$price_count = $data_price['COUNT(product_id)'];
 											?>
 											<small><?= $price_count ?></small>
-											<input class="category" type="checkbox" price_id="2">
+											<input class="category price-check" type="checkbox" data-min-price="50000" data-max-price="250000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
@@ -133,7 +133,7 @@
 											$price_count = $data_price['COUNT(product_id)'];
 											?>
 											<small><?= $price_count ?></small>
-											<input class="category" type="checkbox" price_id="3">
+											<input class="category price-check" type="checkbox" data-min-price="250000" data-max-price="500000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
@@ -145,7 +145,7 @@
 											$price_count = $data_price['COUNT(product_id)'];
 											?>
 											<small><?= $price_count ?></small>
-											<input class="category" type="checkbox" price_id="4">
+											<input class="category price-check" type="checkbox" data-min-price="500000" data-max-price="1000000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
@@ -157,7 +157,7 @@
 											$price_count = $data_price['COUNT(product_id)'];
 											?>
 											<small><?= $price_count ?></small>
-											<input class="category" type="checkbox" price_id="5">
+											<input class="category price-check" type="checkbox" data-min-price="1000000" data-max-price="3000000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
@@ -169,7 +169,7 @@
 											$price_count = $data_price['COUNT(product_id)'];
 											?>
 											<small><?= $price_count ?></small>
-											<input class="category" type="checkbox" price_id="6">
+											<input class="category price-check" type="checkbox" data-min-price="3000000" data-max-price="">
 											<span class="checkmark"></span>
 										</label>
 									</li>

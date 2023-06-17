@@ -82,12 +82,10 @@ check('register');
 								<button type="submit" name="submit" class="btn_1 full-width">Register</button>
 							</div>
 						</div>
-
 						<div class="text-center mt-3">
 							<span>Already have an account?</span>
 							<a href="index.php?page=login">Sign in</a>
 						</div>
-
 						<?php
 						if (isset($_POST['submit'])) {
 							$user_name = $_POST['name'];
@@ -101,11 +99,8 @@ check('register');
 							register($user_name, $email, $password, $confirm_password, $address, $country_id, $telephone);
 						}
 						?>
-
-						<!-- /form_container -->
 				</div>
 				</form>
-				<!-- /box_account -->
 			</div>
 		</div>
 	</div>

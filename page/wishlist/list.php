@@ -118,7 +118,18 @@ check('login');
 								</td>
 								<td>
 									<strong>
-										<p><?= rupiah($price) ?></p>
+										<?php
+										$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+										if (mysqli_num_rows($get_sale) > 0) :
+											$data_sale = mysqli_fetch_assoc($get_sale);
+											$sale = $data_sale['sale'];
+											$price_sale = $price - $price * (int)$sale / 100;
+										?>
+											<span class="new_price"><?= rupiah($price_sale) ?></span>
+											<span style="color:#9d9d9d" class="old_price mt-2"><?= rupiah($price) ?></span>
+										<?php else : ?>
+											<span class="new_price"><?= rupiah($price) ?></span>
+										<?php endif ?>
 									</strong>
 								</td>
 								<td>
@@ -151,7 +162,7 @@ check('login');
 								</td>
 								<td>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>
-									<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this PRODUCT from your wishlist?')" class="btn_1 col p-3 my-1">REMOVE</a>
+									<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="btn_1 col p-3 my-1">REMOVE</a>
 								</td>
 							</tr>
 						<?php endforeach ?>

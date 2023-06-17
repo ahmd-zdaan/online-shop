@@ -42,14 +42,13 @@ function login($email, $password) {
 }
 
 function register($user_name, $email, $password, $confirmPassword, $address, $country_id, $telephone) {
-    // global $connect;
-    
     $result = get("user","WHERE email='".$email."'");
     
     if (mysqli_num_rows($result) == 0) {
         if ($password == $confirmPassword) {
             $password_encrypt = password_hash($password, PASSWORD_DEFAULT);
             $result = insert('user', [
+                'role' => 'user',
                 'user_name' => $user_name,
                 'email' => $email,
                 'password' => $password_encrypt,
@@ -119,4 +118,53 @@ function insert($table, $data) {
     } else {
         return false;
     }
+}
+
+function dateConvert($input) {
+    $explode = explode('-', $input);
+    $output = '';
+
+    $day = $explode[0];
+    $month = $explode[1];
+    $year = $explode[2];
+
+    if ($day == '01') {
+        $day = '1st';
+    } elseif ($day == '02') {
+        $day = '2nd';
+    } elseif ($day == '03') {
+        $day = '3rd';
+    } else {
+        $day .= 'th';
+    }
+
+    if ($month == '01') {
+        $month = 'January';
+    } elseif ($month == '02') {
+        $month = 'February';
+    } elseif ($month == '03') {
+        $month = 'March';
+    } elseif ($month == '04') {
+        $month = 'April';
+    } elseif ($month == '05') {
+        $month = 'May';
+    } elseif ($month == '06') {
+        $month = 'June';
+    } elseif ($month == '07') {
+        $month = 'July';
+    } elseif ($month == '08') {
+        $month = 'August';
+    } elseif ($month == '09') {
+        $month = 'September';
+    } elseif ($month == '10') {
+        $month = 'October';
+    } elseif ($month == '11') {
+        $month = 'November';
+    } elseif ($month == '12') {
+        $month = 'December';
+    }
+
+    $output = $day.' '.$month.', '.$year;
+    
+    return $output;
 }

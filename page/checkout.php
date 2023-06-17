@@ -130,6 +130,7 @@ check('login');
 								<div class="box_general summary">
 									<?php
 									$subtotal_price = 0;
+									
 									foreach ($result as $data) :
 										$cart_id = $data['cart_id'];
 										$product_id = $data['product_id'];
@@ -151,7 +152,9 @@ check('login');
 												<p><?= rupiah($subtotal_product) ?></p>
 											</div>
 										</div>
-									<?php endforeach ?>
+									<?php
+									endforeach
+									?>
 									<hr class="m-0 mb-3">
 									<?php
 									$shipping_price = 17000;

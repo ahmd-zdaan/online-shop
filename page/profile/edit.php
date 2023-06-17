@@ -85,14 +85,14 @@ $user_country_name = $table_country['country_name'];
 								<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="100%">
 							<?php endif ?>
 							<div class="mt-3">
-								<label class="form-label">Product Image</label>
+								<label class="form-label">Profile Image</label>
 								<input class="form-control" type="file" name="image">
 							</div>
 						</div>
 						<div class="col-9">
 							<ul style="list-style: none;" class="pl-0">
 								<li class="mb-2">
-									<label class="form-label">Product Name</label>
+									<label class="form-label">Profile Name</label>
 									<input type="text" name="user_name" class="form-control" value="<?= $user_name ?>">
 								</li>
 								<li class="mb-2">

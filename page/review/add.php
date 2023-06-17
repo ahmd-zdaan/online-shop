@@ -70,7 +70,7 @@ $image_name = $product_image_table['image_name'];
 					<form action="" method="POST" enctype="multipart/form-data">
 						<div class="rating_submit">
 							<div class="form-group">
-								<label class="d-block">Overall rating *</label>
+								<label class="d-block">Overall rating<span style="color:red">*</span></label>
 								<span class="rating mb-0">
 									<input type="radio" class="rating-input" id="5_star" name="rating" value="5">
 									<label for="5_star" class="rating-star"></label>
@@ -95,9 +95,10 @@ $image_name = $product_image_table['image_name'];
 							<div name="image" class="fileupload"><input type="file" name="fileupload"></div>
 						</div>
 						<div class="form-group">
-							<div class="checkboxes float-left add_bottom_15 add_top_15">
-								<label class="container_check">Eos tollit ancillae ea, lorem consulatu qui ne, eu eros eirmod scaevola sea. Et nec tantas accusamus salutatus, sit commodo veritus te, erat legere fabulas has ut. Rebum laudem cum ea, ius essent fuisset ut. Viderer petentium cu his.
-									<input type="checkbox" required>
+							<div class="checkboxes add_bottom_15 add_top_15">
+								<label class="container_check">Accept
+									<a href="#0">Terms and conditions</a>
+									<input required type="checkbox">
 									<span class="checkmark"></span>
 								</label>
 							</div>
@@ -105,7 +106,6 @@ $image_name = $product_image_table['image_name'];
 						<a type="submit" href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1">BACK</a>
 						<button type="submit" name="submit" class="btn_1">SUBMIT</button>
 					</form>
-
 					<?php
 					if (isset($_POST['submit'])) {
 						$rating = $_POST['rating'];
@@ -119,12 +119,28 @@ $image_name = $product_image_table['image_name'];
 							'date' => date("Y-m-d")
 						]);
 
+						if (!empty($_FILES['image']['name'])) {
+							$name = $_FILES['image']['name'];
+							list($file_name, $extension) = explode(".", $name);
+							$image_name = time() . "." . $extension;
+
+							$tmp = $_FILES['image']['tmp_name'];
+							if (move_uploaded_file($tmp, "uploads/review/" . $image_name)) {
+								$result = insert('manifacturer', [
+									'image_name' => $image_name
+								]);
+
+								if (!$result) {
+									unlink("uploads/review/" . $image_name);
+								}
+							}
+						}
+
 						if ($result) {
 							echo '<script>window.location.href = "index.php?page=product_view&product_id=' . $product_id . '"</script>';
 						}
 					}
 					?>
-
 				</div>
 			</div>
 		</main>

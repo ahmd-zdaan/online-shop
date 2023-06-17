@@ -31,7 +31,19 @@
 								<div class="col-lg-6 static">
 									<div class="slide-text text-right white">
 										<h2 class="owl-slide-title"><?= $product_name ?></h2>
-										<p class="owl-slide-subtitle"><?= rupiah($price) ?></p>
+										<?php
+										$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+										if (mysqli_num_rows($get_sale) > 0) :
+											$data_sale = mysqli_fetch_assoc($get_sale);
+											$sale = $data_sale['sale'];
+											$price_sale = $price - $price * (int)$sale / 100;
+										?>
+											<span class="ribbon off">-30%</span>
+											<p class="owl-slide-subtitle mb-0"><?= rupiah($price) ?></p>
+											<p style="color:#9d9d9d" class="old_price"><?= rupiah($price) ?></p>
+										<?php else : ?>
+											<p class="owl-slide-subtitle"><?= rupiah($price) ?></p>
+										<?php endif ?>
 										<div class="owl-slide-cta">
 											<a class="btn_1" href="index.php?page=product_view&product_id=<?= $product_id ?>" role="button">View Product</a>
 										</div>
@@ -44,11 +56,9 @@
 			<?php endforeach ?>
 			<div id="icon_drag_mobile"></div>
 		</div>
-		<!--/carousel-->
-
 		<ul id="banners_grid" class="clearfix">
 			<li>
-				<a href="index.php?page=list" class="img_container">
+				<a href="index.php?page=list&view=list" class="img_container">
 					<img src="img/fashion.jpg" alt="" class="lazy">
 					<div class="short_info opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 						<h3>FASHION</h3>
@@ -59,7 +69,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="index.php?page=list" class="img_container">
+				<a href="index.php?page=list&view=list" class="img_container">
 					<img src="img/electronics.jpg" alt="" class="lazy">
 					<div class="short_info opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 						<h3>ELECTRONICS</h3>
@@ -70,7 +80,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="index.php?page=list" class="img_container">
+				<a href="index.php?page=list&view=list" class="img_container">
 					<img src="img/kitchen.jpg" alt="" class="lazy">
 					<div class="short_info opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 						<h3>KITCHEN</h3>
@@ -88,21 +98,31 @@
 			</div>
 			<div class="row small-gutters">
 				<?php
-				$result = get('product');
+				$result = get('product', 'WHERE sold>0');
 				foreach ($result as $data) :
 					$product_id = $data['product_id'];
 					$product_name = $data['product_name'];
 					$category_id = $data['category_id'];
 					$subcategory_id = $data['subcategory_id'];
 					$price = $data['price'];
+					$sold = $data['sold'];
 					$description = $data['description'];
 				?>
 					<div class="col-6 col-md-4 col-xl-3">
 						<div class="grid_item">
+							<?php
+							$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+							if (mysqli_num_rows($get_sale) > 0) :
+								$data_sale = mysqli_fetch_assoc($get_sale);
+								$sale = $data_sale['sale'];
+								$price_sale = $price - $price * (int)$sale / 100;
+							?>
+								<span class="ribbon off">- <?= $sale ?></span>
+							<?php endif ?>
 							<figure>
 								<!-- <span class="ribbon new">New</span>
-							<span class="ribbon hot">Hot</span>
-							<span class="ribbon off">-30%</span> -->
+								<span class="ribbon hot">Hot</span>
+								<span class="ribbon off">-30%</span> -->
 								<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 									<?php
 									$result = get('product_image', 'WHERE product_id=' . $product_id);
@@ -120,16 +140,32 @@
 								<!-- <div data-countdown="2019/05/15" class="countdown"></div> -->
 							</figure>
 							<div class="rating">
-								<i class="icon-star voted"></i>
-								<i class="icon-star voted"></i>
-								<i class="icon-star voted"></i>
-								<i class="icon-star voted"></i>
-								<i class="icon-star"></i>
+								<?php
+								$get_rating = get('review', 'WHERE product_id=' . $product_id);
+
+								if (mysqli_num_rows($get_rating) > 0) {
+									$data_rating = mysqli_fetch_assoc($get_rating);
+									$rating = $data_rating['rating'];
+
+									// Stars
+									for ($i = $rating; $i > 0; $i--) {
+										echo '<i class="icon-star voted"></i>';
+									}
+									if ($rating < 5) {
+										$n = 5 - $rating;
+										for ($i = $n; $i > 0; $i--) {
+											echo '<i class="icon-star"></i>';
+										}
+									}
+								} else {
+									echo '<p class="mb-0">No Review</p>';
+								}
+								?>
 							</div>
 							<a href="product-detail-1.html">
 								<h3><?= $product_name ?></h3>
 							</a>
-							<div class="price_box">
+							<div class="price_box mb-0">
 								<?php
 								$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 								if (mysqli_num_rows($get_sale) > 0) :
@@ -143,11 +179,29 @@
 									<span class="new_price"><?= rupiah($price) ?></span>
 								<?php endif ?>
 							</div>
+							<div>
+								<p style="color: #9d9d9d;" class="mb-3"><?= $sold ?> sold • 0 discussions</p>
+							</div>
 							<ul>
 								<li>
-									<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
-										<i class="ti-heart"></i>
-									</a>
+									<?php
+									$email = $_SESSION['email'];
+
+									$get_user = get('user', 'WHERE email="' . $email.'"');
+									$data_user = mysqli_fetch_assoc($get_user);
+									$user_id = $data_user['user_id'];
+
+									$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
+									if (mysqli_num_rows($get_wishlist) > 0) :
+									?>
+										<a href="index.php?page=wishlist_remove&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Remove from wishlist">
+											<i class="ti-heart"></i>
+										</a>
+									<?php else : ?>
+										<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+											<i class="ti-heart"></i>
+										</a>
+									<?php endif ?>
 								</li>
 								<li>
 									<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
@@ -220,8 +274,17 @@
 					<div class="item">
 						<div class="grid_item">
 							<!-- <span class="ribbon hot">Hot</span>
-					<span class="ribbon off">-30%</span>
-					<span class="ribbon new">New</span> -->
+							<span class="ribbon off">-30%</span>
+							<span class="ribbon new">New</span> -->
+							<?php
+							$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+							if (mysqli_num_rows($get_sale) > 0) :
+								$data_sale = mysqli_fetch_assoc($get_sale);
+								$sale = $data_sale['sale'];
+								$price_sale = $price - $price * (int)$sale / 100;
+							?>
+								<span class="ribbon off">- <?= $sale ?></span>
+							<?php endif ?>
 							<figure>
 								<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 									<?php
@@ -238,11 +301,33 @@
 									<?php endif ?>
 								</a>
 							</figure>
-							<div class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i></div>
+							<div class="rating">
+								<?php
+								$get_rating = get('review', 'WHERE product_id=' . $product_id);
+
+								if (mysqli_num_rows($get_rating) > 0) {
+									$data_rating = mysqli_fetch_assoc($get_rating);
+									$rating = $data_rating['rating'];
+
+									// Stars
+									for ($i = $rating; $i > 0; $i--) {
+										echo '<i class="icon-star voted"></i>';
+									}
+									if ($rating < 5) {
+										$n = 5 - $rating;
+										for ($i = $n; $i > 0; $i--) {
+											echo '<i class="icon-star"></i>';
+										}
+									}
+								} else {
+									echo '<p class="mb-0">No Review</p>';
+								}
+								?>
+							</div>
 							<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 								<h3><?= $product_name ?></h3>
 							</a>
-							<div class="price_box">
+							<div class="price_box mb-0">
 								<?php
 								$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 								if (mysqli_num_rows($get_sale) > 0) :
@@ -255,6 +340,9 @@
 								<?php else : ?>
 									<span class="new_price"><?= rupiah($price) ?></span>
 								<?php endif ?>
+							</div>
+							<div>
+								<p style="color: #9d9d9d;" class="mb-3"><?= $sold ?> sold • 0 discussions</p>
 							</div>
 							<ul>
 								<li><a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
@@ -283,16 +371,14 @@
 					</div><!-- /item -->
 					<div class="item">
 						<a href="#0"><img src="img/brands/placeholder_brands.png" data-src="img/brands/logo_5.png" alt="" class="owl-lazy"></a>
-					</div><!-- /item -->
+					</div>
 					<div class="item">
 						<a href="#0"><img src="img/brands/placeholder_brands.png" data-src="img/brands/logo_6.png" alt="" class="owl-lazy"></a>
-					</div><!-- /item -->
-				</div><!-- /carousel -->
-			</div><!-- /container -->
+					</div>
+				</div>
+			</div>
 		</div>
-		<!-- /bg_gray -->
-
-		<div class="container margin_60_35">
+		<!-- <div class="container margin_60_35">
 			<div class="main_title">
 				<h2>Latest News</h2>
 				<span>Blog</span>
@@ -313,7 +399,6 @@
 						<p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
 					</a>
 				</div>
-				<!-- /box_news -->
 				<div class="col-lg-6">
 					<a class="box_news" href="blog.html">
 						<figure>
@@ -328,7 +413,6 @@
 						<p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
 					</a>
 				</div>
-				<!-- /box_news -->
 				<div class="col-lg-6">
 					<a class="box_news" href="blog.html">
 						<figure>
@@ -343,7 +427,6 @@
 						<p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
 					</a>
 				</div>
-				<!-- /box_news -->
 				<div class="col-lg-6">
 					<a class="box_news" href="blog.html">
 						<figure>
@@ -358,9 +441,6 @@
 						<p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
 					</a>
 				</div>
-				<!-- /box_news -->
 			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
+		</div> -->
 </main>

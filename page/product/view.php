@@ -1,7 +1,6 @@
 <?php
 $product_id = $_GET['product_id'];
 
-// $result = get('product', 'JOIN category ON product.category_id=category.category_id WHERE product_id="' . $product_id . '"');
 $result_product = get('product', 'WHERE product_id=' . $product_id);
 $data_product = mysqli_fetch_assoc($result_product);
 
@@ -11,10 +10,10 @@ if ($data_product) {
 	$subcategory_id = $data_product['subcategory_id'];
 	$price = $data_product['price'];
 	$stock = $data_product['stock'];
+	$sold = $data_product['sold'];
 	$description = $data_product['description'];
 	$manifacturer_id = $data_product['manifacturer_id'];
-	$size = $data_product['size'];
-	$color = $data_product['color'];
+	$variant = $data_product['variant'];
 	$weight = $data_product['weight'];
 }
 
@@ -62,6 +61,17 @@ $subcategory_name = $data['subcategory_name'];
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
+
+	<style>
+		#more {
+			display: none;
+		}
+
+		.profile:hover {
+			text-decoration: underline;
+			text-decoration-thickness: 2px;
+		}
+	</style>
 </head>
 
 <body>
@@ -76,6 +86,15 @@ $subcategory_name = $data['subcategory_name'];
 				<div class="col-md-6">
 					<div class="all">
 						<div class="slider">
+							<?php
+							$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+							if (mysqli_num_rows($get_sale) > 0) :
+								$data_sale = mysqli_fetch_assoc($get_sale);
+								$sale = $data_sale['sale'];
+								$price_sale = $price - $price * (int)$sale / 100;
+							?>
+								<span class="ribbon off">- <?= $sale ?></span>
+							<?php endif ?>
 							<div class="owl-carousel owl-theme main">
 								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
 								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
@@ -105,7 +124,7 @@ $subcategory_name = $data['subcategory_name'];
 					</div>
 					<!-- PRODUCT -->
 					<div class="prod_info">
-						<h1><?= $name ?></h1>
+						<h1 class="mt-3"><?= $name ?></h1>
 						<span class="rating my-0">
 							<?php
 							// Rating
@@ -126,34 +145,59 @@ $subcategory_name = $data['subcategory_name'];
 							}
 
 							if ($count_rating == 0) {
-								echo '<p>No review</p>';
+								echo '<p class="mb-0" style="color:#9d9d9d">No review</p>';
 							} else {
 								$n = 5 - $average_rating;
 								for ($i = $n; $i > 0; $i--) {
 									echo '<i class="icon-star"></i>';
 								}
-								echo '<p class="ml-2" style="float: right">( ' . $average_rating . ' / 5 )</p>';
-								echo '<em class="mx-2">' . $count_rating . ' reviews</em>';
+								echo '<p class="ml-2" style="float:right; color:#9d9d9d">( ' . $average_rating . ' / 5 )</p>';
+								echo '<em class="mx-2" style="color:#9d9d9d">' . $count_rating . ' reviews</em>';
 							}
 							?>
+							<p style="color:#9d9d9d" class="mb-3"><?= $sold ?> sold • 0 discussions</p>
 						</span>
-						<!-- DETAILS -->
 						<ul style="list-style: none;" class="p-0">
 							<p class="mb-1">
 								<b>Description</b>
 							</p>
 							<li>
-								<p><?= $description ?></p>
+								<?php
+								$desc_array = explode(' ', $description);
+								$desc_count = count($desc_array);
+
+								$desc1 = '';
+								$desc2 = '';
+
+								if ($desc_count > 50) :
+									for ($i = 0; $i < 50; $i++) {
+										$desc1 .= $desc_array[$i] . ' ';
+									}
+									for ($i = 50; $i < $desc_count; $i++) {
+										$desc2 .= $desc_array[$i] . ' ';
+									}
+								?>
+									<p class="m-0 description">
+										<?= $desc1 ?>
+										<span id="dots">...</span>
+										<span id="more"><?= $desc2 ?></span>
+									</p>
+									<button onclick="readMore()" id="readMoreBtn" class="btn btn-link p-0" style="font-size:small;">read more</button>
+								<?php
+								else :
+								?>
+									<p><?= $description ?></p>
+								<?php endif ?>
 							</li>
-							<hr class="hr m-0 mb-3">
+							<hr class="hr border-3 m-0 mb-3">
 							<p class="mb-2">
 								<b>Details</b>
 							</p>
 							<li>
 								<div class="row">
 									<div class="col-2">
-										<p class="mb-0">Manifacturer</p>
 										<p class="mb-0">Stock</p>
+										<p class="mb-0">Manifacturer</p>
 										<p class="mb-0">Category</p>
 										<p class="mb-0">Subcategory</p>
 									</div>
@@ -164,52 +208,52 @@ $subcategory_name = $data['subcategory_name'];
 										<p class="mb-0">:</p>
 									</div>
 									<div class="col-9 pl-0">
+										<p class="mb-0"><?= $stock ?></p>
 										<?php
 										$manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id, 'manifacturer_name');
 										$data_manifacturer = mysqli_fetch_assoc($manifacturer);
 										$manifacturer_name = $data_manifacturer['manifacturer_name'];
 										?>
 										<p class="mb-0"><?= $manifacturer_name ?></p>
-										<p class="mb-0"><?= $stock ?></p>
 										<p class="mb-0"><?= $category_name ?></p>
 										<p class="mb-0"><?= $subcategory_name ?></p>
 									</div>
 								</div>
 							</li>
 						</ul>
-						<hr class="hr m-0">
-						<!-- OPTIONS -->
-						<div class="prod_options pb-0">
-							<!-- COLOR -->
+						<hr class="hr border-3 m-0">
+						<div class="prod_options">
 							<!-- <div class="row">
-								<label class="col-xl-5 col-lg-5  col-md-6 col-6 pt-0"><strong>Color</strong></label>
+								<label class="col-xl-5 col-lg-5 col-md-6 col-6">
+									<strong>Color</strong>
+								</label>
 								<div class="col-xl-4 col-lg-5 col-md-6 col-6 colors">
 									<ul>
 										<li>
-											<a href="index.php?page=product&product_id=<?= $product_id ?>&type=1" class="color color_1"></a>
+											<a href="" class="color color_1"></a>
 										</li>
 									</ul>
 								</div>
 							</div> -->
-							<!-- PAYMENT -->
 							<form action="" method="POST">
 								<input type="text" hidden name="product_id" value="<?= $product_id ?>">
 								<div class="row">
 									<label class="col-xl-5 col-lg-5 col-md-6 col-6">
-										<strong>Size</strong> - Size Guide
-										<a href="#0" data-toggle="modal" data-target="#size-modal">
+										<strong>VARIANT</strong>
+										<!-- <a href="" data-toggle="modal" data-target="#size-modal">
 											<i class="ti-help-alt"></i>
-										</a>
+										</a> -->
 									</label>
 									<div class="col-xl-4 col-lg-5 col-md-6 col-6">
-										<div class="custom-select-form">
-											<select class="form-select wide">
-												<option value="" selected>Small (S)</option>
-												<option value="">M</option>
-												<option value="">L</option>
-												<option value="">XL</option>
-											</select>
-										</div>
+										<select class="form-select" name="size">
+											<option value="" selected disabled hidden>Select variant</option>
+											<?php
+											$variant_explode = explode(', ', $variant);
+											foreach ($variant_explode as $variant_string) :
+											?>
+												<option value=""><?= $variant_string ?></option>
+											<?php endforeach ?>
+										</select>
 									</div>
 								</div>
 								<div class="row">
@@ -258,7 +302,7 @@ $subcategory_name = $data['subcategory_name'];
 								} else {
 									echo '<script>window.location.href = "index.php?page=login"</script>';
 								}
-								
+
 								$quantity = $_POST['quantity'];
 
 
@@ -283,7 +327,7 @@ $subcategory_name = $data['subcategory_name'];
 									$wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 									if (mysqli_num_rows($wishlist) > 0) :
 								?>
-										<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>">
+										<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')">
 											<i class="ti-heart"></i>
 											<span>Remove from Wishlist</span>
 										</a>
@@ -341,23 +385,28 @@ $subcategory_name = $data['subcategory_name'];
 											<table class="table table-sm table-striped">
 												<tbody>
 													<tr>
-														<td><strong>Manifacturer</strong></td>
+														<td>
+															<strong>Manifacturer</strong>
+														</td>
+														<td><?= $manifacturer_name ?></td>
+													</tr>
+													<tr>
+														<td>
+															<strong>Variants</strong>
+														</td>
+														<td><?= $variant ?></td>
+													</tr>
+													<tr>
+														<td>
+															<strong>Weight</strong>
+														</td>
 														<?php
-
+														if ($weight == 0) :
 														?>
-														<td><?= $manifacturer_id ?></td>
-													</tr>
-													<tr>
-														<td><strong>Size</strong></td>
-														<td><?= $size ?></td>
-													</tr>
-													<tr>
-														<td><strong>Color</strong></td>
-														<td><?= $color ?></td>
-													</tr>
-													<tr>
-														<td><strong>Weight</strong></td>
-														<td><?= $weight ?>kg</td>
+															<td>-</td>
+														<?php else : ?>
+															<td><?= $weight ?>kg</td>
+														<?php endif ?>
 													</tr>
 												</tbody>
 											</table>
@@ -395,8 +444,8 @@ $subcategory_name = $data['subcategory_name'];
 												$review = $review_data['review'];
 												$date = $review_data['date'];
 											?>
-												<div class="row mb-3">
-													<div class="col-1 pr-3">
+												<div class="row mb-3 border border-3 rounded rounded-3 p-3">
+													<div class="col-1 pr-3 pl-0">
 														<?php
 														$result = get('user_image', 'WHERE user_id=' . $review_user_id);
 														if (mysqli_num_rows($result) > 0) :
@@ -410,7 +459,10 @@ $subcategory_name = $data['subcategory_name'];
 															<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="35px">
 														<?php endif ?>
 													</div>
-													<div class="col-11 mb-3">
+													<div class="col-11 pl-2 pt-2">
+														<a href="index.php?page=view_profile&user_id=<?= $review_user_id ?>">
+															<h3 style="font-weight: bold" class="mb-2 profile"><?= $review_user_name ?></h3>
+														</a>
 														<div class="clearfix add_bottom_10">
 															<span class="rating">
 																<?php
@@ -427,16 +479,19 @@ $subcategory_name = $data['subcategory_name'];
 																?>
 																<em>( <?= $rating ?> / 5 )</em>
 															</span>
-															<em><?= $date ?></em>
+															<em style="font-weight:normal"><?= dateConvert($date) ?></em>
 														</div>
-														<h3 style="font-weight: bold" class="mb-0"><?= $review_user_name ?></h3>
 														<p class="mb-1"><?= $review ?></p>
 														<div>
 															<?php
-															if ($review_user_id == $user_id) :
+															if (isset($user_id)) :
+																if ($review_user_id == $user_id) :
 															?>
-																<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float: right" class="ml-2">EDIT</a>
-																<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
+																	<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
+																		<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">EDIT</a>
+																		<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" class="btn btn-outline-primary" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
+																	</div>
+																<?php endif ?>
 															<?php endif ?>
 														</div>
 													</div>
@@ -512,12 +567,14 @@ $subcategory_name = $data['subcategory_name'];
 									}
 								}
 
+
 								if ($count_rating == 0) {
 									echo '<p class="mb-0">No review</p>';
 								} else {
 									$n = 5 - $average_rating;
 									for ($i = $n; $i > 0; $i--) {
 										echo '<i class="icon-star"></i>';
+										echo '<em class="mx-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';	
 									}
 								}
 								?>
@@ -590,7 +647,6 @@ $subcategory_name = $data['subcategory_name'];
 			</div>
 		</div>
 	</main>
-	<!-- SIZE -->
 	<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="size-modal" id="size-modal" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
@@ -678,6 +734,23 @@ $subcategory_name = $data['subcategory_name'];
 		</div>
 	</div>
 	<div id="toTop"></div><!-- Back to top button -->
+	<script>
+		function readMore() {
+			let dots = document.getElementById("dots");
+			let moreText = document.getElementById("more");
+			let btnText = document.getElementById("readMoreBtn");
+
+			if (dots.style.display === "none") {
+				dots.style.display = "inline";
+				btnText.innerHTML = "read more";
+				moreText.style.display = "none";
+			} else {
+				dots.style.display = "none";
+				btnText.innerHTML = "read less";
+				moreText.style.display = "inline";
+			}
+		}
+	</script>
 	<!-- COMMON SCRIPTS -->
 	<script src="js/common_scripts.min.js"></script>
 	<script src="js/main.js"></script>
