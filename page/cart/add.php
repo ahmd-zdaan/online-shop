@@ -1,4 +1,6 @@
 <?php
+check('login');
+
 if (isset($_GET['product_id']) && isset($_GET['quantity'])) {
 	$product_id = $_GET['product_id'];
 	$quantity = $_GET['quantity'];

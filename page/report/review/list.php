@@ -44,68 +44,139 @@ check('login')
 							<li><a href="#">Home</a></li>
 							<li><a href="#">Admin</a></li>
 							<li><a href="#">Report</a></li>
+							<li><a href="#">Review</a></li>
 							<li>List</li>
 						</ul>
 					</div>
-					<div class="row">
-						<div class="col-6">
-							<h1 class="pt-3">Report List</h1>
-						</div>
-						<div class="col-6 text-right">
-							<a href="index.php?page=subcategory_add" class="btn_1">ADD SUBCATEGORY</a>
-						</div>
-					</div>
+					<h1 class="pt-3">Review Report List</h1>
 				</div>
-				<table class="table table-striped table-hover table-sm">
-					<thead>
-						<tr>
-							<th scope="col" style="width: 50px">
-								ID
-							</th>
-							<th scope="col">
-								Name
-							</th>
-							<th scope="col">
-								Category
-							</th>
-							<th scope="col" style="width: 250px">
-								Actions
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						$result = get('subcategory');
-						foreach ($result as $data) :
-							$subcategory_id = $data['subcategory_id'];
-							$subcategory_name = $data['subcategory_name'];
-
-							$category_id = $data['category_id'];
-							$result = get('category', 'WHERE category_id='.$category_id);
-							$data = mysqli_fetch_assoc($result);
-							$category_name = $data['category_name'];
-						?>
+				<?php
+				$get_review_report = get('review_report');
+				if (mysqli_num_rows($get_review_report) > 0) :
+				?>
+					<table class="table table-striped table-hover table-sm">
+						<thead>
 							<tr>
-								<td>
-									<p><?= $subcategory_id ?></p>
-								</td>
-								<td>
-									<p><?= $subcategory_name ?></p>
-								</td>
-								<td>
-									<p><?= $category_name ?></p>
-								</td>
-								<!-- OPTIONS -->
-								<td class="row">
-									<a href="index.php?page=subcategory_edit&subcategory_id=<?= $subcategory_id ?>" class="btn_1 col p-3 my-1">EDIT</a>
-									<a href="index.php?page=subcategory_delete&subcategory_id=<?= $subcategory_id ?>" onclick="return confirm('Are you sure you want to DELETE this subcategory?')" class="btn_1 col p-3 my-1">DELETE</a>
-								</td>
+								<th scope="col" style="width: 30px">
+									ID
+								</th>
+								<th scope="col" style="width: 120px">
+									User
+								</th>
+								<th scope="col" style="width: 500px">
+									Reported Review
+								</th>
+								<th scope="col" style="width: 300px">
+									Report Details
+								</th>
+								<th scope="col" style="width: 140px"">
+									Date Reported
+								</th>
+								<th scope="col">
+									Actions
+								</th>
 							</tr>
-						<?php endforeach ?>
-					</tbody>
-				</table>
-				<div class="row add_top_30 flex-sm-row-reverse">
-				</div>
+						</thead>
+						<tbody>
+							<?php
+							foreach ($get_review_report as $data) :
+								$review_report_id = $data['review_report_id'];
+								$user_id = $data['user_id'];
+								$review_id = $data['review_id'];
+								$report = $data['report'];
+								$date = $data['date'];
+
+								$get_user = get('user', 'WHERE user_id=' . $user_id);
+								$data_user = mysqli_fetch_assoc($get_user);
+								$user_name = $data_user['user_name'];
+
+								$get_review = get('review', 'WHERE review_id=' . $review_id);
+								$data_review = mysqli_fetch_assoc($get_review);
+								
+								$product_id = $data_review['product_id'];
+								$rating = $data_review['rating'];
+								$review = $data_review['review'];
+								$review_date = $data_review['date'];
+
+								$review_user_id = $data_review['user_id'];
+								$get_user_review = get('user', 'WHERE user_id=' . $review_user_id);
+								$data_user_review = mysqli_fetch_assoc($get_user_review);
+								$review_user_name = $data_user_review['user_name'];
+							?>
+								<tr>
+									<td>
+										<p><?= $review_report_id ?></p>
+									</td>
+									<td>
+										<?php
+										$result = get('user_image', 'WHERE user_id=' . $user_id);
+										if (mysqli_num_rows($result) > 0) :
+											$data = mysqli_fetch_assoc($result);
+											$user_image = $data['user_image'];
+										?>
+											<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
+										<?php
+										else :
+										?>
+											<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
+										<?php endif ?>
+										<b class="ml-1"><?= $user_name ?></b>
+									</td>
+									<td>
+										<div>
+											<?php
+											$result = get('user_image', 'WHERE user_id=' . $review_user_id);
+											if (mysqli_num_rows($result) > 0) :
+												$data = mysqli_fetch_assoc($result);
+												$user_image = $data['user_image'];
+											?>
+												<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
+											<?php
+											else :
+											?>
+												<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
+											<?php endif ?>
+											<b class="font-weight-bold mb-1 ml-1"><?= $review_user_name ?></b>
+										</div>
+										<div class="rating mt-2 mb-1">
+											<?php
+											// Stars
+											for ($i = $rating; $i > 0; $i--) {
+												echo '<i class="icon-star voted"></i>';
+											}
+											if ($rating < 5) {
+												$n = 5 - $rating;
+												for ($i = $n; $i > 0; $i--) {
+													echo '<i class="icon-star"></i>';
+												}
+											}
+											?>
+											<em style="color:#9d9d9d">( <?= $rating ?> / 5 )</em>
+										</div>
+										<p><?= $review ?></p>
+										<em style="float:right; color:#9d9d9d"><?= dateConvert($review_date) ?></em>
+									</td>
+									<td>
+										<p><?= $report ?></p>
+									</td>
+									<td>
+										<p><?= dateConvert($date) ?></p>
+									</td>
+									<td>
+										<a class="col btn btn-outline-success" href="index.php?page=report_review_accept&review_report_id=<?= $review_report_id ?>">ACCEPT</a>
+										<a class="col btn btn-outline-danger" href="index.php?page=report_review_ignore&review_report_id=<?= $review_report_id ?>" onclick="return confirm('Are you sure you want to IGNORE this REPORT?')">IGNORE</a>
+									</td>
+								</tr>
+							<?php endforeach ?>
+						</tbody>
+					</table>
+				<?php else : ?>
+					<div class="text-center my-5">
+						<img src="img/empty.png" alt="empty">
+						<h3 class="mt-4">Nothing to see here</h3>
+						<p>No review has been reported</p>
+					</div>
+				<?php endif ?>
 			</div>
 		</main>
 </body>

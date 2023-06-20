@@ -5,7 +5,7 @@ $result_product = get('product', 'WHERE product_id=' . $product_id);
 $data_product = mysqli_fetch_assoc($result_product);
 
 if ($data_product) {
-	$name = $data_product['product_name'];
+	$product_name = $data_product['product_name'];
 	$category_id = $data_product['category_id'];
 	$subcategory_id = $data_product['subcategory_id'];
 	$price = $data_product['price'];
@@ -116,18 +116,16 @@ $subcategory_name = $data['subcategory_name'];
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
-							<li><a href="#">Product</a></li>
-							<li><a href="#"><?= $category_name ?></a></li>
-							<li><a href="#"><?= $subcategory_name ?></a></li>
-							<li><?= $name ?></li>
+							<li><a href="index.php?page=list&view=list">Product</a></li>
+							<li><a href="index.php?page=list&view=list"><?= $category_name ?></a></li>
+							<li><a href="index.php?page=list&view=list"><?= $subcategory_name ?></a></li>
+							<li><?= $product_name ?></li>
 						</ul>
 					</div>
-					<!-- PRODUCT -->
 					<div class="prod_info">
-						<h1 class="mt-3"><?= $name ?></h1>
+						<h1 class="mt-3"><?= $product_name ?></h1>
 						<span class="rating my-0">
 							<?php
-							// Rating
 							$result = get('review', 'WHERE product_id="' . $product_id . '"', 'sum(rating)');
 							$data = mysqli_fetch_assoc($result);
 							$total_rating = (int)$data['sum(rating)'];
@@ -246,18 +244,20 @@ $subcategory_name = $data['subcategory_name'];
 									</label>
 									<div class="col-xl-4 col-lg-5 col-md-6 col-6">
 										<select class="form-select" name="size">
-											<option value="" selected disabled hidden>Select variant</option>
 											<?php
 											$variant_explode = explode(', ', $variant);
 											foreach ($variant_explode as $variant_string) :
+												for ($i = 0; $i < 0; $i++) :
 											?>
+													<option value="" selected><?= $variant_string ?></option>
+												<?php endfor ?>
 												<option value=""><?= $variant_string ?></option>
 											<?php endforeach ?>
 										</select>
 									</div>
 								</div>
 								<div class="row">
-									<label class="col-xl-5 col-lg-5  col-md-6 col-6">
+									<label class="col-xl-5 col-lg-5 col-md-6 col-6">
 										<strong>Quantity</strong>
 									</label>
 									<div class="col-xl-4 col-lg-5 col-md-6 col-6">
@@ -276,7 +276,7 @@ $subcategory_name = $data['subcategory_name'];
 												$sale = $data_sale['sale'];
 												$price_sale = $price - $price * (int)$sale / 100;
 											?>
-												<span class="new_price"><?= rupiah($price_sale) ?></span>
+												<span style="font-size:x-large" class="new_price"><?= rupiah($price_sale) ?></span>
 												<span style="color:#9d9d9d" class="old_price mt-2"><?= rupiah($price) ?></span>
 											<?php else : ?>
 												<span class="new_price"><?= rupiah($price) ?></span>
@@ -327,24 +327,29 @@ $subcategory_name = $data['subcategory_name'];
 									$wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 									if (mysqli_num_rows($wishlist) > 0) :
 								?>
-										<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')">
+										<a style="float: left;" class="mr-4" href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')">
 											<i class="ti-heart"></i>
 											<span>Remove from Wishlist</span>
 										</a>
 									<?php else : ?>
-										<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>">
+										<a style="float: left;" class="mr-4" href="index.php?page=wishlist_add&product_id=<?= $product_id ?>">
 											<i class="ti-heart"></i>
 											<span>Add to Wishlist</span>
 										</a>
 									<?php endif ?>
 								<?php endif ?>
 							</li>
+							<li>
+								<a href="index.php?page=report_product_add&product_id=<?= $product_id ?>">
+									<img class="mb-1 mr-1" style="width: 16px;" src="img/report.png" alt="report">
+									<span>Report Product</span>
+								</a>
+							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<div class="tabs_product">
 			<div class="container">
 				<ul class="nav nav-tabs" role="tablist">
@@ -431,7 +436,7 @@ $subcategory_name = $data['subcategory_name'];
 									<div class="col-lg-6">
 										<div class="review_content">
 											<?php
-											$review_get = get('review');
+											$review_get = get('review', 'WHERE product_id='.$product_id);
 
 											foreach ($review_get as $review_data) :
 												$review_id = $review_data['review_id'];
@@ -459,7 +464,7 @@ $subcategory_name = $data['subcategory_name'];
 															<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="35px">
 														<?php endif ?>
 													</div>
-													<div class="col-11 pl-2 pt-2">
+													<div class="col-11 pl-2 pt-2 mb-2">
 														<a href="index.php?page=view_profile&user_id=<?= $review_user_id ?>">
 															<h3 style="font-weight: bold" class="mb-2 profile"><?= $review_user_name ?></h3>
 														</a>
@@ -491,6 +496,10 @@ $subcategory_name = $data['subcategory_name'];
 																		<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">EDIT</a>
 																		<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" class="btn btn-outline-primary" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
 																	</div>
+																	<?php else : ?>
+																		<div class="btn-group-sm mt-3" style="float:right">
+																			<a href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?=$product_id?>" style="float:right" class="btn btn-outline-danger">REPORT</a>
+																		</div>
 																<?php endif ?>
 															<?php endif ?>
 														</div>
@@ -550,7 +559,6 @@ $subcategory_name = $data['subcategory_name'];
 							</figure>
 							<div class="rating">
 								<?php
-								// Rating
 								$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'sum(rating)');
 								$data_review_related = mysqli_fetch_assoc($get_review_related);
 								$total_rating = (int)$data_review_related['sum(rating)'];
@@ -567,14 +575,13 @@ $subcategory_name = $data['subcategory_name'];
 									}
 								}
 
-
 								if ($count_rating == 0) {
 									echo '<p class="mb-0">No review</p>';
 								} else {
 									$n = 5 - $average_rating;
 									for ($i = $n; $i > 0; $i--) {
 										echo '<i class="icon-star"></i>';
-										echo '<em class="mx-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';	
+										echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 									}
 								}
 								?>

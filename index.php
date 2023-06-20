@@ -53,13 +53,10 @@ include_once 'config/connect.php';
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
-
 	<div id="page">
-
 		<header class="version_1">
 			<div class="main_nav Sticky">
 				<div class="container">
@@ -260,7 +257,7 @@ include_once 'config/connect.php';
 															<a class="pl-3 pb-3" href="index.php?page=view_profile">
 																<?php
 																$result = get('user_image', 'WHERE user_id=' . $user_id);
-	
+
 																if (mysqli_num_rows($result) > 0) :
 																	$data = mysqli_fetch_assoc($result);
 																	$user_image = $data['user_image'];
@@ -358,8 +355,8 @@ include_once 'config/connect.php';
 						<h3 data-target="#collapse_1">Quick Links</h3>
 						<div class="collapse dont-collapse-sm links" id="collapse_1">
 							<ul>
-								<li><a href="index.php?page=account">My account</a></li>
-								<li><a href="index.php?page=about">About us</a></li>
+								<li><a href="index.php?page=view_profile">My Profile</a></li>
+								<li><a href="index.php?page=about">About Us</a></li>
 								<li><a href="index.php?page=help">Help & Faq</a></li>
 								<li><a href="index.php?blog">Blog</a></li>
 								<!-- <li><a href="contacts.html">Contacts</a></li> -->
@@ -381,7 +378,7 @@ include_once 'config/connect.php';
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-6">
-						<h3 data-target="#collapse_3">Contacts</h3>
+						<h3 data-target="#collapse_3">Details</h3>
 						<div class="collapse dont-collapse-sm contacts" id="collapse_3">
 							<ul>
 								<li>
@@ -400,25 +397,44 @@ include_once 'config/connect.php';
 					<div class="col-lg-3 col-md-6">
 						<h3 data-target="#collapse_4">Keep in touch</h3>
 						<div class="collapse dont-collapse-sm" id="collapse_4">
-							<div id="newsletter">
-								<div class="form-group">
-									<input type="email" name="email_newsletter" id="email_newsletter" class="form-control" placeholder="Your email">
-									<button type="submit" id="submit-newsletter"><i class="ti-angle-double-right"></i></button>
+							<form action="" method="POST">
+								<div id="newsletter">
+									<div class="form-group">
+										<input type="email" name="email_newsletter" id="email_newsletter" class="form-control" placeholder="Your email">
+										<button type="submit" id="submit-newsletter">
+											<i class="ti-angle-double-right"></i>
+										</button>
+									</div>
 								</div>
-							</div>
+							</form>
 							<div class="follow_us">
 								<h5>Follow Us</h5>
 								<ul>
-									<li><a href="#0"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/youtube_icon.svg" alt="" class="lazy"></a></li>
-									<li><a href="#0"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/instagram_icon.svg" alt="" class="lazy"></a></li>
-									<li><a href="#0"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/facebook_icon.svg" alt="" class="lazy"></a></li>
-									<li><a href="#0"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/twitter_icon.svg" alt="" class="lazy"></a></li>
+									<li>
+										<a href="#0">
+											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/youtube_icon.svg" alt="" class="lazy">
+										</a>
+									</li>
+									<li>
+										<a href="#0">
+											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/instagram_icon.svg" alt="" class="lazy">
+										</a>
+									</li>
+									<li>
+										<a href="#0">
+											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/facebook_icon.svg" alt="" class="lazy">
+										</a>
+									</li>
+									<li>
+										<a href="#0">
+											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/twitter_icon.svg" alt="" class="lazy">
+										</a>
+									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- /row-->
 				<hr>
 				<div class="row add_bottom_25">
 					<div class="col-lg-6">
@@ -426,19 +442,24 @@ include_once 'config/connect.php';
 							<li>
 								<div class="styled-select lang-selector">
 									<select>
-										<option value="English" selected>English</option>
-										<option value="French">French</option>
-										<option value="Spanish">Spanish</option>
-										<option value="Russian">Russian</option>
+										<option value="en" selected style="color:black">English</option>
+										<option value="in" style="color:black">Bahasa Indonesia</option>
+										<option value="cn" style="color:black">中国</option>
+										<option value="fr" style="color:black">French</option>
+										<option value="es" style="color:black">Spanish</option>
+										<option value="de" style="color:black">German</option>
+										<option value="jp" style="color:black">日本語</option>
+										<option value="sa" style="color:black">العربية</option>
+										<option value="ru" style="color:black">Russian</option>
 									</select>
 								</div>
 							</li>
 							<li>
 								<div class="styled-select currency-selector">
 									<select>
-										<option value="US Dollars" selected>(USD) US Dollars</option>
-										<option value="Euro">(EUR) Euro</option>
-										<option value="Euro">(IDR) Indonesian Rupiah</option>
+										<option value="usd" selected style="color:black">(USD) US Dollars</option>
+										<option value="idr" style="color:black">(IDR) Indonesian Rupiah</option>
+										<option value="eur" style="color:black">(EUR) Euro</option>
 									</select>
 								</div>
 							</li>
@@ -455,9 +476,7 @@ include_once 'config/connect.php';
 				</div>
 			</div>
 		</footer>
-		<!--/footer-->
 	</div>
-	<!-- page -->
 
 	<div id="toTop"></div><!-- Back to top button -->
 
@@ -467,7 +486,6 @@ include_once 'config/connect.php';
 
 	<!-- SPECIFIC SCRIPTS -->
 	<script src="js/carousel-home.min.js"></script>
-
 </body>
 
 </html>

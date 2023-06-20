@@ -163,11 +163,11 @@ switch ($page) {
     case 'report_product_add':
         include 'page/report/product/add.php';
         break;
-    case 'report_product_edit':
-        include 'page/report/product/edit.php';
+    case 'report_product_accept':
+        include 'page/report/product/accept.php';
         break;
-    case 'report_product_delete':
-        include 'page/report/product/delete.php';
+    case 'report_product_ignore':
+        include 'page/report/product/ignore.php';
         break;
 
     case 'report_review_list':
@@ -176,11 +176,11 @@ switch ($page) {
     case 'report_review_add':
         include 'page/report/review/add.php';
         break;
-    case 'report_review_edit':
-        include 'page/report/review/edit.php';
+    case 'report_review_accept':
+        include 'page/report/review/accept.php';
         break;
-    case 'report_review_delete':
-        include 'page/report/review/delete.php';
+    case 'report_review_ignore':
+        include 'page/report/review/ignore.php';
         break;
 
         //  BLOG
