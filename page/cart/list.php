@@ -91,9 +91,6 @@ check('login')
 									$data = mysqli_fetch_assoc($result);
 									$product_name = $data['product_name'];
 									$price = $data['price'];
-
-									$subtotal_product = $total_quantity * $price;
-									$subtotal_price += $subtotal_product;
 								?>
 									<tr>
 										<td>
@@ -114,21 +111,39 @@ check('login')
 												</div>
 											</a>
 											<span class="item_cart">
-												<a href="index.php?page=product_view&product_id=<?= $product_id ?>"><?= $product_name ?></a>
+												<a style="font-size:large" href="index.php?page=product_view&product_id=<?= $product_id ?>"><?= $product_name ?></a>
 											</span>
 										</td>
 										<td>
-											<strong><?= rupiah($price) ?></strong>
+											<strong>
+												<?php
+												$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+												if (mysqli_num_rows($get_sale) > 0) :
+													$data_sale = mysqli_fetch_assoc($get_sale);
+													$sale = $data_sale['sale'];
+													$price_sale = $price - $price * (int)$sale / 100;
+												?>
+													<p class="new_price m-0" style="font-size:larger"><?= rupiah($price_sale) ?></p>
+													<p class="old_price m-0" style="font-size:small; color:#9d9d9d"><?= rupiah($price) ?></p>
+												<?php else : ?>
+													<p class="new_price m-0"><?= rupiah($price) ?></p>
+												<?php endif ?>
+											</strong>
 										</td>
 										<td>
 											<strong><?= $total_quantity ?></strong>
-											<!-- <div class="numbers-row">
-												<input type="text" value="<?= $quantity ?>" id="quantity_1" class="qty2" name="quantity_1">
-												<div class="inc button_inc">+</div>
-												<div class="dec button_inc">-</div>
-											</div> -->
 										</td>
 										<td class="text-center">
+											<?php
+											$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+											if (mysqli_num_rows($get_sale) > 0) {
+												$subtotal_product = $total_quantity * $price_sale;
+												$subtotal_price += $subtotal_product;
+											} else {
+												$subtotal_product = $total_quantity * $price;
+												$subtotal_price += $subtotal_product;
+											}
+											?>
 											<strong><?= rupiah($subtotal_product) ?></strong>
 										</td>
 										<td class="options">

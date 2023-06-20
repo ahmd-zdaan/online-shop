@@ -153,7 +153,7 @@ include_once 'config/connect.php';
 
 											if (mysqli_num_rows($result) > 0) :
 											?>
-												<div class="dropdown-menu">
+												<div class="dropdown-menu" style="width: 300px;">
 													<ul>
 														<?php
 														$subtotal_price = 0;
@@ -175,25 +175,41 @@ include_once 'config/connect.php';
 															}
 
 															$subtotal_product = $total_quantity * $price;
-															$subtotal_price += $subtotal_product
-														?>
+															$subtotal_price += $subtotal_product;
+
+															$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+															if (mysqli_num_rows($get_sale) > 0) {
+																$data_sale = mysqli_fetch_assoc($get_sale);
+																$sale = $data_sale['sale'];
+																$price_sale = $price - $price * (int)$sale / 100;
+															}
+															?>
 															<li>
-																<a href="product-detail-1.html">
-																	<figure>
+																<a href="index.php?page=product_view&product_id=<?=$product_id?>">
+																	<figure style="width:70px; height:70px;">
 																		<?php
 																		$result = get('product_image', 'WHERE product_id=' . $product_id);
 																		if (mysqli_num_rows($result) > 0) :
 																			$data = mysqli_fetch_assoc($result);
 																			$image_name = $data['image_name'];
 																		?>
-																			<img src="uploads/product/<?= $image_name ?>" style="object-fit: scale-down" class="lazy" alt="image" width="100%">
+																			<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="image" style="width:80%; height:auto">
 																		<?php else : ?>
-																			<img src="uploads/product/default.jpg" class="lazy" alt="image" width="100%">
+																			<img src="uploads/product/default.jpg" class="lazy" alt="image" style="width:80%; height:auto">
 																		<?php endif ?>
-																	</figure> <strong>
-																		<span><?= $total_quantity . 'x ' . $product_name ?></span>
-																		<?= rupiah($price) ?>
-																	</strong>
+																	</figure>
+																	<div class="ml-4">
+																		<p class="m-0" style="font-size:larger; font-weight:bold"><?= $total_quantity . 'x ' . $product_name ?></p>
+																		<?php
+																		$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+																		if (mysqli_num_rows($get_sale) > 0) :
+																		?>
+																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
+																			<p class="old_price m-0" style="font-size:small"><?= rupiah($price) ?></p>
+																		<?php else : ?>
+																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
+																		<?php endif ?>
+																	</div>
 																</a>
 																<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')" class="action">
 																	<i class="ti-trash"></i>
