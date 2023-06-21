@@ -59,6 +59,13 @@ switch ($page) {
         include 'page/review/submit.php';
         break;
 
+    case 'review_helpful_add':
+        include 'page/review/helpful/add.php';
+        break;
+    case 'review_helpful_delete':
+        include 'page/review/helpful/delete.php';
+        break;
+
     case 'wishlist_list':
         include 'page/wishlist/list.php';
         break;
