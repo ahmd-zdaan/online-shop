@@ -231,9 +231,18 @@
 									<?php endif ?>
 								</li>
 								<li>
-									<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
-										<i class="ti-shopping-cart"></i>
-									</a>
+									<?php
+									$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
+									if (mysqli_num_rows($get_cart) > 0) :
+									?>
+										<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Remove to cart" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
+											<i class="ti-shopping-cart"></i>
+										</a>
+									<?php else : ?>
+										<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+											<i class="ti-shopping-cart"></i>
+										</a>
+									<?php endif ?>
 								</li>
 								<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
 							</ul>

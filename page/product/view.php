@@ -500,38 +500,52 @@ $subcategory_name = $data['subcategory_name'];
 																		$get_review_helpful = get('review_helpful', 'WHERE review_id=' . $review_id, '*,count(user_id) as total_helpful');
 																		$data_review_helpful = mysqli_fetch_assoc($get_review_helpful);
 																		$helpful = $data_review_helpful['total_helpful'];
-		
+
 																		if ($helpful > 1) :
 																		?>
 																			<p class="mb-0 mt-4" style="font-weight:normal; color:#9d9d9d; font-size:smaller"><?= $helpful ?> people found this hepful</p>
-																		<?php else : ?>
+																		<?php elseif ($helpful == 1) : ?>
 																			<p class="mb-0 mt-4" style="font-weight:normal; color:#9d9d9d; font-size:smaller"><?= $helpful ?> person found this hepful</p>
 																		<?php endif ?>
 																	</div>
 																	<div class="col">
-																	<?php
-																	if (isset($user_id)) :
-																		if ($user_id == $review_user_id) :
-																	?>
-																			<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
-																				<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">EDIT</a>
-																				<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
-																			</div>
-																		<?php else : ?>
-																			<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
-																				<?php
-																				$get_review_helpful = get('review_helpful', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
+																		<?php
+																		if (isset($user_id)) :
+																			if ($user_id == $review_user_id) :
+																		?>
+																				<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
+																					<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">EDIT</a>
+																					<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
+																				</div>
+																			<?php else : ?>
+																				<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
+																					<?php
+																					$get_review_helpful = get('review_helpful', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
 
-																				if (mysqli_num_rows($get_review_helpful) > 0) :
-																				?>
-																					<a href="index.php?page=review_helpful_delete&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">REMOVE HELPFUL</a>
-																				<?php else : ?>
-																					<a href="index.php?page=review_helpful_add&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">HELPFUL</a>
-																				<?php endif ?>
-																				<a href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORT</a>
-																			</div>
+																					if (mysqli_num_rows($get_review_helpful) > 0) :
+																					?>
+																						<a href="index.php?page=review_helpful_delete&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">REMOVE HELPFUL</a>
+																					<?php else : ?>
+																						<?php
+																						$get_report = get('review_report', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
+
+																						if (mysqli_num_rows($get_report) == 0) :
+																						?>
+																							<a href="index.php?page=review_helpful_add&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">HELPFUL</a>
+																						<?php endif ?>
+																					<?php endif ?>
+																					<?php
+																					$get_report = get('review_report', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
+
+																					if (mysqli_num_rows($get_report) > 0) :
+																					?>
+																						<button href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORTED</button>
+																					<?php else : ?>
+																						<a href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORT</a>
+																					<?php endif ?>
+																				</div>
+																			<?php endif ?>
 																		<?php endif ?>
-																	<?php endif ?>
 																	</div>
 																</div>
 															</div>
