@@ -105,7 +105,7 @@
 			</div>
 			<div class="row small-gutters">
 				<?php
-				$result = get('product', 'WHERE sold>0');
+				$result = get('product', 'WHERE sold > 0');
 				foreach ($result as $data) :
 					$product_id = $data['product_id'];
 					$product_name = $data['product_name'];
@@ -172,8 +172,8 @@
 									$n = 5 - $average_rating;
 									for ($i = $n; $i > 0; $i--) {
 										echo '<i class="icon-star"></i>';
-										echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 									}
+									echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 								}
 								?>
 							</div>
@@ -306,13 +306,16 @@
 			</div>
 			<div class="owl-carousel owl-theme products_carousel">
 				<?php
-				$result = get('product');
+				$result = get('review', 'WHERE rating > 3');
 				foreach ($result as $data) :
 					$product_id = $data['product_id'];
+
+					$get_product = get('product', 'WHERE pr > 3');
 					$product_name = $data['product_name'];
 					$category_id = $data['category_id'];
 					$subcategory_id = $data['subcategory_id'];
 					$price = $data['price'];
+					$sold = $data['sold'];
 					$description = $data['description'];
 				?>
 					<div class="item">
@@ -371,8 +374,8 @@
 									$n = 5 - $average_rating;
 									for ($i = $n; $i > 0; $i--) {
 										echo '<i class="icon-star"></i>';
-										echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 									}
+									echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 								}
 								?>
 							</div>
