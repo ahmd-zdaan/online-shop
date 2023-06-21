@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 17, 2023 at 12:01 PM
+-- Generation Time: Jun 21, 2023 at 09:15 AM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -37,6 +37,14 @@ CREATE TABLE `cart` (
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `user_id`, `product_id`, `quantity`) VALUES
+(78, 18, 60, 1),
+(82, 18, 69, 1);
 
 -- --------------------------------------------------------
 
@@ -157,23 +165,24 @@ CREATE TABLE `product` (
   `description` longtext NOT NULL,
   `manifacturer_id` int(11) NOT NULL,
   `variant` varchar(100) NOT NULL,
-  `weight` float NOT NULL
+  `weight` float NOT NULL,
+  `report` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`product_id`, `product_name`, `category_id`, `subcategory_id`, `price`, `stock`, `sold`, `description`, `manifacturer_id`, `variant`, `weight`) VALUES
-(60, 'PlayStation 4', 2, 3, '3999000', 1, 3, 'RPlay Play-Station 4 PS4 1TB Slim Edition Jet Black With 1 Wireless Controller', 15, '1', 0.7),
-(62, 'Adilette Aqua Slides', 3, 11, '390000', 5, 2, '1', 12, '1', 1),
-(64, 'ADILS / LINNMON', 7, 1, '579000', 3, 0, 'tabl', 18, '1', 2),
-(66, 'Canon EOS Rebel T7 DSLR', 1, 13, '5799000', 9, 0, 'Canon EOS Rebel T7 DSLR Camera with 18-55mm Lens | Built-in Wi-Fi | 24.1 MP CMOS Sensor | DIGIC 4+ Image Processor and Full HD Videos', 20, '1', 1),
-(68, 'Belajar PHP', 6, 12, '49000', 31, 0, 'Belajar PHP', 21, '1', 0),
-(69, 'Xbox Series S', 2, 3, '389000', 3, 1, '- Go all digital with Xbox Series S and experience next-gen speed and performance at a great price.\r\n- Bundle includes: Xbox Series S console, one Xbox Wireless Controller, a high-speed HDMI cable, power cable, and 2 AA batteries.\r\n- Make the most of every gaming minute with Quick Resume, lightning-fast load times, and gameplay of up to 120 FPS—all powered by Xbox Velocity Architecture.\r\n- Enjoy digital games from four generations of Xbox, with hundreds of optimized titles that look and play better than ever.\r\n- Add Xbox Game Pass Ultimate (membership sold separately) to play new games day one. Enjoy hundreds of high-quality games with friends on console, PC, and cloud. Plus, now you can skip the install and jump in with cloud gaming.\r\n- Hardware-accelerated ray tracing gives your games a heightened level of realism. Bring your games and movies to life with advanced 3D Spatial Sound, which produces rich, dynamic audio environments.', 22, '1', 1),
-(70, 'Nike Air Force 1 \'07 LV8', 3, 5, '1909000', 5, 0, 'The radiance lives on in the Air Force 1 \'07 LV8. Crossing hardwood comfort with off-court flair, these kicks add a touch of crafty style to a hoops original. Mixed materials and era-echoing \'80s construction add nothing-but-net style.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1),
-(71, 'Nike Air Max Impact 4', 3, 5, '1349000', 13, 0, 'Elevate your game and your hops. Charged with Max Air cushioning in the heel, this lightweight, secure shoe helps you get off the ground confidently and land comfortably. Plus, rubber wraps up the sides for added durability and stability.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1),
-(80, 'Utopia Kitchen 11 Inch Nonstick Frying Pan', 4, 17, '250000', 15, 0, 'The wobble-free bakelite handle is ergonomically designed and riveted strongly to the pan so you can have a safe cooking experience without worrying about the handle getting loose ever\r\nThe induction bottom of the frying pan is suitable for all types of cooking; including electric and ceramic cook tops\r\nFormed with multi-layered nonstick and top rated aluminum alloy which is used for highly durable professional grade frying pans\r\nHigh quality nonstick interior allows for easier cooking and cleanup; PFOA, lead and Cadmium-free\r\nFor hand cleaning, first use a paper towel, wooden, or plastic spatula to remove off any loose food from the pan; then use a soft nylon scrubber, sponge, or paper towel sprinkled with a few drops of dish-washing soap to wipe the nonstick surface clean', 25, '1', 1);
+INSERT INTO `product` (`product_id`, `product_name`, `category_id`, `subcategory_id`, `price`, `stock`, `sold`, `description`, `manifacturer_id`, `variant`, `weight`, `report`) VALUES
+(60, 'PlayStation 4', 2, 3, '3999000', 1, 3, 'RPlay Play-Station 4 PS4 1TB Slim Edition Jet Black With 1 Wireless Controller', 15, '1', 0.7, 4),
+(62, 'Adilette Aqua Slides', 3, 11, '390000', 5, 2, '1', 12, '1', 1, 0),
+(64, 'ADILS / LINNMON', 7, 1, '579000', 3, 0, 'tabl', 18, '1', 2, 0),
+(66, 'Canon EOS Rebel T7 DSLR', 1, 13, '5799000', 9, 0, 'Canon EOS Rebel T7 DSLR Camera with 18-55mm Lens | Built-in Wi-Fi | 24.1 MP CMOS Sensor | DIGIC 4+ Image Processor and Full HD Videos', 20, '1', 1, 0),
+(68, 'Belajar PHP', 6, 12, '49000', 31, 0, 'Belajar PHP', 21, '1', 0, 0),
+(69, 'Xbox Series S', 2, 3, '389000', 3, 1, '- Go all digital with Xbox Series S and experience next-gen speed and performance at a great price.\r\n- Bundle includes: Xbox Series S console, one Xbox Wireless Controller, a high-speed HDMI cable, power cable, and 2 AA batteries.\r\n- Make the most of every gaming minute with Quick Resume, lightning-fast load times, and gameplay of up to 120 FPS—all powered by Xbox Velocity Architecture.\r\n- Enjoy digital games from four generations of Xbox, with hundreds of optimized titles that look and play better than ever.\r\n- Add Xbox Game Pass Ultimate (membership sold separately) to play new games day one. Enjoy hundreds of high-quality games with friends on console, PC, and cloud. Plus, now you can skip the install and jump in with cloud gaming.\r\n- Hardware-accelerated ray tracing gives your games a heightened level of realism. Bring your games and movies to life with advanced 3D Spatial Sound, which produces rich, dynamic audio environments.', 22, '1', 1, 0),
+(70, 'Nike Air Force 1 \'07 LV8', 3, 5, '1909000', 5, 0, 'The radiance lives on in the Air Force 1 \'07 LV8. Crossing hardwood comfort with off-court flair, these kicks add a touch of crafty style to a hoops original. Mixed materials and era-echoing \'80s construction add nothing-but-net style.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, 0),
+(71, 'Nike Air Max Impact 4', 3, 5, '1349000', 13, 0, 'Elevate your game and your hops. Charged with Max Air cushioning in the heel, this lightweight, secure shoe helps you get off the ground confidently and land comfortably. Plus, rubber wraps up the sides for added durability and stability.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, 0),
+(80, 'Utopia Kitchen 11 Inch Nonstick Frying Pan', 4, 17, '250000', 15, 0, 'The wobble-free bakelite handle is ergonomically designed and riveted strongly to the pan so you can have a safe cooking experience without worrying about the handle getting loose ever\r\nThe induction bottom of the frying pan is suitable for all types of cooking; including electric and ceramic cook tops\r\nFormed with multi-layered nonstick and top rated aluminum alloy which is used for highly durable professional grade frying pans\r\nHigh quality nonstick interior allows for easier cooking and cleanup; PFOA, lead and Cadmium-free\r\nFor hand cleaning, first use a paper towel, wooden, or plastic spatula to remove off any loose food from the pan; then use a soft nylon scrubber, sponge, or paper towel sprinkled with a few drops of dish-washing soap to wipe the nonstick surface clean', 25, '1', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -205,6 +214,27 @@ INSERT INTO `product_image` (`id`, `image_name`, `product_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_report`
+--
+
+CREATE TABLE `product_report` (
+  `product_report_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `report` longtext NOT NULL,
+  `date` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_report`
+--
+
+INSERT INTO `product_report` (`product_report_id`, `user_id`, `product_id`, `report`, `date`) VALUES
+(7, 18, 60, 'okoko', '19-06-2023');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `review`
 --
 
@@ -214,17 +244,18 @@ CREATE TABLE `review` (
   `user_id` int(11) NOT NULL,
   `rating` int(11) NOT NULL,
   `review` longtext NOT NULL,
-  `date` varchar(100) NOT NULL
+  `date` varchar(100) NOT NULL,
+  `report` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `review`
 --
 
-INSERT INTO `review` (`review_id`, `product_id`, `user_id`, `rating`, `review`, `date`) VALUES
-(14, 60, 18, 5, 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iure vitae debitis soluta quidem ab esse inventore? Impedit soluta, sit enim optio possimus iusto unde laudantium, quia vitae facere laboriosam praesentium!', '17-05-2023'),
-(15, 60, 16, 1, 'badbabadbadb', '17-05-2023'),
-(17, 60, 18, 5, 'best', '03-06-2023');
+INSERT INTO `review` (`review_id`, `product_id`, `user_id`, `rating`, `review`, `date`, `report`) VALUES
+(14, 60, 18, 5, 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iure vitae debitis soluta quidem ab esse inventore? Impedit soluta, sit enim optio possimus iusto unde laudantium, quia vitae facere laboriosam praesentium!', '17-05-2023', 0),
+(15, 60, 16, 1, 'badbabadbadb', '17-05-2023', 2),
+(17, 60, 18, 5, 'best', '03-06-2023', 0);
 
 -- --------------------------------------------------------
 
@@ -236,6 +267,20 @@ CREATE TABLE `review_image` (
   `review_image_id` int(11) NOT NULL,
   `image_name` varchar(100) NOT NULL,
   `review_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review_report`
+--
+
+CREATE TABLE `review_report` (
+  `review_report_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `review_id` int(11) NOT NULL,
+  `report` longtext NOT NULL,
+  `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -413,6 +458,14 @@ ALTER TABLE `product_image`
   ADD KEY `fk_product_image_product_id_product_id` (`product_id`);
 
 --
+-- Indexes for table `product_report`
+--
+ALTER TABLE `product_report`
+  ADD PRIMARY KEY (`product_report_id`),
+  ADD KEY `fk_product_report_product_id` (`product_id`),
+  ADD KEY `fk_product_report_user_id` (`user_id`);
+
+--
 -- Indexes for table `review`
 --
 ALTER TABLE `review`
@@ -425,6 +478,14 @@ ALTER TABLE `review`
 --
 ALTER TABLE `review_image`
   ADD PRIMARY KEY (`review_image_id`);
+
+--
+-- Indexes for table `review_report`
+--
+ALTER TABLE `review_report`
+  ADD PRIMARY KEY (`review_report_id`),
+  ADD KEY `fk_review_report_review_id` (`review_id`),
+  ADD KEY `fk_review_report_user_id` (`user_id`);
 
 --
 -- Indexes for table `sale`
@@ -469,7 +530,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -505,13 +566,19 @@ ALTER TABLE `manifacturer`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `product_image`
 --
 ALTER TABLE `product_image`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `product_report`
+--
+ALTER TABLE `product_report`
+  MODIFY `product_report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `review`
@@ -524,6 +591,12 @@ ALTER TABLE `review`
 --
 ALTER TABLE `review_image`
   MODIFY `review_image_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `review_report`
+--
+ALTER TABLE `review_report`
+  MODIFY `review_report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `sale`
@@ -553,7 +626,7 @@ ALTER TABLE `user_image`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables
@@ -595,11 +668,25 @@ ALTER TABLE `product_image`
   ADD CONSTRAINT `fk_product_image_product_id_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `product_report`
+--
+ALTER TABLE `product_report`
+  ADD CONSTRAINT `fk_product_report_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_product_report_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `review`
 --
 ALTER TABLE `review`
   ADD CONSTRAINT `fk_product_id_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_user_id_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `review_report`
+--
+ALTER TABLE `review_report`
+  ADD CONSTRAINT `fk_review_report_review_id` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_review_report_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `sale`
