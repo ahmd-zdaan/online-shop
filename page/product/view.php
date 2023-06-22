@@ -86,6 +86,12 @@ $subcategory_name = $data['subcategory_name'];
 				<div class="col-md-6">
 					<div class="all">
 						<div class="slider">
+							<div class="owl-carousel owl-theme main">
+								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
+							</div>
+							<div class="left nonl"><i class="ti-angle-left"></i></div>
+							<div class="right"><i class="ti-angle-right"></i></div>
 							<?php
 							$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 							if (mysqli_num_rows($get_sale) > 0) :
@@ -93,14 +99,8 @@ $subcategory_name = $data['subcategory_name'];
 								$sale = $data_sale['sale'];
 								$price_sale = $price - $price * (int)$sale / 100;
 							?>
-								<span class="ribbon off">- <?= $sale ?></span>
+								<span style="font-size:medium;" class="ribbon off ml-3 mt-3 px-3 py-2">- <?= $sale ?>%</span>
 							<?php endif ?>
-							<div class="owl-carousel owl-theme main">
-								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
-								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
-							</div>
-							<div class="left nonl"><i class="ti-angle-left"></i></div>
-							<div class="right"><i class="ti-angle-right"></i></div>
 						</div>
 						<div class="slider-two">
 							<div class="owl-carousel owl-theme thumbs">
@@ -566,8 +566,7 @@ $subcategory_name = $data['subcategory_name'];
 				<div class="container margin_60_35">
 					<div class="main_title">
 						<h2>Related</h2>
-						<span>Products</span>
-						<p>Discover related products.</p>
+						<p>Discover related products</p>
 					</div>
 					<div class="owl-carousel owl-theme products_carousel">
 						<?php
@@ -595,7 +594,7 @@ $subcategory_name = $data['subcategory_name'];
 										$sale = $data_sale['sale'];
 										$price_sale = $price_related - $price_related * (int)$sale / 100;
 									?>
-										<span class="ribbon off">- <?= $sale ?></span>
+										<span class="ribbon off">- <?= $sale ?>%</span>
 									<?php endif ?>
 									<figure>
 										<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
@@ -699,6 +698,7 @@ $subcategory_name = $data['subcategory_name'];
 					</div>
 				</div>
 	</main>
+
 	<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="size-modal" id="size-modal" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
@@ -785,6 +785,7 @@ $subcategory_name = $data['subcategory_name'];
 			</div>
 		</div>
 	</div>
+
 	<div id="toTop"></div><!-- Back to top button -->
 	<script>
 		function readMore() {
