@@ -319,7 +319,7 @@ include_once 'config/connect.php';
 													<li>
 														<a href="index.php?page=help">
 															<i class="ti-help-alt"></i>
-															Help & Faq
+															Help & FAQ
 														</a>
 													</li>
 													<li>
@@ -373,7 +373,7 @@ include_once 'config/connect.php';
 							<ul>
 								<li><a href="index.php?page=view_profile">My Profile</a></li>
 								<li><a href="index.php?page=about">About Us</a></li>
-								<li><a href="index.php?page=help">Help & Faq</a></li>
+								<li><a href="index.php?page=help">Help & FAQ</a></li>
 								<li><a href="index.php?blog">Blog</a></li>
 								<!-- <li><a href="contacts.html">Contacts</a></li> -->
 							</ul>
@@ -405,7 +405,7 @@ include_once 'config/connect.php';
 								</li>
 								<li>
 									<i class="ti-email"></i>
-									<a href="#">email@email.com</a>
+									<a href="#">online@shop.com</a>
 								</li>
 							</ul>
 						</div>
@@ -484,9 +484,15 @@ include_once 'config/connect.php';
 					</div>
 					<div class="col-lg-6">
 						<ul class="additional_links">
-							<li><a href="#0">Terms and conditions</a></li>
-							<li><a href="#0">Privacy</a></li>
-							<li><span>&copy; 2023 Online_Shop</span></li>
+							<li>
+								<a href="index.php?page=terms">Terms and conditions</a>
+							</li>
+							<li>
+								<a href="index.php?page=help">Help and FAQ</a>
+							</li>
+							<li>
+								<span>&copy; 2023 Online_Shop</span>
+							</li>
 						</ul>
 					</div>
 				</div>

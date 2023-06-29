@@ -92,12 +92,14 @@ $image_name = $product_image_table['image_name'];
 						</div>
 						<div class="form-group">
 							<label>Add photo</label>
-							<div name="image" class="fileupload"><input type="file" name="fileupload"></div>
+							<div>
+								<input class="form-control" type="file" name="image">
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="checkboxes add_bottom_15 add_top_15">
 								<label class="container_check">Accept
-									<a href="#0">Terms and conditions</a>
+									<a href="index.php?page=terms">Terms and Conditions</a>
 									<input required type="checkbox">
 									<span class="checkmark"></span>
 								</label>
@@ -126,8 +128,9 @@ $image_name = $product_image_table['image_name'];
 
 							$tmp = $_FILES['image']['tmp_name'];
 							if (move_uploaded_file($tmp, "uploads/review/" . $image_name)) {
-								$result = insert('manifacturer', [
-									'image_name' => $image_name
+								$result = insert('review_image', [
+									'image_name' => $image_name,
+									'review_id' => mysqli_insert_id($connect)								
 								]);
 
 								if (!$result) {

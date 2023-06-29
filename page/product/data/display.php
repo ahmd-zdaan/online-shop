@@ -2,26 +2,34 @@
 include_once '../../../config/connect.php';
 
 $search = $_GET['search'];
-
 $filter_subcategory_id = $_GET['subcategory_id'];
 $filter_category_id = $_GET['category_id'];
-$where = ($filter_subcategory_id != 0) ? 'WHERE subcategory_id IN (' . $filter_subcategory_id . ') AND product_name LIKE "%' . $search . '%"' : 'WHERE category_id IN (' . $filter_category_id . ') AND product_name LIKE "%' . $search . '%"';
+$filter_min_price = $_GET['min_price'];
+$filter_max_price = $_GET['max_price'];
 
-// if ($filter_subcategory_id != 0) {
-//     $where = 'WHERE category_id IN (' . $filter_category_id . ') AND product_name LIKE "%' . $search . '%"';
-// } elseif ($min_price > 0) {
-//     $where = 'WHERE subcategory_id IN (' . $filter_subcategory_id . ') AND price BETWEEN ' . $min_price . ' AND ' . $max_price . ' AND product_name LIKE "%' . $search . '%"';
-// }
+// var_dump($filter_min_price, $filter_max_price);
 
-if ($filter_category_id == 0 and $filter_subcategory_id == 0) {
-    $result = get('product', 'WHERE product_name LIKE "%' . $search . '%"');
-} else {
-    $result = get('product', $where);
+if ($filter_subcategory_id != 0) {
+    $where = 'WHERE subcategory_id IN (' . $filter_subcategory_id . ')';
+} elseif ($filter_category_id != 0) {
+    $where = 'WHERE category_id IN (' . $filter_category_id . ')';
+} elseif ($filter_max_price != 0) {
+    if ($filter_max_price == -1) {
+        $where = 'WHERE price > ' . $filter_min_price;
+    } else {
+        $where = 'WHERE price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
+    }
 }
 
-// if ($search != '') {
-//     $result = get('product', 'WHERE product_name LIKE "%'.$search.'%"');
-// }
+// belum sesuai category/subcategory
+// cek langsung dari produk, produk yang diskon tidak terdeteksi
+if (isset($where)) {
+    $result = get('product', $where . ' AND product_name LIKE "%' . $search . '%"');
+} else {
+    $result = get('product', 'WHERE product_name LIKE "%' . $search . '%"');
+}
+
+// var_dump($where, $result);
 
 foreach ($result as $data) :
     $product_id = $data['product_id'];

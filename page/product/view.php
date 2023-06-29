@@ -493,6 +493,14 @@ $subcategory_name = $data['subcategory_name'];
 																	</span>
 																	<em style="font-weight:normal"><?= dateConvert($date) ?></em>
 																</div>
+																<?php
+																$get_review_image = get('review_image', 'WHERE review_id=' . $review_id);
+																if (mysqli_num_rows($get_review_image) > 0) :
+																	$data_review_image = mysqli_fetch_assoc($get_review_image);
+																	$review_image_name = $data_review_image['image_name'];
+																?>
+																	<img class="mb-3" src="uploads/review/<?= $review_image_name ?>" alt="">
+																<?php endif ?>
 																<p class="mb-2"><?= $review ?></p>
 																<div class="row">
 																	<div class="col-4">
