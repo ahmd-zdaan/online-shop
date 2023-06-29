@@ -75,7 +75,7 @@
             minPrice = 0;
             maxPrice = 0;
         }
-        console.log(subcategoryData);
+
         load_product(categoryData, subcategoryData, '', minPrice, maxPrice);
     });
 </script>
