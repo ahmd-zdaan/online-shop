@@ -37,7 +37,7 @@ check('login');
 <body>
 	<div id="page">
 		<main class="bg_gray">
-			<div class="container margin_30">
+			<div class="container margin_30 pb-0">
 				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
@@ -172,16 +172,15 @@ check('login');
 						</tbody>
 					</table>
 				<?php else : ?>
-					<div class="text-center my-5">
+					<div class="text-center my-5 pb-5">
 						<img src="img/empty.png" alt="empty">
 						<h3 class="mt-4">Nothing to see here</h3>
-						<p>You have not wishlisted any products</p>
+						<p class="mb-5 pb-5">You have not wishlisted any products</p>
 					</div>
-					<div class="container margin_60_35 mt-5" style="background-color: white;">
+					<div class="container margin_60_35 mt-5 pb-0" style="background-color: white;">
 						<div class="main_title">
-							<h3 class="m-0">Featured Products</h3>
-							<!-- <span>Products</span> -->
-							<p style="font-size:large;">Browse & discover millions of products</p>
+							<h3 class="m-0">Create Your Dream Wishlist</h3>
+							<p style="font-size:large;">Explore and Save Your Favorite Products</p>
 						</div>
 						<div class="owl-carousel owl-theme products_carousel">
 							<?php
