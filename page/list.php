@@ -99,79 +99,76 @@
 						</div>
 						<!-- PRICE -->
 						<div class="filter_type version_2">
-							<h4><a href="#filter_4" data-toggle="collapse" class="opened">Price</a></h4>
+							<h4>
+								<a href="#filter_4" data-toggle="collapse" class="opened">Price</a>
+							</h4>
 							<div class="collapse" id="filter_4">
+								<?php
+								$filter_price_1 = 0;
+								$filter_price_2 = 0;
+								$filter_price_3 = 0;
+								$filter_price_4 = 0;
+								$filter_price_5 = 0;
+
+								$get_product = get('product');
+								foreach ($get_product as $product) {
+									$product_id = $product['product_id'];
+									$price = (int)$product['price'];
+
+									$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+									if (mysqli_num_rows($get_sale) > 0) {
+										$data_sale = mysqli_fetch_assoc($get_sale);
+										$sale = (int)$data_sale['sale'];
+										$price = $price - $price * $sale / 100;
+									}
+
+									if ($price < 50000) {
+										$filter_price_1 += 1;
+									} elseif ($price > 50000 and $price < 250000) {
+										$filter_price_2 += 1;
+									} elseif ($price > 250000 and $price < 1000000) {
+										$filter_price_3 += 1;
+									} elseif ($price > 1000000 and $price < 5000000) {
+										$filter_price_4 += 1;
+									} elseif ($price > 5000000) {
+										$filter_price_5 += 1;
+									} 
+								}
+								?>
 								<ul>
 									<li>
 										<label class="container_check">Rp0,00 - Rp50.000,00
-											<?php
-											$result_price = get('product', 'WHERE price BETWEEN 0 AND 50000', 'COUNT(product_id)');
-											$data_price = mysqli_fetch_assoc($result_price);
-											$price_count = $data_price['COUNT(product_id)'];
-											?>
-											<small><?= $price_count ?></small>
+											<small><?= $filter_price_1 ?></small>
 											<input class="category price-check" type="checkbox" data-min-price="0" data-max-price="50000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
 									<li>
 										<label class="container_check">Rp50.000,00 - Rp250.000,00
-											<?php
-											$result_price = get('product', 'WHERE price BETWEEN 50000 AND 250000', 'COUNT(product_id)');
-											$data_price = mysqli_fetch_assoc($result_price);
-											$price_count = $data_price['COUNT(product_id)'];
-											?>
-											<small><?= $price_count ?></small>
+											<small><?= $filter_price_2 ?></small>
 											<input class="category price-check" type="checkbox" data-min-price="50000" data-max-price="250000">
 											<span class="checkmark"></span>
 										</label>
 									</li>
-										<label class="container_check">Rp250.000,00 - Rp500.000,00
-											<?php
-											$result_price = get('product', 'WHERE price BETWEEN 250000 AND 500000', 'COUNT(product_id)');
-											$data_price = mysqli_fetch_assoc($result_price);
-											$price_count = $data_price['COUNT(product_id)'];
-											?>
-											<small><?= $price_count ?></small>
-											<input class="category price-check" type="checkbox" data-min-price="250000" data-max-price="500000">
-											<span class="checkmark"></span>
-										</label>
+									<label class="container_check">Rp250.000,00 - Rp1.000.000,00
+										<small><?= $filter_price_3 ?></small>
+										<input class="category price-check" type="checkbox" data-min-price="250000" data-max-price="1000000">
+										<span class="checkmark"></span>
+									</label>
 									</li>
 									</li>
-										<label class="container_check">Rp500.000,00 - Rp1.000.000,00
-											<?php
-											$result_price = get('product', 'WHERE price BETWEEN 500000 AND 1000000', 'COUNT(product_id)');
-											$data_price = mysqli_fetch_assoc($result_price);
-											$price_count = $data_price['COUNT(product_id)'];
-											?>
-											<small><?= $price_count ?></small>
-											<input class="category price-check" type="checkbox" data-min-price="500000" data-max-price="1000000">
-											<span class="checkmark"></span>
-										</label>
+									<label class="container_check">Rp1.000.000,00 - Rp5.000.000,00
+										<small><?= $filter_price_4 ?></small>
+										<input class="category price-check" type="checkbox" data-min-price="1000000" data-max-price="5000000">
+										<span class="checkmark"></span>
+									</label>
 									</li>
 									</li>
-										<label class="container_check">Rp1.000.000,00 - Rp3.000.000,00
-											<?php
-											$result_price = get('product', 'WHERE price BETWEEN 1000000 AND 3000000', 'COUNT(product_id)');
-											$data_price = mysqli_fetch_assoc($result_price);
-											$price_count = $data_price['COUNT(product_id)'];
-											?>
-											<small><?= $price_count ?></small>
-											<input class="category price-check" type="checkbox" data-min-price="1000000" data-max-price="3000000">
-											<span class="checkmark"></span>
-										</label>
-									</li>
-									</li>
-										<label class="container_check">Rp3.000.000,00 +
-											<?php
-											$result_price = get('product', 'WHERE price > 3000000', 'COUNT(product_id)');
-											$data_price = mysqli_fetch_assoc($result_price);
-											$price_count = $data_price['COUNT(product_id)'];
-											?>
-											<small><?= $price_count ?></small>
-											<input class="category price-check" type="checkbox" data-min-price="3000000" data-max-price="">
-											<span class="checkmark"></span>
-										</label>
+									<label class="container_check">Rp5.000.000,00 +
+										<small><?= $filter_price_5 ?></small>
+										<input class="category price-check" type="checkbox" data-min-price="5000000" data-max-price="-1">
+										<span class="checkmark"></span>
+									</label>
 									</li>
 								</ul>
 							</div>
@@ -196,7 +193,7 @@
 										<li>
 											<label class="container_check"><?= $manifacturer_name ?>
 												<small><?= $manifacturer_count ?></small>
-												<input type="checkbox">
+												<input class="manifacturer-check" type="checkbox" data-manifacturer="<?=$manifacturer_id?>">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -268,9 +265,9 @@
 					<?php
 					elseif ($view == 'list') :
 					?>
-						<div id="list-product"></div>					
+						<div id="list-product"></div>
 
-						<?php endif ?>
+					<?php endif ?>
 					<!-- <div class="pagination__wrapper">
 						<ul class="pagination">
 							<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>

@@ -73,7 +73,7 @@ check('register');
 							</div>
 							<div class="form-group mt-2 mb-3">
 								<label class="container_check">Accept
-									<a href="#0">Terms and conditions</a>
+									<a href="index.php?page=terms">Terms and Conditions</a>
 									<input required type="checkbox">
 									<span class="checkmark"></span>
 								</label>
