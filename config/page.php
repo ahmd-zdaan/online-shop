@@ -199,6 +199,9 @@ switch ($page) {
     case 'about':
         include 'page/about.php';
         break;
+    case 'terms':
+        include 'page/terms.php';
+        break;
     case 'help':
         include 'page/help.php';
         break;

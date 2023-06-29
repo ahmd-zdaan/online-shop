@@ -99,11 +99,11 @@
 			</li>
 		</ul>
 		<div class="container margin_60_35 pt-5">
-			<div class="main_title">
+			<div class="main_title mb-5">
 				<h2>Products on Sale</h2>
-				<p>Discover products that are on sale</p>
+				<p>Shop the Best Products on Sale Now!</p>
 			</div>
-			<div class="row small-gutters">
+			<div class="owl-carousel owl-theme products_carousel">
 				<?php
 				$result = get('sale', 'ORDER BY sale DESC');
 
@@ -121,7 +121,7 @@
 					$sold = $data['sold'];
 					$description = $data['description'];
 				?>
-					<div class="col-6 col-md-4 col-xl-3">
+					<div class="item">
 						<div class="grid_item">
 							<?php
 							$get_sale = get('sale', 'WHERE product_id=' . $product_id);
@@ -133,9 +133,6 @@
 								<span class="ribbon off">- <?= $sale ?>%</span>
 							<?php endif ?>
 							<figure>
-								<!-- <span class="ribbon new">New</span>
-								<span class="ribbon hot">Hot</span>
-								<span class="ribbon off">-30%</span> -->
 								<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 									<?php
 									$result = get('product_image', 'WHERE product_id=' . $product_id);
@@ -150,7 +147,6 @@
 										<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 									<?php endif ?>
 								</a>
-								<!-- <div data-countdown="2019/05/15" class="countdown"></div> -->
 							</figure>
 							<div class="rating">
 								<?php
@@ -181,7 +177,7 @@
 								}
 								?>
 							</div>
-							<a href="product-detail-1.html">
+							<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 								<h3>
 									<?= $product_name ?>
 								</h3>
@@ -224,12 +220,14 @@
 										$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 										if (mysqli_num_rows($get_wishlist) > 0) :
 									?>
-											<a href="index.php?page=wishlist_remove&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Remove from wishlist">
-												<i class="ti-heart"></i>
+											<a href="index.php?page=wishlist_remove&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="tooltip-1" data-toggle="tooltip" data-placement="left">
+												<i class="ti-heart">Remove from wishlist</i>
+												<span></span>
 											</a>
 										<?php else : ?>
-											<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+											<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left">
 												<i class="ti-heart"></i>
+												<span>Add to wishlist</span>
 											</a>
 										<?php endif ?>
 									<?php endif ?>
@@ -240,17 +238,18 @@
 										$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 										if (mysqli_num_rows($get_cart) > 0) :
 									?>
-											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Remove from cart" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
+											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
 												<i class="ti-shopping-cart"></i>
+												<span>Remove from Cart</span>
 											</a>
 										<?php else : ?>
-											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left">
 												<i class="ti-shopping-cart"></i>
+												<span>Add to Cart</span>
 											</a>
 										<?php endif ?>
 									<?php endif ?>
 								</li>
-								<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
 							</ul>
 						</div>
 					</div>
@@ -258,7 +257,7 @@
 			</div>
 		</div>
 		<?php
-		$get_sale = get('sale');
+		$get_sale = get('sale', 'ORDER BY sale DESC');
 		$data_sale = mysqli_fetch_assoc($get_sale);
 		$product_id_sale = $data_sale['product_id'];
 		$sale = $data_sale['sale'];
@@ -276,40 +275,51 @@
 		$data_product_image = mysqli_fetch_assoc($get_product_image);
 		$product_image_sale = $data_product_image['image_name']
 		?>
-		<!-- <div class="featured lazy" data-bg="url(uploads/product/<?= $product_image_sale ?>)"> -->
-		<div class="featured lazy container-fluid" style='background-image: url("uploads/product/<?= $product_image_sale ?>");'>
+		<div class="featured container-fluid">
+			<img src="uploads/product/<?= $product_image_sale ?>" class="pl-5 pt-5" width="450px">
 			<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 				<div class="container margin_60">
-					<div class="row justify-content-center justify-content-md-start">
+					<span class="ribbon off m-3 py-2 px-3" style="font-size: large;">- <?= $sale ?>%</span>
+					<div class="row justify-content-end text-right">
 						<div class="col-lg-6 wow" data-wow-offset="150">
-							<h3>
+							<h4 class="mb-3" style="color: white">
 								<?= $product_name_sale ?>
-							</h3>
-							<p>
-								<?= $description_sale ?>
-							</p>
-							<div class="feat_text_block">
-								<div class="price_box">
-									<span class="new_price mr-1" style="font-size:larger; font-weight:bold">
-										<?= rupiah($price_sale) ?>
-									</span>
-									<span class="old_price">
-										<?= rupiah($price_original_sale) ?>
-									</span>
-								</div>
-								<a class="btn_1" href="index.php?page=product_view&product_id=<?= $product_id_sale ?>" role="button">Shop Now</a>
+							</h4>
+							<?php
+							$desc_array = explode(' ', $description_sale);
+							$desc_count = count($desc_array);
+
+							$desc = '';
+
+							if ($desc_count > 25) :
+								for ($i = 0; $i < 25; $i++) {
+									$desc .= $desc_array[$i] . ' ';
+								}
+							?>
+								<p class="m-0" style="font-weight: lighter;"><?= $desc ?> ...</p>
+							<?php else : ?>
+								<p class="m-0" style="font-weight: lighter;"><?= $description_sale ?></p>
+							<?php endif ?>
+							<div class="my-2">
+								<span class=" new_price mr-1" style="color: white; font-size:larger; font-weight:bolder">
+									<?= rupiah($price_sale) ?>
+								</span>
+								<span class="old_price" style="color:#9d9d9d">
+									<?= rupiah($price_original_sale) ?>
+								</span>
 							</div>
+							<a class="btn_1 mt-2" href="index.php?page=product_view&product_id=<?= $product_id_sale ?>" role="button">View Product</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="container margin_60_35 pb-4">
+		<div class="container margin_60_35 pt-5">
 			<div class="main_title mb-5">
 				<h2>Top Selling</h2>
 				<p>Discover the best selling products</p>
 			</div>
-			<div class="row small-gutters">
+			<div class="owl-carousel owl-theme products_carousel">
 				<?php
 				$result = get('product', 'WHERE sold > 0');
 				foreach ($result as $data) :
@@ -321,7 +331,7 @@
 					$sold = $data['sold'];
 					$description = $data['description'];
 				?>
-					<div class="col-6 col-md-4 col-xl-3">
+					<div class="item">
 						<div class="grid_item">
 							<?php
 							$get_sale = get('sale', 'WHERE product_id=' . $product_id);
@@ -333,9 +343,6 @@
 								<span class="ribbon off">- <?= $sale ?>%</span>
 							<?php endif ?>
 							<figure>
-								<!-- <span class="ribbon new">New</span>
-								<span class="ribbon hot">Hot</span>
-								<span class="ribbon off">-30%</span> -->
 								<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 									<?php
 									$result = get('product_image', 'WHERE product_id=' . $product_id);
@@ -350,7 +357,6 @@
 										<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 									<?php endif ?>
 								</a>
-								<!-- <div data-countdown="2019/05/15" class="countdown"></div> -->
 							</figure>
 							<div class="rating">
 								<?php
@@ -381,7 +387,7 @@
 								}
 								?>
 							</div>
-							<a href="product-detail-1.html">
+							<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 								<h3>
 									<?= $product_name ?>
 								</h3>
@@ -424,12 +430,14 @@
 										$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 										if (mysqli_num_rows($get_wishlist) > 0) :
 									?>
-											<a href="index.php?page=wishlist_remove&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Remove from wishlist">
-												<i class="ti-heart"></i>
+											<a href="index.php?page=wishlist_remove&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="tooltip-1" data-toggle="tooltip" data-placement="left">
+												<i class="ti-heart">Remove from wishlist</i>
+												<span></span>
 											</a>
 										<?php else : ?>
-											<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+											<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left">
 												<i class="ti-heart"></i>
+												<span>Add to wishlist</span>
 											</a>
 										<?php endif ?>
 									<?php endif ?>
@@ -440,17 +448,18 @@
 										$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
 										if (mysqli_num_rows($get_cart) > 0) :
 									?>
-											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Remove from cart" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
+											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
 												<i class="ti-shopping-cart"></i>
+												<span>Remove from Cart</span>
 											</a>
 										<?php else : ?>
-											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left">
 												<i class="ti-shopping-cart"></i>
+												<span>Add to Cart</span>
 											</a>
 										<?php endif ?>
 									<?php endif ?>
 								</li>
-								<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
 							</ul>
 						</div>
 					</div>
