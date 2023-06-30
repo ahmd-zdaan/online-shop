@@ -93,7 +93,7 @@ $image_name = $product_image_table['image_name'];
 						<div class="form-group">
 							<label>Add photo</label>
 							<div>
-								<input class="form-control" type="file" name="image">
+								<input class="form-control" type="file" name="image[]" multiple>
 							</div>
 						</div>
 						<div class="form-group">
@@ -121,22 +121,26 @@ $image_name = $product_image_table['image_name'];
 							'date' => date("Y-m-d")
 						]);
 
-						if (!empty($_FILES['image']['name'])) {
-							$name = $_FILES['image']['name'];
-							list($file_name, $extension) = explode(".", $name);
-							$image_name = time() . "." . $extension;
+						$review_id = mysqli_insert_id($connect);
+						$i = 0;
 
-							$tmp = $_FILES['image']['tmp_name'];
-							if (move_uploaded_file($tmp, "uploads/review/" . $image_name)) {
+						foreach ($_FILES['image']['name'] as $file_name) {
+							list($file_name, $extension) = explode(".", $file_name);
+							$image_name = uniqid() . "." . $extension;
+
+							$tmp_path = $_FILES['image']['tmp_name'][$i];
+							if (move_uploaded_file($tmp_path, "uploads/review/" . $image_name)) {
 								$result = insert('review_image', [
 									'image_name' => $image_name,
-									'review_id' => mysqli_insert_id($connect)								
+									'review_id' => $review_id
 								]);
 
 								if (!$result) {
 									unlink("uploads/review/" . $image_name);
 								}
 							}
+
+							$i++;
 						}
 
 						if ($result) {
