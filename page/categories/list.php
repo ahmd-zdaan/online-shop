@@ -100,10 +100,11 @@ check('login')
 									</ul>
 									<?php endforeach ?>
 								</td>
-								<!-- OPTIONS -->
 								<td class="row">
-									<a href="index.php?page=category_edit&category_id=<?= $category_id ?>" class="btn_1 col p-3 my-1">EDIT</a>
-									<a href="index.php?page=category_delete&category_id=<?= $category_id ?>" onclick="return confirm('Are you sure you want to DELETE this category?')" class="btn_1 col p-3 my-1">DELETE</a>
+									<div class="btn-group p-0">
+										<a class="btn btn-outline-primary col" href="index.php?page=category_edit&category_id=<?= $category_id ?>">EDIT</a>
+										<a class="btn btn-outline-danger col" href="index.php?page=category_delete&category_id=<?= $category_id ?>" onclick="return confirm('Are you sure you want to DELETE this category?')">DELETE</a>
+									</div>
 								</td>
 							</tr>
 						<?php endforeach ?>

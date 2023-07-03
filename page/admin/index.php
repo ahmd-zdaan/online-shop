@@ -51,25 +51,22 @@ check('login')
 					<div>
 						<ul>
 							<li>
-								<a href="index.php?page=product_list">Product List</a>
+								<a href="index.php?page=product_list">Products</a>
 							</li>
 							<li>
-								<a href="index.php?page=category_list">Category List</a>
+								<a href="index.php?page=category_list">Categories and Subcategories</a>
 							</li>
 							<li>
-								<a href="index.php?page=subcategory_list">Subcategory List</a>
+								<a href="index.php?page=manifacturer_list">Manifacturers</a>
 							</li>
 							<li>
-								<a href="index.php?page=manifacturer_list">Manifacturer List</a>
+								<a href="index.php?page=sale_list">Sales</a>
 							</li>
 							<li>
-								<a href="index.php?page=sale_list">Sales List</a>
+								<a href="index.php?page=report_product_list">Product Reports</a>
 							</li>
 							<li>
-								<a href="index.php?page=report_product_list">Product Report List</a>
-							</li>
-							<li>
-								<a href="index.php?page=report_review_list">Review Report List</a>
+								<a href="index.php?page=report_review_list">Review Reports</a>
 							</li>
 						</ul>
 					</div>
