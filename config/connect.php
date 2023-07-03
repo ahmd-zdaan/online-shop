@@ -41,15 +41,15 @@ function login($email, $password) {
     }
 }
 
-function register($user_name, $email, $password, $confirmPassword, $address, $country_id, $telephone) {
+function register($user_name, $role, $email, $password, $confirmPassword, $address, $country_id, $telephone) {
     $result = get("user","WHERE email='".$email."'");
     
     if (mysqli_num_rows($result) == 0) {
         if ($password == $confirmPassword) {
             $password_encrypt = password_hash($password, PASSWORD_DEFAULT);
             $result = insert('user', [
-                'role' => 'user',
                 'user_name' => $user_name,
+                'role' => $role,
                 'email' => $email,
                 'password' => $password_encrypt,
                 'address' => $address,
@@ -167,4 +167,9 @@ function dateConvert($input) {
     $output = $day.' '.$month.', '.$year;
     
     return $output;
+}
+
+function cutFromEnd($string, $value) {
+    $result = rtrim($string, substr($string, -$value));
+    return $result;
 }

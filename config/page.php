@@ -1,11 +1,34 @@
 <?php
-$page = "";
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+
+    $get_user = get('user', 'WHERE email="' . $email . '"');
+    $data_user = mysqli_fetch_assoc($get_user);
+    $role = $data_user['role'];
+
+    if ($role == 'seller') {
+        $page = "seller_index";
+    }
+} else {
+    $page = "";
+}
 
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
 
 switch ($page) {
+        // SELLER
+    case 'seller_index':
+        include 'page/seller/index.php';
+        break;
+    case 'seller_view':
+        include 'page/seller/view.php';
+        break;
+    case 'seller_product':
+        include 'page/seller/product.php';
+        break;
+
         // ACCOUNT
     case 'register':
         include 'page/register.php';
@@ -100,7 +123,7 @@ switch ($page) {
         include 'page/product/list.php';
         break;
     case 'product_add':
-        include 'page/product/add.php';
+        include 'page/seller/add.php';
         break;
     case 'product_view':
         include 'page/product/view.php';
@@ -113,7 +136,7 @@ switch ($page) {
         break;
 
     case 'category_list':
-        include 'page/categories/category/list.php';
+        include 'page/categories/list.php';
         break;
     case 'category_add':
         include 'page/categories/category/add.php';

@@ -26,7 +26,7 @@ foreach ($get_cart as $data_cart) :
 	$product_name_50 = $data_product['product_name'];
 
 	if (strlen($product_name_50) > 50) {
-		$product_name_50 = rtrim($product_name_50, substr($product_name_50, -4));
+		$product_name_50 = cutFromEnd($product_name_50, 4);
 		$product_name_50 .= '...';
 	}
 
@@ -61,8 +61,6 @@ $transaction_details = array(
 	'order_id' => rand(),
 	'gross_amount' => $total_price + 17000 // no decimal allowed for creditcard
 );
-
-var_dump($transaction_details);
 
 $enable_payments = array('credit_card', 'mandiri_clickpay', 'gopay', 'indomaret', 'kredivo', 'echannel');
 

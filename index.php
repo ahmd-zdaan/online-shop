@@ -323,7 +323,7 @@ include_once 'config/connect.php';
 														</a>
 													</li>
 													<li>
-														<a href="index.php?page=log-out">
+														<a href="index.php?page=log-out" onclick="return confirm('Are you sure you want to LOG OUT?')">
 															<i>
 																<img src="img/logout.png" alt="" width="21px" class="pt-0 pb-3 pl-1" draggable="false">
 															</i>
