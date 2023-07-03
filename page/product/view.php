@@ -6,6 +6,7 @@ $data_product = mysqli_fetch_assoc($result_product);
 
 if ($data_product) {
 	$product_name = $data_product['product_name'];
+	$seller_id = $data_product['seller_id'];
 	$category_id = $data_product['category_id'];
 	$subcategory_id = $data_product['subcategory_id'];
 	$price = $data_product['price'];
@@ -15,6 +16,11 @@ if ($data_product) {
 	$manifacturer_id = $data_product['manifacturer_id'];
 	$variant = $data_product['variant'];
 	$weight = $data_product['weight'];
+
+	$get_user = get('user', 'WHERE user_id=' . $seller_id);
+	$data_user = mysqli_fetch_assoc($get_user);
+
+	$seller_name = $data_user['user_name'];
 }
 
 $result_product_image = get('product_image', 'WHERE product_id=' . $product_id);
@@ -202,6 +208,7 @@ $subcategory_name = $data['subcategory_name'];
 							<li>
 								<div class="row">
 									<div class="col-2">
+										<p class="mb-0">Seller</p>
 										<p class="mb-0">Stock</p>
 										<p class="mb-0">Manifacturer</p>
 										<p class="mb-0">Category</p>
@@ -212,8 +219,12 @@ $subcategory_name = $data['subcategory_name'];
 										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
 										<p class="mb-0">:</p>
+										<p class="mb-0">:</p>
 									</div>
 									<div class="col-9 pl-0">
+										<a href="index.php?page=seller_view&seller_id=<?= $seller_id ?>">
+											<p class="mb-0"><?= $seller_name ?></p>
+										</a>
 										<p class="mb-0"><?= $stock ?></p>
 										<?php
 										$manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id, 'manifacturer_name');
@@ -302,26 +313,11 @@ $subcategory_name = $data['subcategory_name'];
 							<?php
 							if (isset($_POST['submit'])) {
 								if (isset($_SESSION['email'])) {
-									$user_email = $_SESSION['email'];
-									$result = get('user', 'WHERE email="' . $user_email . '"');
-									$data = mysqli_fetch_assoc($result);
+									$quantity = $_POST['quantity'];
 
-									$user_id = $data['user_id'];
+									echo '<script>window.location.href = "index.php?page=cart_add&product_id='.$product_id.'&quantity='.$quantity.'"</script>';
 								} else {
 									echo '<script>window.location.href = "index.php?page=login"</script>';
-								}
-
-								$quantity = $_POST['quantity'];
-
-
-								$result_add_to_cart = insert('cart', [
-									'user_id' => $user_id,
-									'product_id' => $product_id,
-									'quantity' => $quantity
-								]);
-
-								if ($result_add_to_cart) {
-									echo '<script>window.location.href = "index.php?page=cart_list"</script>';
 								}
 							}
 							?>

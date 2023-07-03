@@ -1,5 +1,141 @@
 <?php
+
+namespace Midtrans;
+
 check('login');
+
+require_once 'vendor/Midtrans.php';
+
+Config::$serverKey = 'SB-Mid-server-Qu4bvihLIlPfq5SBf4Cx1MzP';
+Config::$clientKey = 'SB-Mid-client-y_QtrBno-npZszyu';
+
+$result = get('user', 'WHERE email="' . $email . '"');
+$data = mysqli_fetch_assoc($result);
+$user_id = $data['user_id'];
+
+$item_details = [];
+
+$get_cart = get('cart', 'WHERE user_id=' . $user_id);
+foreach ($get_cart as $data_cart) :
+	$product_id = $data_cart['product_id'];
+	$quantity = $data_cart['quantity'];
+
+	$get_product = get('product', 'WHERE product_id=' . $product_id);
+	$data_product = mysqli_fetch_assoc($get_product);
+
+	$product_name_50 = $data_product['product_name'];
+
+	if (strlen($product_name_50) > 50) {
+		$product_name_50 = rtrim($product_name_50, substr($product_name_50, -4));
+		$product_name_50 .= '...';
+	}
+
+	$price = $data_product['price'];
+
+	$get_sale = get('sale', 'WHERE product_id='.$product_id);
+	if (mysqli_num_rows($get_sale) > 0) {
+	    $data_sale = mysqli_fetch_assoc($get_sale);
+
+	    $sale = $data_sale['sale'];
+
+	    $price = $price - $price * (int)$sale / 100;
+	}
+
+	$item_details[] = [
+		'id' => $product_id,
+		'price' => $price,
+		'quantity' => $quantity,
+		'name' => $product_name_50,
+	];
+endforeach;
+
+$total_price = 0;
+foreach ($item_details as $item) {
+	$price = (int)$item['price'];
+	$quantity = (int)$item['quantity'];
+
+	$total_price = $price * $quantity;
+}
+
+$transaction_details = array(
+	'order_id' => rand(),
+	'gross_amount' => $total_price + 17000 // no decimal allowed for creditcard
+);
+
+var_dump($transaction_details);
+
+$enable_payments = array('credit_card', 'mandiri_clickpay', 'gopay', 'indomaret', 'kredivo', 'echannel');
+
+$get_user = get('user', 'WHERE user_id=' . $user_id);
+$data_user = mysqli_fetch_assoc($get_user);
+
+$user_name = $data['user_name'];
+$address = $data['address'];
+$country_id = $data['country_id'];
+$postal_code = $data['postal_code'];
+$telephone = $data['telephone'];
+
+$get_country = get('country', 'WHERE country_id=' . $country_id);
+$data_country = mysqli_fetch_assoc($get_country);
+
+$country_name = $data_country['country_name'];
+$code = $data_country['code'];
+
+$billing_address = array(
+	'first_name'    => "Andri",
+	'last_name'     => "Litani",
+	'address'       => "Mangga 20",
+	'city'          => "Jakarta",
+	'postal_code'   => "16602",
+	'phone'         => "081122334455",
+	'country_code'  => 'IDN'
+);
+
+$shipping_address = array(
+	'first_name'    => $user_name,
+	// 'last_name'     => "Supriadi",
+	'address'       => $address,
+	'city'          => $country_name,
+	'postal_code'   => $postal_code,
+	'phone'         => $telephone,
+	'country_code'  => $code
+);
+
+$customer_details = array(
+	'first_name'    => $user_name,
+	// 'last_name'     => "NAME",
+	'email'         => $email,
+	'phone'         => $telephone,
+	'billing_address'  => $billing_address,
+	'shipping_address' => $shipping_address
+);
+
+$transaction = array(
+	'enabled_payments' => $enable_payments,
+	'transaction_details' => $transaction_details,
+	'customer_details' => $customer_details,
+	'item_details' => $item_details
+);
+
+$snap_token = '';
+$snap_token = Snap::getSnapToken($transaction);
+try {
+} catch (\Exception $e) {
+	echo $e->getMessage();
+}
+
+function printExampleWarningMessage()
+{
+	if (strpos(Config::$serverKey, 'your ') != false) {
+		echo "<code>";
+		echo "<h4>Please set your server key from sandbox</h4>";
+		echo "In file: " . __FILE__;
+		echo "<br>";
+		echo "<br>";
+		echo htmlspecialchars('Config::$serverKey = \'<your server key>\';');
+		die();
+	}
+}
 ?>
 
 <!DOCTYPE html>
@@ -52,44 +188,7 @@ check('login');
 				<div class="row">
 					<div class="col-lg-4 col-md-6">
 						<div class="step first payments">
-							<h3>1. Payment</h3>
-							<ul>
-								<li>
-									<label class="container_radio">Credit Card<a href="#0" class="info" data-toggle="modal" data-target="#payments_method"></a>
-										<input type="radio" name="payment" checked>
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_radio">Paypal<a href="#0" class="info" data-toggle="modal" data-target="#payments_method"></a>
-										<input type="radio" name="payment">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_radio">Cash on delivery<a href="#0" class="info" data-toggle="modal" data-target="#payments_method"></a>
-										<input type="radio" name="payment">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_radio">Bank Transfer<a href="#0" class="info" data-toggle="modal" data-target="#payments_method"></a>
-										<input type="radio" name="payment">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-							</ul>
-							<div class="payment_info d-none d-sm-block">
-								<figure><img src="img/cards_all.svg" alt=""></figure>
-								<p>
-									Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae adipisci fugit labore rerum quibusdam neque, exercitationem unde similique pariatur quia, distinctio aspernatur. Quisquam voluptate magni esse molestias laborum deserunt earum.
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-4 col-md-6">
-						<div class="step middle payments">
-							<h3>2. Shipping Method</h3>
+							<h3>Shipping Method</h3>
 							<h6 class="pb-2">Shipping Method</h6>
 							<ul>
 								<li>
@@ -113,79 +212,79 @@ check('login');
 						</div>
 					</div>
 					<div class="col-lg-4 col-md-6">
-						<div class="step last">
-							<h3>2. Order Summary</h3>
-							<?php
-							$email = $_SESSION['email'];
+						<div class="step middle payments">
+							<h3 class="pl-4">Order Summary</h3>
+							<div style="font-size: 11pt;" class="box_general summary">
+								<?php
+								$subtotal_price = 0;
 
-							$result = get('user', 'WHERE email="' . $email . '"');
-							$data = mysqli_fetch_assoc($result);
-							$user_id = $data['user_id'];
+								foreach ($item_details as $item) :
+									$product_id = $item['id'];
+									$product_price = $item['price'];
+									$quantity = $item['quantity'];
 
-							// $result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,COUNT(user_id) AS total_quantity');
-							$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
+									$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+									if (mysqli_num_rows($get_sale) > 0) {
+										$data_sale = mysqli_fetch_assoc($get_sale);
 
-							if (mysqli_num_rows($result) > 0) :
-							?>
-								<div class="box_general summary">
-									<?php
-									$subtotal_price = 0;
-									
-									foreach ($result as $data) :
-										$cart_id = $data['cart_id'];
-										$product_id = $data['product_id'];
-										$quantity = $data['total_quantity'];
+										$sale = $data_sale['sale'];
 
-										$result = get('product', 'WHERE product_id=' . $product_id);
-										$data = mysqli_fetch_assoc($result);
-										$product_name = $data['product_name'];
-										$price = $data['price'];
-
-										$subtotal_product = $total_quantity * $price;
-										$subtotal_price += $subtotal_product;
-									?>
-										<div class="row">
-											<div class="col-6" style="font-weight: bold;">
-												<p><?= $quantity . 'x ' . $product_name ?></p>
-											</div>
-											<div class="col-6 text-right">
-												<p><?= rupiah($subtotal_product) ?></p>
-											</div>
+										$total_product = $quantity * $price_sale;
+										$subtotal_price += $total_product;
+									} else {
+										$total_product = $quantity * $product_price;
+										$subtotal_price += $total_product;
+									}
+								?>
+									<div class="row">
+										<div class="col-6">
+											<p>
+												<span style="color: #004cd7" >
+													<?= $quantity ?>x
+												</span>
+												<?= $product_name ?>
+											</p>
 										</div>
-									<?php
-									endforeach
-									?>
-									<hr class="m-0 mb-3">
-									<?php
-									$shipping_price = 17000;
-									$total_price = $subtotal_price + $shipping_price;
-									?>
-									<ul>
-										<div class="row mb-3" style="font-weight: bold;">
-											<div class="col-6">
-												<p class="m-0">Subtotal</p>
-												<p class="m-0">Shipping</p>
-											</div>
-											<div class="col-6 text-right">
-												<span><?= rupiah($subtotal_price) ?></span>
-												<span><?= rupiah($shipping_price) ?></span>
-											</div>
+										<div class="col-6 text-right" style="font-weight: bold;">
+											<p><?= rupiah($total_product) ?></p>
 										</div>
-									</ul>
-									<ul>
-										<div class="form-group">
-											<label class="container_check">Shipping insurance (optional)
-												<input type="checkbox">
-												<span class="checkmark"></span>
-											</label>
-										</div>
-									</ul>
-									<div class="total clearfix">TOTAL
-										<span><?= rupiah($total_price) ?></span>
 									</div>
-									<a href="index.php?page=checkout_confirm" class="text-center btn_1 full-width">CONFIRM AND PAY</a>
+								<?php
+								endforeach;
+
+								$shipping_price = 17000;
+								$total_price = $subtotal_price + $shipping_price;
+								?>
+								<hr class="hr border-3 m-0 mb-3">
+								<div class="row mb-3" style="font-weight: bold; font-size: 13pt">
+									<div class="col-6">
+										<p class="m-0">Subtotal</p>
+										<p class="m-0">Shipping</p>
+									</div>
+									<div class="col-6 text-right">
+										<span><?= rupiah($subtotal_price) ?></span>
+										<span><?= rupiah($shipping_price) ?></span>
+									</div>
 								</div>
-							<?php endif ?>
+								<hr class="hr border-3 m-0 mb-3">
+								<div class="form-group">
+									<label class="container_check m-0">Shipping insurance (optional)
+										<input type="checkbox">
+										<span class="checkmark"></span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6">
+						<div class="step last">
+							<h3 class="pl-4">Total Price</h3>
+							<div style="font-size: 11pt;" class="box_general summary">
+								<div style="font-size: 17pt" class="total clearfix">Total
+									<span><?= rupiah($total_price) ?></span>
+								</div>
+								<button class="text-center btn_1 full-width" id="pay-button">CONFIRM AND PAY</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -193,11 +292,12 @@ check('login');
 		</main>
 
 		<div id="toTop"></div><!-- Back to top button -->
+
 		<div class="modal fade" id="payments_method" tabindex="-1" role="dialog" aria-labelledby="payments_method_title" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="payments_method_title">Payments Methods</h5>
+						<h5 class="modal-title" id="payments_method_title">Shipping Method</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -213,7 +313,33 @@ check('login');
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
 
+		<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<?= Config::$clientKey; ?>"></script>
+
 		<script>
+			document.getElementById('pay-button').onclick = function() {
+				// SnapToken acquired from previous step
+				snap.pay('<?= $snap_token ?>', {
+					// Optional
+					onSuccess: function(result) {
+						/* You may add your own js here, this is just example */
+						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+						console.log(result);
+					},
+					// Optional
+					onPending: function(result) {
+						/* You may add your own js here, this is just example */
+						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+						console.log(result);
+					},
+					// Optional
+					onError: function(result) {
+						/* You may add your own js here, this is just example */
+						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+						console.log(result);
+					}
+				});
+			};
+
 			// Other address Panel
 			$('#other_addr input').on("change", function() {
 				if (this.checked)
