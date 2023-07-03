@@ -163,7 +163,12 @@ check('login');
 
 				<?php
 				if (isset($_POST['submit'])) {
+					$email = $_SESSION['email'];
+					$get_user = get('user', 'WHERE email="'.$email.'"');
+					$data_user = mysqli_fetch_assoc($get_user);
+
 					$product_name = $_POST['name'];
+					$seller_id = $data_user['user_id'];
 					$category = $_POST['category'];
 					$subcategory = $_POST['subcategory'];
 					$price = $_POST['price'];
@@ -179,10 +184,12 @@ check('login');
 
 					if (!empty($_FILES['image']['name'])) {
 						$image_file_name = $_FILES['image']['name'];
-						list($file_name, $extension) = explode(".", $image_file_name);
-						$image_name = time() . "." . $extension;
-						$tmp = $_FILES['image']['tmp_name'];
 
+						$explode = explode(".", $image_file_name);
+						list($file_name, $extension) = $explode;
+						$image_name = time() . "." . $extension;
+						
+						$tmp = $_FILES['image']['tmp_name'];
 						if (move_uploaded_file($tmp, "uploads/product/" . $image_name)) {
 							$image_name_new = $_POST['image_id'];
 
@@ -204,20 +211,25 @@ check('login');
 						}
 					}
 
-					$query = "UPDATE product SET 
+					$product_name = str_replace('"', '\"', $product_name);
+					$product_name = str_replace("'", "\'", $product_name);
+					$description = str_replace('"', '\"', $description);
+					$description = str_replace("'", "\'", $description);
 
-					product_name=\"" . $product_name . "\", 
-					category_id='" . $category . "', 
-					subcategory_id='" . $subcategory . "', 
-					price='" . $price . "', 
-					description=\"" . $description . "\", 
-					manifacturer_id='" . $manifacturer_id . "', 
-					variant='" . $variant . "', 
-					weight='" . $weight . "', 
-					stock='" . $stock . "'
+					$query = 'UPDATE product SET 
+					product_name="' . $product_name . '", 
+					seller_id="' . $seller_id . '", 
+					category_id="' . $category . '", 
+					subcategory_id="' . $subcategory . '", 
+					price="' . $price . '", 
+					description="' . $description . '", 
+					manifacturer_id="' . $manifacturer_id . '", 
+					variant="' . $variant . '", 
+					weight="' . $weight . '", 
+					stock="' . $stock . '"
+					WHERE product_id=' . $product_id;
 
-					WHERE product_id=" . $product_id;
-
+					// var_dump($query); die;
 					$result = mysqli_query($connect, $query);
 
 					if ($result) {
