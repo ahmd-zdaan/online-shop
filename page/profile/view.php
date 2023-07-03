@@ -107,7 +107,7 @@ if (isset($_SESSION['email'])) {
 						<?php
 						else :
 						?>
-							<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="100%">
+							<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
 						<?php endif ?>
 					</div>
 					<div class="col-9">
