@@ -1,5 +1,15 @@
 <?php
 check('login');
+
+$email = $_SESSION['email'];
+$get_user = get('user', 'WHERE email="'.$email.'"');
+$data_user = mysqli_fetch_assoc($get_user);
+
+$role = $data_user['role'];
+
+if ($role != 'admin') {
+	echo '<script>window.location.href = "index.php"</script>';
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +57,7 @@ check('login');
 							<h1 class="pt-3">Product List</h1>
 						</div>
 						<div class="col-6 text-right">
-							<a href="index.php?page=product_add" class="btn_1">ADD</a>
+							<a href="index.php?page=product_add" class="btn btn-sm btn-outline-primary">Add New Product</a>
 						</div>
 					</div>
 				</div>
