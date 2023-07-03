@@ -96,7 +96,7 @@ check('register');
 							$country_id = $_POST['country'];
 							$telephone = $_POST['telephone'];
 
-							register($user_name, $email, $password, $confirm_password, $address, $country_id, $telephone);
+							register($user_name, 'user', $email, $password, $confirm_password, $address, $country_id, $telephone);
 						}
 						?>
 				</div>
