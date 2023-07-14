@@ -2,12 +2,14 @@
 include_once '../../../config/connect.php';
 
 $search = $_GET['search'];
+
 $filter_subcategory_id = $_GET['subcategory_id'];
 $filter_category_id = $_GET['category_id'];
+
 $filter_min_price = $_GET['min_price'];
 $filter_max_price = $_GET['max_price'];
 
-// var_dump($filter_min_price, $filter_max_price);
+$filter_manifacturer_id = $_GET['manifacturer_id'];
 
 if ($filter_subcategory_id != 0) {
     $where = 'WHERE subcategory_id IN (' . $filter_subcategory_id . ')';
@@ -19,17 +21,18 @@ if ($filter_subcategory_id != 0) {
     } else {
         $where = 'WHERE price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
     }
+} elseif ($filter_manifacturer_id != 0) {
+    $where = 'WHERE manifacturer_id IN (' . $filter_manifacturer_id . ')';
 }
 
-// belum sesuai category/subcategory
+// belum bisa gabung dengan category/subcategory
 // cek langsung dari produk, produk yang diskon tidak terdeteksi
 if (isset($where)) {
     $result = get('product', $where . ' AND product_name LIKE "%' . $search . '%"');
+    // $result = get('product WHERE manifacturer_id IN (' . $filter_manifacturer_id . ')');
 } else {
     $result = get('product', 'WHERE product_name LIKE "%' . $search . '%"');
 }
-
-// var_dump($where, $result);
 
 foreach ($result as $data) :
     $product_id = $data['product_id'];
@@ -53,10 +56,10 @@ foreach ($result as $data) :
     $data_manifacturer = mysqli_fetch_assoc($result_manifacturer);
     $manifacturer_name = $data_manifacturer['manifacturer_name'];
 
-    $result_image = get('product_image', 'WHERE product_id=' . $product_id);
-    $data_image = mysqli_fetch_assoc($result_image);
+    $get_image = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+    if (mysqli_num_rows($get_image) > 0) {
+        $data_image = mysqli_fetch_assoc($get_image);
 
-    if (mysqli_num_rows($result_image) > 0) {
         $product_image = $data_image['image_name'];
     } else {
         $product_image = "default.jpg";
@@ -65,17 +68,17 @@ foreach ($result as $data) :
     <li class="shadow mb-3" style="list-style: none">
         <a href="index.php?page=product_view&product_id=<?= $product_id ?>">
             <div class="row">
-                <div class="col-3 p-0">
-                    <img class="img-fluid lazy" src="uploads/product/<?= $product_image ?>" alt="product_image" width="100%">
+                <div class="col">
+                    <img class="img-fluid lazy" src="uploads/product/<?= $product_image ?>" alt="product_image" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
                 </div>
-                <div class="col pl-4">
+                <div class="col-9 pl-4">
                     <div class="row">
                         <div class="col pr-0">
-                            <h3 class="mt-3"><?= $product_name ?></h3>
+                            <h3 class="mt-4"><?= $product_name ?></h3>
                             <p class="mt-2 mb-0" style="color:black"><?= $manifacturer_name ?></p>
                         </div>
                         <div class="col-6 pl-0">
-                            <div class="mt-3 text-right pr-4">
+                            <div class="mt-5 text-right pr-4">
                                 <?php
                                 $get_sale = get('sale', 'WHERE product_id=' . $product_id);
                                 if (mysqli_num_rows($get_sale) > 0) :

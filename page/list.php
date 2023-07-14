@@ -132,7 +132,7 @@
 										$filter_price_4 += 1;
 									} elseif ($price > 5000000) {
 										$filter_price_5 += 1;
-									} 
+									}
 								}
 								?>
 								<ul>
@@ -173,7 +173,6 @@
 								</ul>
 							</div>
 						</div>
-						<!-- MANIFACTURER -->
 						<div class="filter_type version_2">
 							<h4><a href="#filter_3" data-toggle="collapse" class="opened">Manifacturer</a></h4>
 							<div class="collapse" id="filter_3">
@@ -190,10 +189,10 @@
 										$data = mysqli_fetch_assoc($result);
 										$manifacturer_count = $data['count(manifacturer_id)'];
 									?>
-										<li>
+										<li class="manifacturer-group">
 											<label class="container_check"><?= $manifacturer_name ?>
 												<small><?= $manifacturer_count ?></small>
-												<input class="manifacturer-check" type="checkbox" data-manifacturer="<?=$manifacturer_id?>">
+												<input class="manifacturer-check" type="checkbox" data-manifacturer="<?= $manifacturer_id ?>">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -203,21 +202,10 @@
 								</ul>
 							</div>
 						</div>
-						<!-- <div class="buttons">
-							<a href="#0" class="btn_1">Filter</a>
-							<a href="#0" class="btn_1 gray">Reset</a>
-						</div> -->
+						<a href="#0" class="btn btn-sm btn-outline-secondary">Reset Filter</a>
 					</div>
 				</aside>
 				<div class="col-lg-9 my-5">
-					<!-- <div class="top_banner">
-						<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.3)">
-							<div class="container pl-lg-5">
-								<h1>Product List</h1>
-							</div>
-						</div>
-						<img src="https://unsplash.it/50/50" class="img-fluid" alt="">
-					</div> -->
 					<div id="stick_here"></div>
 					<div class="toolbox elemento_stick add_bottom_30">
 						<div class="container">
@@ -245,8 +233,6 @@
 							</ul>
 						</div>
 					</div>
-
-					<!-- PRODUCT -->
 					<?php
 					$view = $_GET['view'];
 					if ($view == 'grid') :
@@ -266,26 +252,7 @@
 					elseif ($view == 'list') :
 					?>
 						<div id="list-product"></div>
-
 					<?php endif ?>
-					<!-- <div class="pagination__wrapper">
-						<ul class="pagination">
-							<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>
-							<li>
-								<a href="#0" class="active">1</a>
-							</li>
-							<li>
-								<a href="#0">2</a>
-							</li>
-							<li>
-								<a href="#0">3</a>
-							</li>
-							<li>
-								<a href="#0">4</a>
-							</li>
-							<li><a href="#0" class="next" title="next page">&#10095;</a></li>
-						</ul>
-					</div> -->
 				</div>
 			</div>
 		</div>
