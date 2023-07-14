@@ -1,4 +1,6 @@
 <?php
+check('login');
+
 $email = $_SESSION['email'];
 $user_get = get('user', 'WHERE email="' . $email . '"');
 $user_table = mysqli_fetch_assoc($user_get);

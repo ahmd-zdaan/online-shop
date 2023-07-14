@@ -20,13 +20,14 @@ if ($data_product) {
 	$get_user = get('user', 'WHERE user_id=' . $seller_id);
 	$data_user = mysqli_fetch_assoc($get_user);
 
+	$seller_id = $data_user['user_id'];
 	$seller_name = $data_user['user_name'];
+
+	$get_seller_image = get('user_image', 'WHERE user_id=' . $seller_id);
+	$data_seller_image = mysqli_fetch_assoc($get_seller_image);
+
+	$seller_image = $data_seller_image['user_image'];
 }
-
-$result_product_image = get('product_image', 'WHERE product_id=' . $product_id);
-$data_product_image = mysqli_fetch_assoc($result_product_image);
-
-$image_name = $data_product_image['image_name'];
 
 $result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
 $data = mysqli_fetch_assoc($result);
@@ -80,10 +81,119 @@ $subcategory_name = $data['subcategory_name'];
 
 		.review-image {
 			cursor: pointer;
+			transition: opacity .1s;
 		}
 
 		.review-image:hover {
 			opacity: 75%;
+		}
+
+		#myImg {
+			border-radius: 5px;
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		#myImg:hover {
+			opacity: 0.7;
+		}
+
+		/* The Modal (background) */
+		.modal {
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			/* Stay in place */
+			z-index: 1;
+			/* Sit on top */
+			padding-top: 100px;
+			/* Location of the box */
+			left: 0;
+			top: 0;
+			width: 100%;
+			/* Full width */
+			height: 100%;
+			/* Full height */
+			overflow: auto;
+			/* Enable scroll if needed */
+			background-color: rgb(0, 0, 0);
+			/* Fallback color */
+			background-color: rgba(0, 0, 0, 0.9);
+			/* Black w/ opacity */
+		}
+
+		/* Modal Content (image) */
+		.modal-content {
+			margin: auto;
+			display: block;
+			width: 80%;
+			max-width: 700px;
+		}
+
+		/* Caption of Modal Image */
+		#caption {
+			margin: auto;
+			display: block;
+			width: 80%;
+			max-width: 700px;
+			text-align: center;
+			color: #ccc;
+			padding: 10px 0;
+			height: 150px;
+		}
+
+		/* Add Animation */
+		.modal-content,
+		#caption {
+			-webkit-animation-name: zoom;
+			-webkit-animation-duration: 0.6s;
+			animation-name: zoom;
+			animation-duration: 0.6s;
+		}
+
+		@-webkit-keyframes zoom {
+			from {
+				-webkit-transform: scale(0)
+			}
+
+			to {
+				-webkit-transform: scale(1)
+			}
+		}
+
+		@keyframes zoom {
+			from {
+				transform: scale(0)
+			}
+
+			to {
+				transform: scale(1)
+			}
+		}
+
+		/* The Close Button */
+		.close {
+			position: absolute;
+			top: 15px;
+			right: 35px;
+			color: #f1f1f1;
+			font-size: 40px;
+			font-weight: bold;
+			transition: 0.3s;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: #bbb;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		/* 100% Image Width on Smaller Screens */
+		@media only screen and (max-width: 700px) {
+			.modal-content {
+				width: 100%;
+			}
 		}
 	</style>
 </head>
@@ -91,18 +201,18 @@ $subcategory_name = $data['subcategory_name'];
 <body>
 	<main>
 		<div class="container margin_30">
-			<!-- SALE -->
-			<!-- <div class="countdown_inner">-20% This offer ends in
-				<div data-countdown="2019/05/15" class="countdown"></div>
-			</div> -->
 			<div class="row">
-				<!-- IMAGES -->
 				<div class="col-md-6">
 					<div class="all">
 						<div class="slider">
 							<div class="owl-carousel owl-theme main">
-								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
-								<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down;">
+								<?php
+								$get_product_image = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+								foreach ($get_product_image as $data_product_image) :
+									$image_name = $data_product_image['image_name'];
+								?>
+									<img src="uploads/product/<?= $image_name ?>" alt="" class="item-box" style="object-fit: scale-down">
+								<?php endforeach ?>
 							</div>
 							<div class="left nonl"><i class="ti-angle-left"></i></div>
 							<div class="right"><i class="ti-angle-right"></i></div>
@@ -118,11 +228,23 @@ $subcategory_name = $data['subcategory_name'];
 						</div>
 						<div class="slider-two">
 							<div class="owl-carousel owl-theme thumbs">
-								<img src="uploads/product/<?= $image_name ?>" alt="" class="item active" style="object-fit: cover;">
-								<img src="uploads/product/<?= $image_name ?>" alt="" class="item" style="object-fit: cover;">
+								<?php
+								$i = 0;
+
+								$get_product_image = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+								foreach ($get_product_image as $data_product_image) :
+									$image_name = $data_product_image['image_name'];
+									if ($i == 0) :
+								?>
+										<img src="uploads/product/<?= $image_name ?>" alt="" class="item active" style="object-fit: scale-down; transition:none;" draggable="false">
+									<?php else : ?>
+										<img src="uploads/product/<?= $image_name ?>" alt="" class="item" style="object-fit: scale-down; transition:none;" draggable="false">
+								<?php
+									endif;
+									$i++;
+								endforeach
+								?>
 							</div>
-							<div class="left-t nonl-t"></div>
-							<div class="right-t"></div>
 						</div>
 					</div>
 				</div>
@@ -281,7 +403,7 @@ $subcategory_name = $data['subcategory_name'];
 									</label>
 									<div class="col-xl-4 col-lg-5 col-md-6 col-6">
 										<div class="numbers-row">
-											<input type="number" name="quantity" value="1" class="qty2">
+											<input type="number" name="quantity" value="1" min="1" max="<?=$stock?>" class="qty2">
 										</div>
 									</div>
 								</div>
@@ -305,7 +427,6 @@ $subcategory_name = $data['subcategory_name'];
 									<div class="col-lg-4 col-md-6">
 										<div class="btn_add_to_cart">
 											<button type="submit" name="submit" class="btn_1 px-5" style="font-size:12px">ADD TO CART</button>
-											<!-- <a href="index.php?page=cart_add" class="btn_1">Add to Cart</a> -->
 										</div>
 									</div>
 								</div>
@@ -315,7 +436,7 @@ $subcategory_name = $data['subcategory_name'];
 								if (isset($_SESSION['email'])) {
 									$quantity = $_POST['quantity'];
 
-									echo '<script>window.location.href = "index.php?page=cart_add&product_id='.$product_id.'&quantity='.$quantity.'"</script>';
+									echo '<script>window.location.href = "index.php?page=cart_add&product_id=' . $product_id . '&quantity=' . $quantity . '"</script>';
 								} else {
 									echo '<script>window.location.href = "index.php?page=login"</script>';
 								}
@@ -332,7 +453,7 @@ $subcategory_name = $data['subcategory_name'];
 									if (mysqli_num_rows($wishlist) > 0) :
 								?>
 										<a style="float: left;" class="mr-4" href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')">
-											<i class="ti-heart"></i>
+											<i class="ti-heart-broken"></i>
 											<span>Remove from Wishlist</span>
 										</a>
 									<?php else : ?>
@@ -345,7 +466,7 @@ $subcategory_name = $data['subcategory_name'];
 							</li>
 							<li>
 								<a href="index.php?page=report_product_add&product_id=<?= $product_id ?>">
-									<img class="mb-1 mr-1" style="width: 16px;" src="img/report.png" alt="report">
+									<i class="ti-announcement mr-2"></i>
 									<span>Report Product</span>
 								</a>
 							</li>
@@ -380,45 +501,53 @@ $subcategory_name = $data['subcategory_name'];
 						<div id="collapse-A" class="collapse" role="tabpanel" aria-labelledby="heading-A">
 							<div class="card-body">
 								<div class="row justify-content-between">
-									<div class="col-lg-6">
+									<div class="col-6">
 										<h3 class="mb-2">
 											<b>Description</b>
 										</h3>
 										<p><?= $description ?></p>
 									</div>
-									<div class="col-lg-5">
-										<h3 class="mb-2">
-											<b>Specifications</b>
-										</h3>
-										<div class="table-responsive">
-											<table class="table table-sm table-striped">
-												<tbody>
-													<tr>
-														<td>
-															<strong>Manifacturer</strong>
-														</td>
-														<td><?= $manifacturer_name ?></td>
-													</tr>
-													<tr>
-														<td>
-															<strong>Variants</strong>
-														</td>
-														<td><?= $variant ?></td>
-													</tr>
-													<tr>
-														<td>
-															<strong>Weight</strong>
-														</td>
-														<?php
-														if ($weight == 0) :
-														?>
-															<td>-</td>
-														<?php else : ?>
-															<td><?= $weight ?>kg</td>
-														<?php endif ?>
-													</tr>
-												</tbody>
-											</table>
+									<div class="col-5">
+										<div class="mb-5">
+											<a href="index.php?page=seller_view&seller_id=<?= $seller_id ?>">
+												<img class="mb-4 mr-2" src="uploads/user/<?= $seller_image ?>" style="border-radius:50%; float:left" width="60px" alt="seller_image">
+												<h4 class="pt-3"><?= $seller_name ?></h4>
+											</a>
+										</div>
+										<div class="mt-1" style="clear:left">
+											<h3 class="mb-2">
+												<b>Specifications</b>
+											</h3>
+											<div class="table-responsive">
+												<table class="table table-sm table-striped">
+													<tbody>
+														<tr>
+															<td>
+																<strong>Manifacturer</strong>
+															</td>
+															<td><?= $manifacturer_name ?></td>
+														</tr>
+														<tr>
+															<td>
+																<strong>Variants</strong>
+															</td>
+															<td><?= $variant ?></td>
+														</tr>
+														<tr>
+															<td>
+																<strong>Weight</strong>
+															</td>
+															<?php
+															if ($weight == 0) :
+															?>
+																<td>-</td>
+															<?php else : ?>
+																<td><?= $weight ?>kg</td>
+															<?php endif ?>
+														</tr>
+													</tbody>
+												</table>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -445,13 +574,15 @@ $subcategory_name = $data['subcategory_name'];
 											foreach ($review_get as $review_data) :
 												$review_id = $review_data['review_id'];
 												$review_user_id = $review_data['user_id'];
-												$review_user_get = get('user', 'WHERE user_id=' . $review_user_id);
-												$review_user_table = mysqli_fetch_assoc($review_user_get);
-												$review_user_name = $review_user_table['user_name'];
-
 												$rating = $review_data['rating'];
 												$review = $review_data['review'];
 												$date = $review_data['date'];
+
+												$review_user_get = get('user', 'WHERE user_id=' . $review_user_id);
+												$review_user_table = mysqli_fetch_assoc($review_user_get);
+
+												$review_user_name = $review_user_table['user_name'];
+												$review_user_role = $review_user_table['role'];
 
 												if (isset($user_id)) :
 													if ($review_user_id == $user_id) :
@@ -476,91 +607,105 @@ $subcategory_name = $data['subcategory_name'];
 																<?php endif ?>
 															</div>
 															<div class="col-11 pl-2 pt-2 mb-2">
-																<a href="index.php?page=view_profile&user_id=<?= $review_user_id ?>">
-																	<h3 style="font-weight: bold" class="mb-2 profile"><?= $review_user_name ?></h3>
-																</a>
-																<div class="clearfix add_bottom_10">
-																	<span class="rating">
-																		<?php
-																		// Stars
-																		for ($i = $rating; $i > 0; $i--) {
-																			echo '<i class="icon-star"></i>';
-																		}
-																		if ($rating < 5) {
-																			$n = 5 - $rating;
-																			for ($i = $n; $i > 0; $i--) {
-																				echo '<i class="icon-star empty"></i>';
-																			}
-																		}
-																		?>
-																		<em>( <?= $rating ?> / 5 )</em>
-																	</span>
-																	<em style="font-weight:normal"><?= dateConvert($date) ?></em>
-																</div>
-																<?php
-																$get_review_image = get('review_image', 'WHERE review_id=' . $review_id);
-																if (mysqli_num_rows($get_review_image) > 0) :
-																	foreach ($get_review_image as $data_review_image) :
-																		$review_image_name = $data_review_image['image_name'];
-																?>
-																		<img class="mb-3 review-image" src="uploads/review/<?= $review_image_name ?>" alt="" width="150px">
-																	<?php endforeach ?>
-																<?php endif ?>
-																<p class="mb-2"><?= $review ?></p>
-																<div class="row">
-																	<div class="col-4">
-																		<?php
-																		$get_review_helpful = get('review_helpful', 'WHERE review_id=' . $review_id, '*,count(user_id) as total_helpful');
-																		$data_review_helpful = mysqli_fetch_assoc($get_review_helpful);
-																		$helpful = $data_review_helpful['total_helpful'];
-
-																		if ($helpful > 1) :
-																		?>
-																			<p class="mb-0 mt-4" style="font-weight:normal; color:#9d9d9d; font-size:smaller"><?= $helpful ?> people found this hepful</p>
-																		<?php elseif ($helpful == 1) : ?>
-																			<p class="mb-0 mt-4" style="font-weight:normal; color:#9d9d9d; font-size:smaller"><?= $helpful ?> person found this hepful</p>
+																<?php if ($review_user_role == 'seller') : ?>
+																	<a href="index.php?page=seller_view&seller_id=<?= $review_user_id ?>">
+																	<?php else : ?>
+																		<a href="index.php?page=view_profile&user_id=<?= $review_user_id ?>">
 																		<?php endif ?>
-																	</div>
-																	<div class="col">
+																		<h3 style="font-weight: bold" class="mb-2 profile"><?= $review_user_name ?></h3>
+																		</a>
+																		<div class="clearfix add_bottom_10">
+																			<span class="rating">
+																				<?php
+																				// Stars
+																				for ($i = $rating; $i > 0; $i--) {
+																					echo '<i class="icon-star"></i>';
+																				}
+																				if ($rating < 5) {
+																					$n = 5 - $rating;
+																					for ($i = $n; $i > 0; $i--) {
+																						echo '<i class="icon-star empty"></i>';
+																					}
+																				}
+																				?>
+																				<em>( <?= $rating ?> / 5 )</em>
+																			</span>
+																			<em style="font-weight:normal"><?= dateConvert($date) ?></em>
+																		</div>
 																		<?php
-																		if (isset($user_id)) :
-																			if ($user_id == $review_user_id) :
+																		$get_review_image = get('review_image', 'WHERE review_id=' . $review_id);
+																		if (mysqli_num_rows($get_review_image) > 0) :
+																			$i = 0;
+
+																			foreach ($get_review_image as $data_review_image) :
+																				$review_image_name = $data_review_image['image_name'];
 																		?>
-																				<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
-																					<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">EDIT</a>
-																					<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
-																				</div>
-																			<?php else : ?>
-																				<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
-																					<?php
-																					$get_review_helpful = get('review_helpful', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
-
-																					if (mysqli_num_rows($get_review_helpful) > 0) :
-																					?>
-																						<a href="index.php?page=review_helpful_delete&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">REMOVE HELPFUL</a>
-																					<?php else : ?>
-																						<?php
-																						$get_report = get('review_report', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
-
-																						if (mysqli_num_rows($get_report) == 0) :
-																						?>
-																							<a href="index.php?page=review_helpful_add&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">HELPFUL</a>
-																						<?php endif ?>
-																					<?php endif ?>
-																					<?php
-																					$get_report = get('review_report', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
-
-																					if (mysqli_num_rows($get_report) > 0) :
-																					?>
-																						<button href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORTED</button>
-																					<?php else : ?>
-																						<a href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORT</a>
-																					<?php endif ?>
-																				</div>
-																			<?php endif ?>
+																				<img class="mb-3 review-image" id="image<?= $i ?>" src="uploads/review/<?= $review_image_name ?>" alt="" width="150px">
+																			<?php
+																			$i++;
+																			endforeach;
+																			?>
+																			<div id="myModal" class="modal">
+																				<span class="close">&times;</span>
+																				<img class="modal-content" id="img01">
+																				<div id="caption"></div>
+																			</div>
 																		<?php endif ?>
-																	</div>
-																</div>
+																		<p class="mb-2"><?= $review ?></p>
+																		<div class="row">
+																			<div class="col-4">
+																				<?php
+																				$get_review_helpful = get('review_helpful', 'WHERE review_id=' . $review_id, '*,count(user_id) as total_helpful');
+																				$data_review_helpful = mysqli_fetch_assoc($get_review_helpful);
+																				$helpful = $data_review_helpful['total_helpful'];
+
+																				if ($helpful > 1) :
+																				?>
+																					<p class="mb-0 mt-4" style="font-weight:normal; color:#9d9d9d; font-size:smaller"><?= $helpful ?> people found this hepful</p>
+																				<?php elseif ($helpful == 1) : ?>
+																					<p class="mb-0 mt-4" style="font-weight:normal; color:#9d9d9d; font-size:smaller"><?= $helpful ?> person found this hepful</p>
+																				<?php endif ?>
+																			</div>
+																			<div class="col">
+																				<?php
+																				if (isset($user_id)) :
+																					if ($user_id == $review_user_id) :
+																				?>
+																						<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
+																							<a href="index.php?page=review_edit&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">EDIT</a>
+																							<a href="index.php?page=review_delete&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float: right" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to DELETE this REVIEW?')">DELETE</a>
+																						</div>
+																					<?php else : ?>
+																						<div class="btn-group btn-group-sm mt-3" role="group" style="float:right">
+																							<?php
+																							$get_review_helpful = get('review_helpful', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
+
+																							if (mysqli_num_rows($get_review_helpful) > 0) :
+																							?>
+																								<a href="index.php?page=review_helpful_delete&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">REMOVE HELPFUL</a>
+																							<?php else : ?>
+																								<?php
+																								$get_report = get('review_report', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
+
+																								if (mysqli_num_rows($get_report) == 0) :
+																								?>
+																									<a href="index.php?page=review_helpful_add&review_id=<?= $review_id ?>" style="float:right" class="btn btn-outline-primary">HELPFUL</a>
+																								<?php endif ?>
+																							<?php endif ?>
+																							<?php
+																							$get_report = get('review_report', 'WHERE user_id=' . $user_id . ' AND review_id=' . $review_id);
+
+																							if (mysqli_num_rows($get_report) > 0) :
+																							?>
+																								<button href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORTED</button>
+																							<?php else : ?>
+																								<a href="index.php?page=report_review_add&review_id=<?= $review_id ?>&product_id=<?= $product_id ?>" style="float:right" class="btn btn-outline-danger">REPORT</a>
+																							<?php endif ?>
+																						</div>
+																					<?php endif ?>
+																				<?php endif ?>
+																			</div>
+																		</div>
 															</div>
 															</div>
 														<?php endforeach ?>
@@ -576,107 +721,269 @@ $subcategory_name = $data['subcategory_name'];
 						</div>
 					</div>
 				</div>
-				<div class="container margin_60_35">
-					<div class="main_title">
-						<h2>Related</h2>
-						<p>Discover related products</p>
+				<div class="container margin_60_35 pb-0">
+					<div class="row">
+						<div class="col">
+							<h2 class="m-0">More from <?= $seller_name ?></h2>
+							<p>Browse more products from <?= $seller_name ?></p>
+						</div>
+						<div class="col text-right mt-4">
+							<a href="index.php?page=seller_view&seller_id=<?= $seller_id ?>" style="text-decoration:underline;">Show All</a>
+						</div>
 					</div>
 					<div class="owl-carousel owl-theme products_carousel">
 						<?php
-						$get_product_related = get('product', 'WHERE category_id=' . $category_id);
+						$get_product_seller = get('product', 'WHERE seller_id=' . $seller_id);
 
-						foreach ($get_product_related as $data_related) :
-							$product_id_related = $data_related['product_id'];
-							$product_name_related = $data_related['product_name'];
-							$price_related = $data_related['price'];
+						foreach ($get_product_seller as $data_product_seller) :
+							$product_id_seller = $data_product_seller['product_id'];
+							if ($product_id_seller != $product_id) :
+								$product_name_seller = $data_product_seller['product_name'];
+								$price_seller = $data_product_seller['price'];
 
-							$get_product_image_related = get('product_image', 'WHERE product_id=' . $product_id_related);
-							$data_product_image_related = mysqli_fetch_assoc($get_product_image_related);
+								$get_product_image_seller = get('product_image', 'WHERE product_id=' . $product_id_seller);
+								$data_product_image_seller = mysqli_fetch_assoc($get_product_image_seller);
 
-							$image_name_related = $data_product_image_related['image_name'];
+								$image_name_seller = $data_product_image_seller['image_name'];
 						?>
-							<div class="item">
-								<div class="grid_item">
-									<!-- <span class="ribbon hot">Hot</span>
-						<span class="ribbon off">-30%</span>
-						<span class="ribbon new">New</span> -->
-									<?php
-									$get_sale = get('sale', 'WHERE product_id=' . $product_id_related);
-									if (mysqli_num_rows($get_sale) > 0) :
-										$data_sale = mysqli_fetch_assoc($get_sale);
-										$sale = $data_sale['sale'];
-										$price_sale = $price_related - $price_related * (int)$sale / 100;
-									?>
-										<span class="ribbon off">- <?= $sale ?>%</span>
-									<?php endif ?>
-									<figure>
-										<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
-											<img src="uploads/product/<?= $image_name_related ?>" width="100%" alt="product_image_related">
-										</a>
-									</figure>
-									<div class="rating">
+								<div class="item">
+									<div class="grid_item">
 										<?php
-										$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'sum(rating)');
-										$data_review_related = mysqli_fetch_assoc($get_review_related);
-										$total_rating = (int)$data_review_related['sum(rating)'];
+										$get_sale = get('sale', 'WHERE product_id=' . $product_id_seller);
+										if (mysqli_num_rows($get_sale) > 0) :
+											$data_sale = mysqli_fetch_assoc($get_sale);
+											$sale = $data_sale['sale'];
+											$price_sale = $price_seller - $price_seller * (int)$sale / 100;
+										?>
+											<span class="ribbon off">- <?= $sale ?>%</span>
+										<?php endif ?>
+										<figure>
+											<a href="index.php?page=product_view&product_id=<?= $product_id_seller ?>">
+												<img src="uploads/product/<?= $image_name_seller ?>" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;" alt="product_image_related">
+											</a>
+										</figure>
+										<div class="rating">
+											<?php
+											$get_review_seller = get('review', 'WHERE product_id="' . $product_id_seller . '"', 'sum(rating)');
+											$data_review_seller = mysqli_fetch_assoc($get_review_seller);
 
-										$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'count(rating)');
-										$data_review_related = mysqli_fetch_assoc($get_review_related);
-										$count_rating = (int)$data_review_related['count(rating)'];
+											$total_rating = (int)$data_review_seller['sum(rating)'];
 
-										if ($count_rating > 0) {
-											$average_rating = round($total_rating / $count_rating);
+											$get_review_seller = get('review', 'WHERE product_id="' . $product_id_seller . '"', 'count(rating)');
+											$data_review_seller = mysqli_fetch_assoc($get_review_seller);
 
-											for ($i = $average_rating; $i > 0; $i--) {
-												echo '<i class="icon-star voted"></i>';
+											$count_rating = (int)$data_review_seller['count(rating)'];
+
+											if ($count_rating > 0) {
+												$average_rating = round($total_rating / $count_rating);
+
+												for ($i = $average_rating; $i > 0; $i--) {
+													echo '<i class="icon-star voted"></i>';
+												}
 											}
-										}
 
-										if ($count_rating == 0) {
-											echo '<p class="mb-0">No review</p>';
-										} else {
-											$n = 5 - $average_rating;
-											for ($i = $n; $i > 0; $i--) {
-												echo '<i class="icon-star"></i>';
+											if ($count_rating == 0) {
+												echo '<p class="mb-0">No review</p>';
+											} else {
+												$n = 5 - $average_rating;
+												for ($i = $n; $i > 0; $i--) {
+													echo '<i class="icon-star"></i>';
+												}
 												echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 											}
-										}
-										?>
+											?>
+										</div>
+										<a href="index.php?page=product_view&product_id=<?= $product_id_seller ?>">
+											<h3><?= $product_name_seller ?></h3>
+										</a>
+										<div class="price_box">
+											<?php
+											$get_sale = get('sale', 'WHERE product_id=' . $product_id_seller);
+											if (mysqli_num_rows($get_sale) > 0) :
+											?>
+												<span class="new_price"><?= rupiah($price_sale) ?></span>
+												<span class="old_price" style="font-size:small"><?= rupiah($price) ?></span>
+											<?php else : ?>
+												<span class="new_price"><?= rupiah($price_seller) ?></span>
+											<?php endif ?>
+										</div>
+										<ul>
+											<li>
+												<?php
+												if (isset($_SESSION['email'])) :
+													$email = $_SESSION['email'];
+
+													$get_user = get('user', 'WHERE email="' . $email . '"');
+													$data_user = mysqli_fetch_assoc($get_user);
+
+													$role = $data_user['role'];
+													if ($role != 'seller') :
+
+														$user_id = $data_user['user_id'];
+
+														$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id_seller);
+														if (mysqli_num_rows($get_wishlist) > 0) :
+												?>
+															<a href="index.php?page=wishlist_remove&product_id=<?= $product_id_seller ?>" class="tooltip-1" title="Remove from Wishlist" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" data-toggle="tooltip" data-placement="left">
+																<i class="ti-heart-broken"></i>
+															</a>
+														<?php else : ?>
+															<a href="index.php?page=wishlist_add&product_id=<?= $product_id_seller ?>" class="tooltip-1" title="Add to Wishlist" data-toggle="tooltip" data-placement="left">
+																<i class="ti-heart"></i>
+															</a>
+														<?php endif ?>
+													<?php endif ?>
+												<?php endif ?>
+											</li>
+											<li>
+												<?php
+												if (isset($user_id) and $role != 'seller') :
+													$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id_seller);
+													if (mysqli_num_rows($get_cart) > 0) :
+												?>
+														<a href="index.php?page=cart_add&product_id=<?= $product_id_seller ?>&quantity=1" class="tooltip-1" title="Remove from Cart" data-toggle="tooltip" data-placement="left" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
+															<i class="ti-shopping-cart-full"></i>
+														</a>
+													<?php else : ?>
+														<a href="index.php?page=cart_add&product_id=<?= $product_id_seller ?>&quantity=1" class="tooltip-1" title="Add to Cart" data-toggle="tooltip" data-placement="left">
+															<i class="ti-shopping-cart"></i>
+														</a>
+													<?php endif ?>
+												<?php endif ?>
+											</li>
+										</ul>
 									</div>
-									<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
-										<h3><?= $product_name_related ?></h3>
-									</a>
-									<div class="price_box">
+								</div>
+						<?php endif;
+						endforeach ?>
+					</div>
+				</div>
+				<?php
+				$get_product_related = get('product', 'WHERE category_id=' . $category_id . ' AND NOT product_id=' . $product_id);
+				if (mysqli_num_rows($get_product_related) > 0) :
+				?>
+					<div class="container margin_60_35 pt-0">
+						<div class="row">
+							<div class="col">
+								<h2 class="m-0">Related Products</h2>
+								<p>Browse other products in this category</p>
+							</div>
+							<div class="col text-right mt-4">
+								<a href="index.php?page=list&view=list" style="text-decoration:underline;">Show All</a>
+							</div>
+						</div>
+						<div class="owl-carousel owl-theme products_carousel">
+							<?php
+							foreach ($get_product_related as $data_related) :
+								$product_id_related = $data_related['product_id'];
+								$product_name_related = $data_related['product_name'];
+								$price_related = $data_related['price'];
+
+								$get_product_image_related = get('product_image', 'WHERE product_id=' . $product_id_related);
+								$data_product_image_related = mysqli_fetch_assoc($get_product_image_related);
+
+								$image_name_related = $data_product_image_related['image_name'];
+							?>
+								<div class="item">
+									<div class="grid_item">
 										<?php
 										$get_sale = get('sale', 'WHERE product_id=' . $product_id_related);
 										if (mysqli_num_rows($get_sale) > 0) :
+											$data_sale = mysqli_fetch_assoc($get_sale);
+											$sale = $data_sale['sale'];
+											$price_sale = $price_related - $price_related * (int)$sale / 100;
 										?>
-											<span class="new_price"><?= rupiah($price_sale) ?></span>
-											<span class="old_price" style="font-size:small"><?= rupiah($price) ?></span>
-										<?php else : ?>
-											<span class="new_price"><?= rupiah($price_sale) ?></span>
+											<span class="ribbon off">- <?= $sale ?>%</span>
 										<?php endif ?>
+										<figure>
+											<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
+												<img src="uploads/product/<?= $image_name_related ?>" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;" alt="product_image_related">
+											</a>
+										</figure>
+										<div class="rating">
+											<?php
+											$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'sum(rating)');
+											$data_review_related = mysqli_fetch_assoc($get_review_related);
+											$total_rating = (int)$data_review_related['sum(rating)'];
+
+											$get_review_related = get('review', 'WHERE product_id="' . $product_id_related . '"', 'count(rating)');
+											$data_review_related = mysqli_fetch_assoc($get_review_related);
+											$count_rating = (int)$data_review_related['count(rating)'];
+
+											if ($count_rating > 0) {
+												$average_rating = round($total_rating / $count_rating);
+
+												for ($i = $average_rating; $i > 0; $i--) {
+													echo '<i class="icon-star voted"></i>';
+												}
+											}
+
+											if ($count_rating == 0) {
+												echo '<p class="mb-0">No review</p>';
+											} else {
+												$n = 5 - $average_rating;
+												for ($i = $n; $i > 0; $i--) {
+													echo '<i class="icon-star"></i>';
+												}
+												echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
+											}
+											?>
+										</div>
+										<a href="index.php?page=product_view&product_id=<?= $product_id_related ?>">
+											<h3><?= $product_name_related ?></h3>
+										</a>
+										<div class="price_box">
+											<?php
+											$get_sale = get('sale', 'WHERE product_id=' . $product_id_related);
+											if (mysqli_num_rows($get_sale) > 0) :
+											?>
+												<span class="new_price"><?= rupiah($price_sale) ?></span>
+												<span class="old_price" style="font-size:small"><?= rupiah($price) ?></span>
+											<?php else : ?>
+												<span class="new_price"><?= rupiah($price_related) ?></span>
+											<?php endif ?>
+										</div>
+										<ul>
+											<li>
+												<?php
+												if (isset($user_id) and $role != 'seller') :
+													$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id_related);
+													if (mysqli_num_rows($get_wishlist) > 0) :
+												?>
+														<a href="index.php?page=wishlist_remove&product_id=<?= $product_id_related ?>" class="tooltip-1" title="Remove from Wishlist" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" data-toggle="tooltip" data-placement="left">
+															<i class="ti-heart-broken"></i>
+														</a>
+													<?php else : ?>
+														<a href="index.php?page=wishlist_add&product_id=<?= $product_id_related ?>" class="tooltip-1" title="Add to Wishlist" data-toggle="tooltip" data-placement="left">
+															<i class="ti-heart"></i>
+														</a>
+													<?php endif ?>
+												<?php endif ?>
+											</li>
+											<li>
+												<?php
+												if (isset($user_id) and $role != 'seller') :
+													$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id_related);
+													if (mysqli_num_rows($get_cart) > 0) :
+												?>
+														<a href="index.php?page=cart_add&product_id=<?= $product_id_related ?>&quantity=1" class="tooltip-1" title="Remove from Cart" data-toggle="tooltip" data-placement="left" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
+															<i class="ti-shopping-cart-full"></i>
+														</a>
+													<?php else : ?>
+														<a href="index.php?page=cart_add&product_id=<?= $product_id_related ?>&quantity=1" class="tooltip-1" title="Add to Cart" data-toggle="tooltip" data-placement="left">
+															<i class="ti-shopping-cart"></i>
+														</a>
+													<?php endif ?>
+												<?php endif ?>
+											</li>
+											<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
+										</ul>
 									</div>
-									<ul>
-										<li>
-											<a href="index.php?page=wishlist_add&product_id=<?= $product_id_related ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
-												<i class="ti-heart"></i>
-												<span>Add to favorites</span>
-											</a>
-										</li>
-										<li>
-											<a href="index.php?page=cart_add&product_id=<?= $product_id_related ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
-												<i class="ti-shopping-cart"></i>
-												<span>Add to cart</span>
-											</a>
-										</li>
-										<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
-									</ul>
 								</div>
-							</div>
-						<?php endforeach ?>
+							<?php endforeach ?>
+						</div>
 					</div>
-				</div>
+				<?php endif ?>
 				<div class="feat">
 					<div class="container">
 						<ul>
@@ -715,6 +1022,24 @@ $subcategory_name = $data['subcategory_name'];
 	<div id="toTop"></div><!-- Back to top button -->
 
 	<script>
+		var modal = document.getElementById("myModal");
+
+		var img = document.getElementById("myImg");
+		var modalImg = document.getElementById("img01");
+		var captionText = document.getElementById("caption");
+
+		img.onclick = function() {
+			modal.style.display = "block";
+			modalImg.src = this.src;
+			captionText.innerHTML = this.alt;
+		}
+
+		var span = document.getElementsByClassName("close")[0];
+
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
 		function readMore() {
 			let dots = document.getElementById("dots");
 			let moreText = document.getElementById("more");
@@ -731,6 +1056,7 @@ $subcategory_name = $data['subcategory_name'];
 			}
 		}
 	</script>
+
 	<!-- COMMON SCRIPTS -->
 	<script src="js/common_scripts.min.js"></script>
 	<script src="js/main.js"></script>

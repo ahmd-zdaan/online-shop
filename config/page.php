@@ -25,8 +25,14 @@ switch ($page) {
     case 'seller_view':
         include 'page/seller/view.php';
         break;
+    case 'product_add':
+        include 'page/seller/product/add.php';
+        break;
     case 'seller_product':
-        include 'page/seller/product.php';
+        include 'page/seller/product/list.php';
+        break;
+    case 'seller_product_list':
+        include 'page/seller/list.php';
         break;
 
         // ACCOUNT
@@ -63,10 +69,10 @@ switch ($page) {
         include 'page/order.php';
         break;
     case 'checkout':
-        include 'page/checkout.php';
+        include 'page/checkout/checkout.php';
         break;
     case 'checkout_confirm':
-        include 'page/checkout_confirm.php';
+        include 'page/checkout/confirm.php';
         break;
 
     case 'review_add':
@@ -121,9 +127,6 @@ switch ($page) {
 
     case 'product_list':
         include 'page/product/list.php';
-        break;
-    case 'product_add':
-        include 'page/seller/add.php';
         break;
     case 'product_view':
         include 'page/product/view.php';

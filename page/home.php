@@ -11,19 +11,18 @@
 	<div id="carousel-home">
 		<div class="owl-carousel owl-theme">
 			<?php
-			$result1 = get('product');
+			$get_product = get('product', 'LIMIT 5');
 
-			foreach ($result1 as $data1) :
-				$product_id = $data1['product_id'];
-				$product_name = $data1['product_name'];
-				$price = $data1['price'];
+			foreach ($get_product as $data_product) :
+				$product_id = $data_product['product_id'];
+				$product_name = $data_product['product_name'];
+				$price = $data_product['price'];
 
 				$result_image = get('product_image', 'WHERE product_id=' . $product_id);
 				$data_image = mysqli_fetch_assoc($result_image);
 
 				$image_name = $data_image['image_name'];
 			?>
-				<!-- <div class="owl-slide cover" style="background-image: url(img/slides/slide_home_2.jpg);"> -->
 				<div class="owl-slide cover" style="background-image: url(uploads/product/<?= $image_name ?>);background-size:contain;background-repeat: no-repeat">
 					<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 						<div class="container">
@@ -221,7 +220,7 @@
 										if (mysqli_num_rows($get_wishlist) > 0) :
 									?>
 											<a href="index.php?page=wishlist_remove&product_id=<?= $product_id ?>" class="tooltip-1" title="Remove from Wishlist" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" data-toggle="tooltip" data-placement="left">
-												<i class="ti-heart"></i>
+												<i class="ti-heart-broken"></i>
 											</a>
 										<?php else : ?>
 											<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" title="Add to Wishlist" data-toggle="tooltip" data-placement="left">
@@ -237,7 +236,7 @@
 										if (mysqli_num_rows($get_cart) > 0) :
 									?>
 											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Remove from Cart" data-toggle="tooltip" data-placement="left" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
-												<i class="ti-shopping-cart"></i>
+												<i class="ti-shopping-cart-full"></i>
 											</a>
 										<?php else : ?>
 											<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Add to Cart" data-toggle="tooltip" data-placement="left">
@@ -252,37 +251,48 @@
 				<?php endforeach ?>
 			</div>
 		</div>
-		<?php
-		$get_sale = get('sale', 'ORDER BY sale DESC');
-		$data_sale = mysqli_fetch_assoc($get_sale);
-		$product_id_sale = $data_sale['product_id'];
-		$sale = $data_sale['sale'];
+		<div class="featured container-fluid" style="height: 450px;">
+			<?php
+			$product_id_list = [];
 
-		$get_product = get('product', 'WHERE product_id=' . $product_id_sale);
-		$data_product = mysqli_fetch_assoc($get_product);
-		$product_name_sale = $data_product['product_name'];
-		$price_original_sale = $data_product['price'];
-		$description_sale = $data_product['description'];
+			$get_product = get('product');
+			foreach ($get_product as $data_product) {
+				$product_id = $data_product['product_id'];
+				$product_id_list[] .= $product_id;
+			}
 
-		$sale_amount = str_replace('%', '', $sale);
-		$price_sale = $price_original_sale - $price_original_sale * (int) $sale_amount / 100;
+			$product_id = $product_id_list[array_rand($product_id_list)];
 
-		$get_product_image = get('product_image', 'WHERE product_id=' . $product_id_sale);
-		$data_product_image = mysqli_fetch_assoc($get_product_image);
-		$product_image_sale = $data_product_image['image_name']
-		?>
-		<div class="featured container-fluid">
-			<img src="uploads/product/<?= $product_image_sale ?>" class="pl-5 pt-5" width="450px">
+			$get_product = get('product', 'WHERE product_id=' . $product_id);
+			$data_product = mysqli_fetch_assoc($get_product);
+
+			$product_name = $data_product['product_name'];
+			$price = $data_product['price'];
+			$description = $data_product['description'];
+
+			$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+			if (mysqli_num_rows($get_sale) > 0) {
+				$data_sale = mysqli_fetch_assoc($get_sale);
+
+				$sale = $data_sale['sale'];
+				$price_sale = $price - $price * (int)$sale / 100;
+			}
+
+			$get_product_image = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+			$data_product_image = mysqli_fetch_assoc($get_product_image);
+			$product_image = $data_product_image['image_name'];
+			?>
+			<img src="uploads/product/<?= $product_image ?>" class="p-5" width="450px">
 			<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.5)">
 				<div class="container margin_60">
 					<span class="ribbon off m-3 py-2 px-3" style="font-size: large;">- <?= $sale ?>%</span>
 					<div class="row justify-content-end text-right">
 						<div class="col-lg-6 wow" data-wow-offset="150">
 							<h4 class="mb-3" style="color: white">
-								<?= $product_name_sale ?>
+								<?= $product_name ?>
 							</h4>
 							<?php
-							$desc_array = explode(' ', $description_sale);
+							$desc_array = explode(' ', $description);
 							$desc_count = count($desc_array);
 
 							$desc = '';
@@ -294,17 +304,26 @@
 							?>
 								<p class="m-0" style="font-weight: lighter;"><?= $desc ?> ...</p>
 							<?php else : ?>
-								<p class="m-0" style="font-weight: lighter;"><?= $description_sale ?></p>
+								<p class="m-0" style="font-weight: lighter;"><?= $description ?></p>
 							<?php endif ?>
 							<div class="my-2">
-								<span class=" new_price mr-1" style="color: white; font-size:larger; font-weight:bolder">
-									<?= rupiah($price_sale) ?>
-								</span>
-								<span class="old_price" style="color:#9d9d9d">
-									<?= rupiah($price_original_sale) ?>
-								</span>
+								<?php
+								$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+								if (mysqli_num_rows($get_sale) > 0) :
+								?>
+									<span class=" new_price mr-1" style="color: white; font-size:larger; font-weight:bolder">
+										<?= rupiah($price_sale) ?>
+									</span>
+									<span class="old_price" style="color:#9d9d9d">
+										<?= rupiah($price) ?>
+									</span>
+								<?php else : ?>
+									<span class=" new_price mr-1" style="color: white; font-size:larger; font-weight:bolder">
+										<?= rupiah($price) ?>
+									</span>
+								<?php endif ?>
 							</div>
-							<a class="btn_1 mt-2" href="index.php?page=product_view&product_id=<?= $product_id_sale ?>" role="button">View Product</a>
+							<a class="btn_1 mt-2" href="index.php?page=product_view&product_id=<?= $product_id ?>" role="button">View Product</a>
 						</div>
 					</div>
 				</div>
@@ -317,7 +336,7 @@
 			</div>
 			<div class="owl-carousel owl-theme products_carousel">
 				<?php
-				$result = get('product', 'WHERE sold > 0');
+				$result = get('product', 'WHERE sold > 0 ORDER BY sold DESC');
 				foreach ($result as $data) :
 					$product_id = $data['product_id'];
 					$product_name = $data['product_name'];

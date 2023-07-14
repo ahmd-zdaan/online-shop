@@ -70,7 +70,7 @@ check('login')
 									<th>
 										Price
 									</th>
-									<th>
+									<th style="width:100px">
 										Quantity
 									</th>
 									<th>

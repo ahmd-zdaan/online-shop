@@ -149,43 +149,49 @@ include_once 'config/connect.php';
 												<?php endif ?>
 											</a>
 											<?php
-											$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
+											$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
 
-											if (mysqli_num_rows($result) > 0) :
+											if (mysqli_num_rows($get_cart) > 0) :
 											?>
 												<div class="dropdown-menu" style="width: 300px;">
 													<ul>
 														<?php
 														$subtotal_price = 0;
 
-														foreach ($result as $data) :
-															$cart_id = $data['cart_id'];
-															$product_id = $data['product_id'];
-															$total_quantity = $data['total_quantity'];
+														foreach ($get_cart as $data_cart) :
+															$cart_id = $data_cart['cart_id'];
+															$product_id = $data_cart['product_id'];
+															$total_quantity = $data_cart['total_quantity'];
 
-															$result = get('product', 'WHERE product_id=' . $product_id);
-															$data = mysqli_fetch_assoc($result);
-															$product_name = $data['product_name'];
-															$price = $data['price'];
+															$get_cart_product = get('product', 'WHERE product_id=' . $product_id);
+															$data_cart_product = mysqli_fetch_assoc($get_cart_product);
 
-															$result = get('product_image', 'WHERE product_id=' . $product_id);
-															$data = mysqli_fetch_assoc($result);
-															if (isset($data['image_name'])) {
-																$product_image = $data['image_name'];
+															$cart_product_name = $data_cart_product['product_name'];
+															$cart_product_price = $data_cart_product['price'];
+
+															$get_cart_product_image = get('product_image', 'WHERE product_id=' . $product_id);
+															$data_cart_product_image = mysqli_fetch_assoc($get_cart_product_image);
+
+															if (isset($data_cart_product_image['image_name'])) {
+																$product_image = $data_cart_product_image['image_name'];
 															}
-
-															$subtotal_product = $total_quantity * $price;
-															$subtotal_price += $subtotal_product;
 
 															$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 															if (mysqli_num_rows($get_sale) > 0) {
 																$data_sale = mysqli_fetch_assoc($get_sale);
 																$sale = $data_sale['sale'];
-																$price_sale = $price - $price * (int)$sale / 100;
+																$price_sale = $cart_product_price - $cart_product_price * (int)$sale / 100;
+
+																$subtotal_product = $total_quantity * $price_sale;
+																$subtotal_price += $subtotal_product;
+															} else {
+																$subtotal_product = $total_quantity * $cart_product_price;
+																$subtotal_price += $subtotal_product;
 															}
-															?>
+
+														?>
 															<li>
-																<a href="index.php?page=product_view&product_id=<?=$product_id?>">
+																<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 																	<figure style="width:70px; height:70px;">
 																		<?php
 																		$result = get('product_image', 'WHERE product_id=' . $product_id);
@@ -199,13 +205,18 @@ include_once 'config/connect.php';
 																		<?php endif ?>
 																	</figure>
 																	<div class="ml-4">
-																		<p class="m-0" style="font-size:larger; font-weight:bold"><?= $total_quantity . 'x ' . $product_name ?></p>
+																		<p class="m-0" style="font-size:larger; font-weight:500">
+																			<span style="color:#004cd7">
+																				<?= $total_quantity . 'x ' ?>
+																			</span>
+																			<?= $cart_product_name ?>
+																		</p>
 																		<?php
 																		$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 																		if (mysqli_num_rows($get_sale) > 0) :
 																		?>
 																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
-																			<p class="old_price m-0" style="font-size:small"><?= rupiah($price) ?></p>
+																			<p class="old_price m-0" style="font-size:small"><?= rupiah($cart_product_price) ?></p>
 																		<?php else : ?>
 																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
 																		<?php endif ?>
@@ -245,49 +256,58 @@ include_once 'config/connect.php';
 											<?php endif ?>
 										</div>
 									</li>
-								<?php else : ?>
 									<li>
-										<div class="dropdown dropdown-cart">
-											<a href="index.php?page=cart_list" class="cart_bt"></a>
-										</div>
+										<a href="index.php?page=wishlist_list" class="wishlist"></a>
 									</li>
+								<?php else : ?>
+									<a href="index.php?page=login" class="btn_1  mt-2">
+										<b>Login</b> or <b>Register</b>
+									</a>
 								<?php endif ?>
 								<li>
-									<a href="index.php?page=wishlist_list" class="wishlist"></a>
-								</li>
-								<li>
 									<div class="dropdown dropdown-access">
-										<a class="access_link"></a>
-										<div class="dropdown-menu">
-											<?php
-											if (isset($_SESSION['email'])) :
-												$result = get("user", "WHERE email='" . $_SESSION['email'] . "'");
-												$result = mysqli_fetch_assoc($result);
+										<?php
+										if (isset($email)) :
+											$get_user = get("user", "WHERE email='" . $email . "'");
+											$data_user = mysqli_fetch_assoc($get_user);
 
-												$user_name = $result['user_name'];
-												$user_role = $result['role'];
-											?>
+											$user_name = $data_user['user_name'];
+											$user_role = $data_user['role'];
+
+											$get_user_image = get('user_image', 'WHERE user_id=' . $user_id);
+											if (mysqli_num_rows($get_user_image) > 0) :
+												$data_user_image = mysqli_fetch_assoc($get_user_image);
+												$user_image = $data_user_image['user_image'];
+										?>
+												<a class="access_link mt-3" style="width:30px; height:auto; content:url('uploads/user/<?= $user_image ?>'); border-radius:50%"></a>
+											<?php else : ?>
+												<a class="access_link" style="content:url('uploads/user/default.jpg')"></a>
+											<?php endif ?>
+											<div class="dropdown-menu">
 												<ul class="mt-0">
 													<div class="row">
 														<div class="col-5">
-															<a class="pl-3 pb-3" href="index.php?page=view_profile">
-																<?php
-																$result = get('user_image', 'WHERE user_id=' . $user_id);
-
-																if (mysqli_num_rows($result) > 0) :
-																	$data = mysqli_fetch_assoc($result);
-																	$user_image = $data['user_image'];
-																?>
-																	<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
-																<?php
-																else :
-																?>
-																	<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
-																<?php endif ?>
-															</a>
+															<?php if ($user_role == 'seller') : ?>
+																<a class="pl-3 pb-3" href="index.php">
+																<?php else : ?>
+																	<a class="pl-3 pb-3" href="index.php?page=view_profile">
+																	<?php endif ?>
+																	<?php if (mysqli_num_rows($get_user_image) > 0) : ?>
+																		<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+																	<?php else : ?>
+																		<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+																	<?php endif ?>
+																	</a>
 														</div>
 														<div class="col pl-0">
-															<h5><?= $user_name ?></h5>
+															<h5 class="m-0"><?= $user_name ?></h5>
+															<?php if ($user_role == 'user') : ?>
+																<span class="badge text-bg-primary">User</span>
+															<?php elseif ($user_role == 'seller') : ?>
+																<span class="badge text-bg-warning">Seller</span>
+															<?php elseif ($user_role == 'admin') : ?>
+																<span class="badge text-bg-danger">Admin</span>
+															<?php endif ?>
 														</div>
 													</div>
 													<?php
@@ -295,9 +315,7 @@ include_once 'config/connect.php';
 													?>
 														<li>
 															<a href="index.php?page=admin">
-																<i>
-																	<img src="img/admin.png" alt="" width="20px" class="pb-2" draggable="false">
-																</i>
+																<i><img src="img/admin.png" alt="" width="20px" class="pb-2" draggable="false"></i>
 																Admin
 															</a>
 														</li>
@@ -310,9 +328,7 @@ include_once 'config/connect.php';
 													</li>
 													<li>
 														<a href="index.php?page=history_list">
-															<i>
-																<img src="img/history.png" alt="" width="20px" class="pb-2" draggable="false">
-															</i>
+															<i class="ti-timer"></i>
 															History
 														</a>
 													</li>
@@ -331,23 +347,9 @@ include_once 'config/connect.php';
 														</a>
 													</li>
 												</ul>
-											<?php else : ?>
-												<a href="index.php?page=login" class="btn_1">
-													<b>Login</b> or <b>Register</b>
-												</a>
-											<?php endif ?>
-										</div>
-									</div>
-								</li>
-								<li>
-									<a href="#menu" class="btn_cat_mob">
-										<div class="hamburger hamburger--spin" id="hamburger">
-											<div class="hamburger-box">
-												<div class="hamburger-inner"></div>
 											</div>
-										</div>
-										Categories
-									</a>
+										<?php endif ?>
+									</div>
 								</li>
 							</ul>
 						</div>

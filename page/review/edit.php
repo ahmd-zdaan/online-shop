@@ -73,15 +73,15 @@ check('login');
 						<div class="form-group">
 							<label class="d-block">Overall rating *</label>
 							<span class="rating mb-0">
-								<input type="radio" class="rating-input" id="5_star" name="rating" value="5">
+								<input type="radio" class="rating-input" id="5_star" name="rating" value="5" <?php echo ($rating == 5) ? 'checked' : ''; ?>>
 								<label for="5_star" class="rating-star"></label>
-								<input type="radio" class="rating-input" id="4_star" name="rating" value="4">
+								<input type="radio" class="rating-input" id="4_star" name="rating" value="4" <?php echo ($rating == 4) ? 'checked' : ''; ?>>
 								<label for="4_star" class="rating-star"></label>
-								<input type="radio" class="rating-input" id="3_star" name="rating" value="3">
+								<input type="radio" class="rating-input" id="3_star" name="rating" value="3" <?php echo ($rating == 3) ? 'checked' : ''; ?>>
 								<label for="3_star" class="rating-star"></label>
-								<input type="radio" class="rating-input" id="2_star" name="rating" value="2">
+								<input type="radio" class="rating-input" id="2_star" name="rating" value="2" <?php echo ($rating == 2) ? 'checked' : ''; ?>>
 								<label for="2_star" class="rating-star"></label>
-								<input type="radio" class="rating-input" id="1_star" name="rating" value="1">
+								<input type="radio" class="rating-input" id="1_star" name="rating" value="1" <?php echo ($rating == 1) ? 'checked' : ''; ?>>
 								<label for="1_star" class="rating-star"></label>
 							</span>
 						</div>
@@ -98,15 +98,18 @@ check('login');
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="checkboxes float-left add_bottom_15 add_top_15">
-							<label class="container_check">Eos tollit ancillae ea, lorem consulatu qui ne, eu eros eirmod scaevola sea. Et nec tantas accusamus salutatus, sit commodo veritus te, erat legere fabulas has ut. Rebum laudem cum ea, ius essent fuisset ut. Viderer petentium cu his.
-								<input type="checkbox" required>
+						<div class="checkboxes add_bottom_15 add_top_15">
+							<label class="container_check">Accept
+								<a href="index.php?page=terms">Terms and Conditions</a>
+								<input required type="checkbox">
 								<span class="checkmark"></span>
 							</label>
 						</div>
 					</div>
-					<a type="submit" href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1">BACK</a>
-					<button type="submit" name="submit" class="btn_1">SUBMIT</button>
+					<div class="mt-5">
+						<a type="submit" href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1">BACK</a>
+						<button type="submit" name="submit" class="btn_1">SUBMIT</button>
+					</div>
 				</form>
 
 				<?php

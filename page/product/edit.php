@@ -32,7 +32,6 @@ check('login');
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -53,19 +52,19 @@ check('login');
 				<?php
 				$product_id = $_GET['product_id'];
 
-				$result = get('product', 'WHERE product_id=' . $product_id);
+				$get_product = get('product', 'WHERE product_id=' . $product_id);
 
-				$data = mysqli_fetch_assoc($result);
+				$data_product = mysqli_fetch_assoc($get_product);
 
-				$product_name = $data['product_name'];
-				$product_category_id = $data['category_id'];
-				$product_subcategory_id = $data['subcategory_id'];
-				$price = $data['price'];
-				$stock = $data['stock'];
-				$description = $data['description'];
-				$manifacturer_id = $data['manifacturer_id'];
-				$variant = $data['variant'];
-				$weight = $data['weight'];
+				$product_name = $data_product['product_name'];
+				$product_category_id = $data_product['category_id'];
+				$product_subcategory_id = $data_product['subcategory_id'];
+				$price = $data_product['price'];
+				$stock = $data_product['stock'];
+				$description = $data_product['description'];
+				$manifacturer_id = $data_product['manifacturer_id'];
+				$variant = $data_product['variant'];
+				$weight = $data_product['weight'];
 				?>
 
 				<form action="" method="POST" enctype="multipart/form-data">
@@ -74,23 +73,18 @@ check('login');
 							<div class="col-3">
 								<div>
 									<?php
-									$result = get('product_image', 'WHERE product_id=' . $product_id);
+									$get_image = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 
-									if (mysqli_num_rows($result) > 0) :
-										$data = mysqli_fetch_assoc($result);
-										$image_name = $data['image_name'];
+									foreach ($get_image as $data_image) :
+										$image_name = $data_image['image_name'];
 									?>
-										<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
-									<?php
-									else :
-									?>
-										<img src="uploads/product/default.jpg" class="lazy" alt="Image" width="100%">
-									<?php endif ?>
+										<img src="uploads/product/<?= $image_name ?>" class="mt-3" alt="Image" width="100%">
+									<?php endforeach ?>
 								</div>
 								<div class="mt-3">
 									<label class="form-label">Product Image</label>
 									<input class="form-control" type="hidden" name="image_id" value="<?= $image_name ?>">
-									<input class="form-control" type="file" name="image">
+									<input class="form-control" type="file" name="image[]" multiple>
 								</div>
 							</div>
 							<div class="col-9">
@@ -104,10 +98,10 @@ check('login');
 											<label class="form-label">Category</label>
 											<select id="list-category" class="form-control form-select" name="category">
 												<?php
-												$result = get('category');
-												foreach ($result as $data) :
-													$category_id = $data['category_id'];
-													$category_name = $data['category_name'];
+												$get_category = get('category');
+												foreach ($get_category as $data_category) :
+													$category_id = $data_category['category_id'];
+													$category_name = $data_category['category_name'];
 												?>
 													<option value="<?= $category_id ?>" <?= ($product_category_id == $category_id) ? 'selected' : '' ?>><?= $category_name ?></option>
 												<?php
@@ -133,9 +127,9 @@ check('login');
 									<li class="mb-2">
 										<label class="form-label">Manifacturer</label>
 										<?php
-										$result = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
-										$data = mysqli_fetch_assoc($result);
-										$manifacturer_name = $data['manifacturer_name'];
+										$get_manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
+										$data_manifacturer = mysqli_fetch_assoc($get_manifacturer);
+										$manifacturer_name = $data_manifacturer['manifacturer_name'];
 										?>
 										<input type="text" name="manifacturer" class="form-control" value="<?= $manifacturer_name ?>">
 									</li>
@@ -152,7 +146,7 @@ check('login');
 										<input type="number" name="stock" class="form-control" value="<?= $stock ?>">
 									</li>
 									<li class="mt-3">
-										<a type="submit" href="index.php?page=product_list" class="btn_1">BACK</a>
+										<a type="submit" href="index.php?page=seller_product" class="btn_1">BACK</a>
 										<button type="submit" name="submit" class="btn_1">SAVE</button>
 									</li>
 								</ul>
@@ -164,7 +158,7 @@ check('login');
 				<?php
 				if (isset($_POST['submit'])) {
 					$email = $_SESSION['email'];
-					$get_user = get('user', 'WHERE email="'.$email.'"');
+					$get_user = get('user', 'WHERE email="' . $email . '"');
 					$data_user = mysqli_fetch_assoc($get_user);
 
 					$product_name = $_POST['name'];
@@ -178,36 +172,43 @@ check('login');
 					$stock = $_POST['stock'];
 
 					$manifacturer = $_POST['manifacturer'];
-					$result = get('manifacturer', 'WHERE manifacturer_name="' . $manifacturer . '"');
-					$data = mysqli_fetch_assoc($result);
-					$manifacturer_id = $data['manifacturer_id'];
+					$get_manifacturer = get('manifacturer', 'WHERE manifacturer_name="' . $manifacturer . '"');
+					$data_manifacturer = mysqli_fetch_assoc($get_manifacturer);
 
-					if (!empty($_FILES['image']['name'])) {
-						$image_file_name = $_FILES['image']['name'];
+					$manifacturer_id = $data_manifacturer['manifacturer_id'];
 
-						$explode = explode(".", $image_file_name);
-						list($file_name, $extension) = $explode;
-						$image_name = time() . "." . $extension;
-						
-						$tmp = $_FILES['image']['tmp_name'];
-						if (move_uploaded_file($tmp, "uploads/product/" . $image_name)) {
-							$image_name_new = $_POST['image_id'];
-
-							// Deletes previous image
-							$old_image = get('product_image', 'WHERE product_id=' . $product_id);
-							if (mysqli_num_rows($old_image) > 0) {
-								$data = mysqli_fetch_assoc($old_image);
-								$image_name_old = $data['image_name'];
-								unlink("uploads/product/" . $image_name_old);
-
-								$query = "UPDATE product_image SET image_name='" . $image_name_new . "' WHERE product_id=" . $product_id;
-								$result = mysqli_query($connect, $query);
-							} else {
-								insert('product_image', [
-									'image_name' => $image_name,
-									'product_id' => $product_id
-								]);
+					if ((int)$_FILES['image']['size'][0] > 0) {
+						$get_image = get('product_image', 'WHERE product_id=' . $product_id);
+						if (mysqli_num_rows($get_image) > 0) {
+							foreach ($get_image as $data_image) {
+								$image_name = $data_image['image_name'];
+	
+								unlink("uploads/product/" . $image_name);
 							}
+	
+							$query = "DELETE FROM product_image WHERE product_id=" . $product_id;
+							$result = mysqli_query($connect, $query);
+						}
+
+						$i = 0;
+						$image_index = 1;
+						$file_name_array = array_reverse($_FILES['image']['name']);
+
+						foreach ($file_name_array as $file_name) {
+							list($file_name, $extension) = explode(".", $file_name);
+							$image_name = uniqid() . "." . $extension;
+
+							$tmp_path = $_FILES['image']['tmp_name'][$i];
+							$upload = move_uploaded_file($tmp_path, "uploads/product/" . $image_name);
+
+							$result_image = insert('product_image', [
+								'image_name' => $image_name,
+								'product_id' => $product_id,
+								'image_index' => $image_index
+							]);
+
+							$i++;
+							$image_index++;
 						}
 					}
 
@@ -229,17 +230,18 @@ check('login');
 					stock="' . $stock . '"
 					WHERE product_id=' . $product_id;
 
-					// var_dump($query); die;
 					$result = mysqli_query($connect, $query);
 
 					if ($result) {
-						echo '<script>window.location.href = "index.php?page=product_list"</script>';
+						echo '<script>window.location.href = "index.php?page=seller_product"</script>';
 					}
 				}
 				?>
 			</div>
 		</main>
+
 		<div id="toTop"></div> <!-- Back to top button -->
+
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>

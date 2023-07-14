@@ -2,38 +2,28 @@
 if (isset($_SESSION['email'])) {
 	if (isset($_GET['user_id'])) {
 		$user_id = $_GET['user_id'];
-
 		$get_user = get('user', 'WHERE user_id="' . $user_id . '"');
-		$table_user = mysqli_fetch_assoc($get_user);
-
-		$name = $table_user['user_name'];
-		$email = $table_user['email'];
-		$address = $table_user['address'];
-		$country_id = $table_user['country_id'];
-		$telephone = $table_user['telephone'];
-
-		$get_country = get('country', 'WHERE country_id=' . $country_id);
-		$table_country = mysqli_fetch_assoc($get_country);
-		$country_name = $table_country['country_name'];
 	} else {
 		$email = $_SESSION['email'];
-
 		$get_user = get('user', 'WHERE email="' . $email . '"');
-		$table_user = mysqli_fetch_assoc($get_user);
-
-		$name = $table_user['user_name'];
-		$email = $table_user['email'];
-		$address = $table_user['address'];
-		$country_id = $table_user['country_id'];
-		$telephone = $table_user['telephone'];
-
-		$get_country = get('country', 'WHERE country_id=' . $country_id);
-		$table_country = mysqli_fetch_assoc($get_country);
-		$country_name = $table_country['country_name'];
 	}
 } else {
 	check('login');
 }
+
+$table_user = mysqli_fetch_assoc($get_user);
+
+$user_id = $table_user['user_id'];
+$name = $table_user['user_name'];
+$role = $table_user['role'];
+$email = $table_user['email'];
+$address = $table_user['address'];
+$country_id = $table_user['country_id'];
+$telephone = $table_user['telephone'];
+
+$get_country = get('country', 'WHERE country_id=' . $country_id);
+$table_country = mysqli_fetch_assoc($get_country);
+$country_name = $table_country['country_name'];
 
 ?>
 
@@ -67,7 +57,6 @@ if (isset($_SESSION['email'])) {
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -77,8 +66,8 @@ if (isset($_SESSION['email'])) {
 				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
-							<li><a href="#">Home</a></li>
-							<li><a href="#">Profile</a></li>
+							<li><a href="index.php">Home</a></li>
+							<li><a href="index.php?page=view_profile">Profile</a></li>
 							<li>View</li>
 						</ul>
 					</div>
@@ -113,7 +102,14 @@ if (isset($_SESSION['email'])) {
 					<div class="col-9">
 						<ul style="list-style: none;" class="pl-4">
 							<li>
-								<h1 class="mb-4"><?= $name ?></h1>
+								<h1 class="m-0"><?= $name ?></h1>
+								<?php if ($user_role == 'user') : ?>
+									<span class="mb-4 badge text-bg-primary">User</span>
+								<?php elseif ($user_role == 'seller') : ?>
+									<span class="mb-4 badge text-bg-warning">Seller</span>
+								<?php elseif ($user_role == 'admin') : ?>
+									<span class="mb-4 badge text-bg-danger">Admin</span>
+								<?php endif ?>
 							</li>
 							<li>
 								<h5>Address</h5>
@@ -125,10 +121,12 @@ if (isset($_SESSION['email'])) {
 							</li>
 							<?php
 							if (isset($_SESSION['email'])) :
+								if ($email == $_SESSION['email']) :
 							?>
-								<li>
-									<a href="index.php?page=edit_profile" class="mt-3 btn_1">Edit</a>
-								</li>
+									<li>
+										<a href="index.php?page=edit_profile" class="mt-3 btn btn-outline-primary">Edit Profile</a>
+									</li>
+								<?php endif ?>
 							<?php endif ?>
 						</ul>
 					</div>

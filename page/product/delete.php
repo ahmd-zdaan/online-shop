@@ -3,14 +3,17 @@ check('login');
 
 $product_id = $_GET['product_id'];
 
-$query = get('product_image', 'WHERE product_id='.$product_id);
-$data = mysqli_fetch_assoc($query);
-$image_name = $data['image_name'];
-unlink("uploads/" . $image_name);
+$get_image = get('product_image', 'WHERE product_id='.$product_id);
+foreach ($get_image as $data_image) {
+    $image_name = $data_image['image_name'];
+
+    unlink("uploads/product/" . $image_name);
+}
 
 $query = "DELETE FROM product WHERE product_id=".$product_id;
+$result = mysqli_query($connect, $query);
 
-if (mysqli_query($connect, $query)) {
-    echo "<script>window.location.href = 'index.php?page=product_list'</script>";
+if ($result) {
+    echo "<script>window.location.href = 'index.php?page=seller_product'</script>";
 }
 ?>
