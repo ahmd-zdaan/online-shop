@@ -32,13 +32,13 @@ foreach ($get_cart as $data_cart) :
 
 	$price = $data_product['price'];
 
-	$get_sale = get('sale', 'WHERE product_id='.$product_id);
+	$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 	if (mysqli_num_rows($get_sale) > 0) {
-	    $data_sale = mysqli_fetch_assoc($get_sale);
+		$data_sale = mysqli_fetch_assoc($get_sale);
 
-	    $sale = $data_sale['sale'];
+		$sale = $data_sale['sale'];
 
-	    $price = $price - $price * (int)$sale / 100;
+		$price = $price - $price * (int)$sale / 100;
 	}
 
 	$item_details[] = [
@@ -234,17 +234,22 @@ function printExampleWarningMessage()
 										$subtotal_price += $total_product;
 									}
 								?>
-									<div class="row">
+									<div class="row" style="font-weight:bold">
 										<div class="col-6">
 											<p>
-												<span style="color: #004cd7" >
+												<span style="color:#004cd7">
 													<?= $quantity ?>x
 												</span>
 												<?= $product_name ?>
 											</p>
 										</div>
-										<div class="col-6 text-right" style="font-weight: bold;">
-											<p><?= rupiah($total_product) ?></p>
+										<div class="col-6 text-right">
+											<p>
+												<span style="color:gray; font-weight:normal">
+													(<?= $quantity ?>x <?= rupiah($product_price) ?>)
+												</span>
+												<?= rupiah($total_product) ?>
+											</p>
 										</div>
 									</div>
 								<?php
@@ -317,23 +322,17 @@ function printExampleWarningMessage()
 			document.getElementById('pay-button').onclick = function() {
 				// SnapToken acquired from previous step
 				snap.pay('<?= $snap_token ?>', {
-					// Optional
 					onSuccess: function(result) {
-						/* You may add your own js here, this is just example */
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-						console.log(result);
+						window.location.href = 'index.php?page=checkout_confirm&user_id=<?= $user_id ?>';
 					},
-					// Optional
 					onPending: function(result) {
-						/* You may add your own js here, this is just example */
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-						console.log(result);
+						console.log('pending');
 					},
-					// Optional
 					onError: function(result) {
-						/* You may add your own js here, this is just example */
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-						console.log(result);
+						console.log('error');
 					}
 				});
 			};
@@ -346,7 +345,6 @@ function printExampleWarningMessage()
 					$('#other_addr_c').fadeOut('fast');
 			});
 		</script>
-
 </body>
 
 </html>
