@@ -58,7 +58,7 @@ check('login');
 								</div>
 								<div class="mt-3">
 									<label class="form-label">Product Image</label>
-									<input class="form-control" type="file" name="image">
+									<input class="form-control" type="file" name="image[]" oninvalid="this.setCustomValidity('At least one product image is required')" multiple required onvalid="this.setCustomValidity('')">
 								</div>
 							</div>
 							<div class="col-9">
@@ -115,10 +115,6 @@ check('login');
 										<label class="form-label">Stock</label>
 										<input type="number" name="stock" class="form-control" placeholder="0" required>
 									</li>
-									<!-- <li class="mb-2">
-										<label class="form-label">Image</label>
-										<input class="form-control" type="file" name="image">
-									</li> -->
 									<li class="mt-3">
 										<a type="submit" href="index.php" class="btn_1">BACK</a>
 										<button type="submit" name="submit" class="btn_1">SAVE</button>
@@ -131,7 +127,7 @@ check('login');
 				<?php
 				if (isset($_POST['submit'])) {
 					$email = $_SESSION['email'];
-					$get_user = get('user', 'WHERE email="'.$email.'"');
+					$get_user = get('user', 'WHERE email="' . $email . '"');
 					$data_user = mysqli_fetch_assoc($get_user);
 
 					$product_name = $_POST['name'];
@@ -165,7 +161,7 @@ check('login');
 						$id = mysqli_insert_id($connect);
 					}
 
-					$result = insert('product', [
+					$result_insert = insert('product', [
 						'product_name' => $product_name,
 						'seller_id' => $seller_id,
 						'category_id' => $category,
@@ -178,27 +174,31 @@ check('login');
 						'weight' => $weight
 					]);
 
-					$id = $connect -> insert_id;
+					$product_id = mysqli_insert_id($connect);
+					$i = 0; $image_index = 1;
+					$upload = array_reverse($_FILES['image']['name']);
 
-					if (!empty($_FILES['image']['name'])) {
-						$name = $_FILES['image']['name'];
+					foreach ($upload as $file_name) {
+						list($file_name, $extension) = explode(".", $file_name);
+						$image_name = uniqid() . "." . $extension;
 
-						$explode = explode(".", $name);
-						list($file_name, $extension) = $explode;
-						$image_name = time() . "." . $extension;
+						$tmp_path = $_FILES['image']['tmp_name'][$i];
+						if (move_uploaded_file($tmp_path, "uploads/product/" . $image_name)) {
+							$result_image = insert('product_image', [
+								'image_name' => $image_name,
+								'product_id' => $product_id,
+								'image_index' => $image_index
+							]);
 
-						$tmp = $_FILES['image']['tmp_name'];
-						if (move_uploaded_file($tmp, "uploads/product/" . $image_name)) {
-							$query = "INSERT INTO product_image (image_name, product_id) VALUES ('" . $image_name . "', '" . $id . "')";
-							$result = mysqli_query($connect, $query);
-
-							if (!$result) {
+							if (!$result_image) {
 								unlink("uploads/product/" . $image_name);
 							}
 						}
+
+						$i++; $image_index++;
 					}
 
-					if ($result) {
+					if ($result_insert) {
 						echo '<script>window.location.href = "index.php"</script>';
 					}
 				}
@@ -238,4 +238,5 @@ check('login');
 			});
 		</script>
 </body>
+
 </html>

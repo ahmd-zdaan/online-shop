@@ -46,14 +46,7 @@ $country_name = $data_country['country_name'];
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
-
-<style>
-	.text-link:hover {
-		text-decoration: underline;
-	}
-</style>
 
 <body>
 	<div id="page">
@@ -63,7 +56,7 @@ $country_name = $data_country['country_name'];
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
-							<li><a href="">Seller</a></li>
+							<li><a href="index.php">Seller</a></li>
 							<li><?= $user_name ?></li>
 						</ul>
 					</div>
@@ -90,7 +83,8 @@ $country_name = $data_country['country_name'];
 					<div class="col-9">
 						<ul style="list-style: none;" class="pl-4">
 							<li>
-								<h1 class="mb-3"><?= $user_name ?></h1>
+								<h1 class="m-0"><?= $user_name ?></h1>
+								<span class="mb-4 badge text-bg-warning">Seller</span>
 							</li>
 							<li>
 								<h5>Address</h5>
@@ -107,8 +101,8 @@ $country_name = $data_country['country_name'];
 			<div class="container margin_60_35 p-0 mt-5">
 				<div>
 					<h4 class="m-0"><?= $user_name ?>'s Products</h4>
-					<a href="index.php?page=seller_list">
-						<p class="m-0 text-right text-link">View All</p>
+					<a href="index.php?page=seller_product_list&seller_id=<?=$seller_id?>">
+						<p class="m-0 text-right" style="text-decoration:underline">View All</p>
 					</a>
 				</div>
 				<div class="owl-carousel owl-theme products_carousel px-5">

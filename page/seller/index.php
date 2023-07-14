@@ -46,14 +46,7 @@ $country_name = $data_country['country_name'];
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
-
-<style>
-	.text-link:hover {
-		text-decoration: underline;
-	}
-</style>
 
 <body>
 	<div id="page">
@@ -62,8 +55,8 @@ $country_name = $data_country['country_name'];
 				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
-							<li><a href="#">Home</a></li>
-							<li><a href="#">Seller</a></li>
+							<li><a href="index.php">Home</a></li>
+							<li><a href="index.php">Seller</a></li>
 							<li>Dashboard</li>
 						</ul>
 					</div>
@@ -90,7 +83,8 @@ $country_name = $data_country['country_name'];
 					<div class="col-9">
 						<ul style="list-style: none;" class="pl-4">
 							<li>
-								<h1 class="mb-3"><?= $name ?></h1>
+								<h1 class="m-0"><?= $name ?></h1>
+								<span class="mb-4 badge text-bg-warning">Seller</span>
 							</li>
 							<li>
 								<h5>Address</h5>
@@ -101,7 +95,8 @@ $country_name = $data_country['country_name'];
 								<p><?= $telephone ?></p>
 							</li>
 							<li>
-								<a href="index.php?page=product_add" class="btn_1">Add New Product</a>
+								<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
+								<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
 							</li>
 						</ul>
 					</div>
@@ -110,7 +105,7 @@ $country_name = $data_country['country_name'];
 			<div class="container margin_60_35">
 				<h5 class="mb-4">Your Products</h5>
 				<a href="index.php?page=seller_product">
-					<p class="m-0 text-right text-link">View All</p>
+					<p class="m-0 text-right" style="text-decoration:underline">View All</p>
 				</a>
 				<div class="owl-carousel owl-theme products_carousel">
 					<?php
@@ -220,7 +215,12 @@ $country_name = $data_country['country_name'];
 								</div>
 								<ul>
 									<li>
-										<a href="index.php?page=product_delete&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Delete Product" onclick="return confirm('Are you sure to DELETE this PRODUCT?')" data-toggle="tooltip" data-placement="left">
+										<a href="index.php?page=product_edit&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Edit Product" data-toggle="tooltip" data-placement="left">
+											<i class="ti-pencil"></i>
+										</a>
+									</li>
+									<li>
+										<a href="index.php?page=product_delete&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Edit Product" onclick="return confirm('Are you sure to DELETE this PRODUCT?')" data-toggle="tooltip" data-placement="left">
 											<i class="ti-trash"></i>
 										</a>
 									</li>
