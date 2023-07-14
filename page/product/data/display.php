@@ -11,25 +11,47 @@ $filter_max_price = $_GET['max_price'];
 
 $filter_manifacturer_id = $_GET['manifacturer_id'];
 
+$where = 'WHERE ';
+
 if ($filter_subcategory_id != 0) {
-    $where = 'WHERE subcategory_id IN (' . $filter_subcategory_id . ')';
-} elseif ($filter_category_id != 0) {
-    $where = 'WHERE category_id IN (' . $filter_category_id . ')';
-} elseif ($filter_max_price != 0) {
-    if ($filter_max_price == -1) {
-        $where = 'WHERE price > ' . $filter_min_price;
+    if ($where == 'WHERE ') {
+        $where .= 'subcategory_id IN (' . $filter_subcategory_id . ')';
     } else {
-        $where = 'WHERE price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
+        $where .= ' AND subcategory_id IN (' . $filter_subcategory_id . ')';
     }
-} elseif ($filter_manifacturer_id != 0) {
-    $where = 'WHERE manifacturer_id IN (' . $filter_manifacturer_id . ')';
+}
+if ($filter_category_id != 0) {
+    if ($where == 'WHERE ') {
+        $where .= 'category_id IN (' . $filter_category_id . ')';
+    } else {
+        $where .= ' AND category_id IN (' . $filter_category_id . ')';
+    }
+}
+if ($filter_max_price != 0) {
+    if ($filter_max_price == -1) {
+        if ($where == 'WHERE ') {
+            $where .= 'price > ' . $filter_min_price;
+        } else {
+            $where .= ' AND price > ' . $filter_min_price;
+        }
+    } else {
+        if ($where == 'WHERE ') {
+            $where .= 'price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
+        } else {
+            $where .= ' AND price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
+        }
+    }
+}
+if ($filter_manifacturer_id != 0) {
+    if ($where == 'WHERE ') {
+        $where .= 'manifacturer_id IN (' . $filter_manifacturer_id . ')';
+    } else {
+        $where .= ' AND manifacturer_id IN (' . $filter_manifacturer_id . ')';
+    }
 }
 
-// belum bisa gabung dengan category/subcategory
-// cek langsung dari produk, produk yang diskon tidak terdeteksi
-if (isset($where)) {
+if ($where != 'WHERE ') {
     $result = get('product', $where . ' AND product_name LIKE "%' . $search . '%"');
-    // $result = get('product WHERE manifacturer_id IN (' . $filter_manifacturer_id . ')');
 } else {
     $result = get('product', 'WHERE product_name LIKE "%' . $search . '%"');
 }

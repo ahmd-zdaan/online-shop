@@ -164,7 +164,7 @@
 									</label>
 									</li>
 									</li>
-									<label class="container_check">Rp5.000.000,00 +
+									<label class="container_check">Rp5.000.000,00+
 										<small><?= $filter_price_5 ?></small>
 										<input class="category price-check" type="checkbox" data-min-price="5000000" data-max-price="-1">
 										<span class="checkmark"></span>
