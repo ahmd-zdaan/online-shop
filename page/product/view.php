@@ -263,16 +263,16 @@ $subcategory_name = $data['subcategory_name'];
 							<?php
 							$product_name_array = explode(' ', $product_name);
 							$product_name_count = count($product_name_array);
-							
+
 							$product_name_cut = '';
 							if ($product_name_count > 5) :
 								for ($i = 0; $i < 5; $i++) {
 									$product_name_cut .= $product_name_array[$i] . ' ';
 								}
-								?>
+							?>
 								<li><?= $product_name_cut ?>...</li>
-								<?php else : ?>
-									<li><?= $product_name ?></li>
+							<?php else : ?>
+								<li><?= $product_name ?></li>
 							<?php endif ?>
 						</ul>
 					</div>
