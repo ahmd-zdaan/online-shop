@@ -33,25 +33,17 @@
 <body>
 	<main>
 		<div class="container-fluid px-5">
-			<!-- <div class="breadcrumbs m-0 pt-3">
-				<ul>
-					<li><a href="#">Home</a></li>
-					<li><a href="#">Category</a></li>
-					<li>Page active</li>
-				</ul>
-			</div> -->
 			<div class="row">
-				<aside class="col-lg-3 my-5" id="sidebar_fixed">
+				<aside class="col-lg-3 mt-3 mb-5" id="sidebar_fixed">
 					<div class="filter_col">
 						<div class="inner_bt">
 							<a href="#" class="open_filters">
 								<i class="ti-close"></i>
 							</a>
 						</div>
-						<!-- CATEGORY -->
 						<div class="filter_type version_2">
 							<h4>
-								<a href="#filter_1" data-toggle="collapse" class="opened">Categories</a>
+								<a href="#filter_1" data-toggle="collapse" class="opened">Category</a>
 							</h4>
 							<div class="collapse show" id="filter_1">
 								<ul>
@@ -97,7 +89,6 @@
 								</ul>
 							</div>
 						</div>
-						<!-- PRICE -->
 						<div class="filter_type version_2">
 							<h4>
 								<a href="#filter_4" data-toggle="collapse" class="opened">Price</a>
@@ -202,56 +193,34 @@
 								</ul>
 							</div>
 						</div>
-						<a href="#0" class="btn btn-sm btn-outline-secondary">Reset Filter</a>
+						<a href="#" onclick="resetFilter()" class="btn btn-sm btn-outline-secondary">Reset Filter</a>
 					</div>
 				</aside>
-				<div class="col-lg-9 my-5">
-					<div id="stick_here"></div>
-					<div class="toolbox elemento_stick add_bottom_30">
-						<div class="container">
-							<ul class="clearfix">
-								<li>
-									<div class="sort_select">
-										<select name="sort" id="sort">
-											<option value="popularity" selected="selected">Sort by popularity</option>
-											<option value="rating">Sort by average rating</option>
-											<option value="date">Sort by newness</option>
-											<option value="price">Sort by price: low to high</option>
-											<option value="price-desc">Sort by price: high to low</option>
-										</select>
-									</div>
-								</li>
-								<li>
-									<a href="index.php?page=list&view=grid"><i class="ti-view-grid"></i></a>
-									<a href="index.php?page=list&view=list"><i class="ti-view-list"></i></a>
-								</li>
-								<li>
-									<a href="#0" class="open_filters">
-										<i class="ti-filter"></i><span>Filters</span>
-									</a>
-								</li>
-							</ul>
+				<div class="col-lg-9 mt-3 mb-5">
+					<div class="toolbox elemento_stick add_bottom_30 row">
+						<div class="col-10">
+							<span class="mt-1 mr-2" style="float:left">Sort by</span>
+							<select class="form-select form-select-sm" name="sort" id="sort" style="width:150px">
+								<option selected>-</option>
+								<option value="relevance">Relevance</option>
+								<option value="date">Date added</option>
+								<option value="price_lth">Price (low to high)</option>
+								<option value="price_htl">Price (high to low)</option>
+							</select>
+						</div>
+						<div class="col text-right mt-1" style="font-size:large">
+							<a class="mr-1" href="index.php?page=list&view=grid"><i class="ti-view-grid"></i></a>
+							<a href="index.php?page=list&view=list"><i class="ti-view-list"></i></a>
 						</div>
 					</div>
 					<?php
 					$view = $_GET['view'];
+
 					if ($view == 'grid') :
 					?>
-						<div class="row small-gutters">
-							<?php
-							$result = get('product');
-							foreach ($result as $data) :
-								$product_id = $data['product_id'];
-								$product_name = $data['product_name'];
-								$price = $data['price'];
-							?>
-
-							<?php endforeach ?>
-						</div>
-					<?php
-					elseif ($view == 'list') :
-					?>
-						<div id="list-product"></div>
+						<div id="display-product-grid"></div>
+					<?php elseif ($view == 'list') : ?>
+						<div id="display-product-list"></div>
 					<?php endif ?>
 				</div>
 			</div>
