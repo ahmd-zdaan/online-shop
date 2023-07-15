@@ -95,6 +95,7 @@ $country_name = $data_country['country_name'];
 								<p><?= $telephone ?></p>
 							</li>
 							<li>
+								<a href="index.php?page=discussion_list" class="btn btn-warning">Discussions</a>
 								<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
 								<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
 							</li>

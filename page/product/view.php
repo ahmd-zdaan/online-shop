@@ -16,6 +16,7 @@ if ($data_product) {
 	$manifacturer_id = $data_product['manifacturer_id'];
 	$variant = $data_product['variant'];
 	$weight = $data_product['weight'];
+	$date = $data_product['date'];
 
 	$get_user = get('user', 'WHERE user_id=' . $seller_id);
 	$data_user = mysqli_fetch_assoc($get_user);
@@ -24,9 +25,13 @@ if ($data_product) {
 	$seller_name = $data_user['user_name'];
 
 	$get_seller_image = get('user_image', 'WHERE user_id=' . $seller_id);
-	$data_seller_image = mysqli_fetch_assoc($get_seller_image);
+	if (mysqli_num_rows($get_seller_image) > 0) {
+		$data_seller_image = mysqli_fetch_assoc($get_seller_image);
 
-	$seller_image = $data_seller_image['user_image'];
+		$seller_image = $data_seller_image['user_image'];
+	} else {
+		$seller_image = 'default.jpg';
+	}
 }
 
 $result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
@@ -255,10 +260,23 @@ $subcategory_name = $data['subcategory_name'];
 							<li><a href="index.php?page=list&view=list">Product</a></li>
 							<li><a href="index.php?page=list&view=list"><?= $category_name ?></a></li>
 							<li><a href="index.php?page=list&view=list"><?= $subcategory_name ?></a></li>
-							<li><?= $product_name ?></li>
+							<?php
+							$product_name_array = explode(' ', $product_name);
+							$product_name_count = count($product_name_array);
+							
+							$product_name_cut = '';
+							if ($product_name_count > 5) :
+								for ($i = 0; $i < 5; $i++) {
+									$product_name_cut .= $product_name_array[$i] . ' ';
+								}
+								?>
+								<li><?= $product_name_cut ?>...</li>
+								<?php else : ?>
+									<li><?= $product_name ?></li>
+							<?php endif ?>
 						</ul>
 					</div>
-					<div class="prod_info">
+					<div class="prod_info p-0">
 						<h1 class="mt-3"><?= $product_name ?></h1>
 						<span class="rating my-0">
 							<?php
@@ -286,7 +304,11 @@ $subcategory_name = $data['subcategory_name'];
 									echo '<i class="icon-star"></i>';
 								}
 								echo '<p class="ml-2" style="float:right; color:#9d9d9d">( ' . $average_rating . ' / 5 )</p>';
-								echo '<em class="mx-2" style="color:#9d9d9d">' . $count_rating . ' reviews</em>';
+								if ($count_rating == 1) {
+									echo '<em class="mx-2" style="color:#9d9d9d">' . $count_rating . ' review</em>';
+								} else {
+									echo '<em class="mx-2" style="color:#9d9d9d">' . $count_rating . ' reviews</em>';
+								}
 							}
 							?>
 							<p style="color:#9d9d9d" class="mb-3"><?= $sold ?> sold • 0 discussions</p>
@@ -303,11 +325,11 @@ $subcategory_name = $data['subcategory_name'];
 								$desc1 = '';
 								$desc2 = '';
 
-								if ($desc_count > 50) :
-									for ($i = 0; $i < 50; $i++) {
+								if ($desc_count > 55) :
+									for ($i = 0; $i < 55; $i++) {
 										$desc1 .= $desc_array[$i] . ' ';
 									}
-									for ($i = 50; $i < $desc_count; $i++) {
+									for ($i = 55; $i < $desc_count; $i++) {
 										$desc2 .= $desc_array[$i] . ' ';
 									}
 								?>
@@ -317,9 +339,7 @@ $subcategory_name = $data['subcategory_name'];
 										<span id="more"><?= $desc2 ?></span>
 									</p>
 									<button onclick="readMore()" id="readMoreBtn" class="btn btn-link p-0" style="font-size:small;">read more</button>
-								<?php
-								else :
-								?>
+								<?php else : ?>
 									<p><?= $description ?></p>
 								<?php endif ?>
 							</li>
@@ -403,7 +423,7 @@ $subcategory_name = $data['subcategory_name'];
 									</label>
 									<div class="col-xl-4 col-lg-5 col-md-6 col-6">
 										<div class="numbers-row">
-											<input type="number" name="quantity" value="1" min="1" max="<?=$stock?>" class="qty2">
+											<input type="number" name="quantity" value="1" min="1" max="<?= $stock ?>" class="qty2">
 										</div>
 									</div>
 								</div>
@@ -510,7 +530,7 @@ $subcategory_name = $data['subcategory_name'];
 									<div class="col-5">
 										<div class="mb-5">
 											<a href="index.php?page=seller_view&seller_id=<?= $seller_id ?>">
-												<img class="mb-4 mr-2" src="uploads/user/<?= $seller_image ?>" style="border-radius:50%; float:left" width="60px" alt="seller_image">
+												<img class="mb-4 mr-3" src="uploads/user/<?= $seller_image ?>" style="border-radius:50%; float:left" width="60px" alt="seller_image">
 												<h4 class="pt-3"><?= $seller_name ?></h4>
 											</a>
 										</div>
@@ -545,16 +565,27 @@ $subcategory_name = $data['subcategory_name'];
 																<td><?= $weight ?>kg</td>
 															<?php endif ?>
 														</tr>
+														<tr>
+															<td>
+																<strong>Date added</strong>
+															</td>
+															<td><?= dateConvert($date)	 ?></td>
+														</tr>
 													</tbody>
 												</table>
 											</div>
+										</div>
+										<div class="mt-2">
+											<a href="index.php?page=discussion_add&product_id=<?= $product_id ?>">
+												<img width="30px" src="img/whatsapp.png" alt="">
+												<span class="ml-1">Disscuss with <?= $seller_name ?> on Whatsapp</span>
+											</a>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- REVIEW -->
 					<div id="pane-B" class="card tab-pane fade" role="tabpanel" aria-labelledby="tab-B">
 						<div class="card-header" role="tab" id="heading-B">
 							<h5 class="mb-0">
@@ -603,7 +634,7 @@ $subcategory_name = $data['subcategory_name'];
 																?>
 																	<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
 																<?php else : ?>
-																	<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="35px">
+																	<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="35px">
 																<?php endif ?>
 															</div>
 															<div class="col-11 pl-2 pt-2 mb-2">
@@ -617,7 +648,6 @@ $subcategory_name = $data['subcategory_name'];
 																		<div class="clearfix add_bottom_10">
 																			<span class="rating">
 																				<?php
-																				// Stars
 																				for ($i = $rating; $i > 0; $i--) {
 																					echo '<i class="icon-star"></i>';
 																				}
@@ -640,18 +670,18 @@ $subcategory_name = $data['subcategory_name'];
 																			foreach ($get_review_image as $data_review_image) :
 																				$review_image_name = $data_review_image['image_name'];
 																		?>
-																				<img class="mb-3 review-image" id="image<?= $i ?>" src="uploads/review/<?= $review_image_name ?>" alt="" width="150px">
+																				<img class="mb-3 review-image" id="image-1" src="uploads/review/<?= $review_image_name ?>" alt="" width="150px">
 																			<?php
-																			$i++;
+																				$i++;
 																			endforeach;
 																			?>
 																			<div id="myModal" class="modal">
 																				<span class="close">&times;</span>
-																				<img class="modal-content" id="img01">
+																				<img class="modal-content" id="image-modal-1">
 																				<div id="caption"></div>
 																			</div>
 																		<?php endif ?>
-																		<p class="mb-2"><?= $review ?></p>
+																		<p class="m-0"><?= $review ?></p>
 																		<div class="row">
 																			<div class="col-4">
 																				<?php
@@ -1024,8 +1054,8 @@ $subcategory_name = $data['subcategory_name'];
 	<script>
 		var modal = document.getElementById("myModal");
 
-		var img = document.getElementById("myImg");
-		var modalImg = document.getElementById("img01");
+		var img = document.getElementById("image-1");
+		var modalImg = document.getElementById("image-modal-1");
 		var captionText = document.getElementById("caption");
 
 		img.onclick = function() {
