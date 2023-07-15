@@ -281,7 +281,7 @@ include_once 'config/connect.php';
 										?>
 												<a class="access_link mt-3" style="width:30px; height:auto; content:url('uploads/user/<?= $user_image ?>'); border-radius:50%"></a>
 											<?php else : ?>
-												<a class="access_link" style="content:url('uploads/user/default.jpg')"></a>
+												<a class="access_link mt-3" style="width:30px; height:auto; content:url('uploads/user/default.jpg'); border-radius:50%"></a>
 											<?php endif ?>
 											<div class="dropdown-menu">
 												<ul class="mt-0">

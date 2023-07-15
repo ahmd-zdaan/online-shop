@@ -32,7 +32,6 @@ check('login')
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -57,22 +56,6 @@ check('login')
 					</div>
 				</div>
 				<table class="table table-striped table-hover table-sm">
-					<thead>
-						<tr>
-							<th scope="col" style="width: 50px">
-								ID
-							</th>
-							<th scope="col">
-								Name
-							</th>
-							<th scope="col">
-								Subcategories
-							</th>
-							<th scope="col" style="width: 250px">
-								Actions
-							</th>
-						</tr>
-					</thead>
 					<tbody>
 						<?php
 						$result = get('category');
@@ -82,28 +65,38 @@ check('login')
 						?>
 							<tr>
 								<td>
-									<p><?= $category_id ?></p>
-								</td>
-								<td>
 									<p><?= $category_name ?></p>
 								</td>
 								<td>
 									<?php
-									$result = get('subcategory', 'WHERE category_id='.$category_id);
+									$result = get('subcategory', 'WHERE category_id=' . $category_id);
 									foreach ($result as $data) :
 										$subcategories = $data['subcategory_name'];
 									?>
-									<ul class="m-0">
-										<li>
-											<p class="m-0"><?= $subcategories ?></p>
-										</li>
-									</ul>
+										<ul class="m-0">
+											<li>
+												<p class="m-0"><?= $subcategories ?></p>
+											</li>
+										</ul>
 									<?php endforeach ?>
 								</td>
 								<td class="row">
-									<div class="btn-group p-0">
+									<!-- <div class="btn-group p-0">
 										<a class="btn btn-outline-primary col" href="index.php?page=category_edit&category_id=<?= $category_id ?>">EDIT</a>
 										<a class="btn btn-outline-danger col" href="index.php?page=category_delete&category_id=<?= $category_id ?>" onclick="return confirm('Are you sure you want to DELETE this category?')">DELETE</a>
+									</div> -->
+									<div class="col-1 p-0" style="max-width:30px">
+										<div class="btn-group-vertical btn-group-sm">
+											<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-primary tooltip-1" title="View" data-placement="left" href="index.php?page=list&view=list">
+												<i class="ti-eye"></i>
+											</a>
+											<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-primary tooltip-1" title="Edit" data-placement="left" href="index.php?page=category_edit&category_id=<?= $category_id ?>">
+												<i class="ti-pencil"></i>
+											</a>
+											<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-danger tooltip-1" title="Delete" data-placement="left" href="index.php?page=category_delete&category_id=<?= $category_id ?>" onclick="return confirm('Are you sure to DELETE this CATEGORY and it\'s SUBCATEGORIES?')">
+												<i class="ti-trash"></i>
+											</a>
+										</div>
 									</div>
 								</td>
 							</tr>

@@ -5,10 +5,8 @@ $search = $_GET['search'];
 
 $filter_subcategory_id = $_GET['subcategory_id'];
 $filter_category_id = $_GET['category_id'];
-
 $filter_min_price = $_GET['min_price'];
 $filter_max_price = $_GET['max_price'];
-
 $filter_manifacturer_id = $_GET['manifacturer_id'];
 
 $where = 'WHERE ';
@@ -91,21 +89,26 @@ foreach ($result as $data) :
         <a href="index.php?page=product_view&product_id=<?= $product_id ?>">
             <div class="row">
                 <div class="col">
-                    <img class="img-fluid lazy" src="uploads/product/<?= $product_image ?>" alt="product_image" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
+                    <?php
+                    $get_sale = get('sale', 'WHERE product_id=' . $product_id);
+                    if (mysqli_num_rows($get_sale) > 0) :
+                        $data_sale = mysqli_fetch_assoc($get_sale);
+                        $sale = $data_sale['sale'];
+                    ?>
+                        <span class="ribbon off"><?= $sale ?>%</span>
+                    <?php endif ?>
+                    <img class="img-fluid lazy pl-4" src="uploads/product/<?= $product_image ?>" alt="product_image" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
                 </div>
-                <div class="col-9 pl-4">
+                <div class="col-9 pl-3 py-4">
                     <div class="row">
                         <div class="col pr-0">
-                            <h3 class="mt-4"><?= $product_name ?></h3>
+                            <h3><?= $product_name ?></h3>
                             <p class="mt-2 mb-0" style="color:black"><?= $manifacturer_name ?></p>
                         </div>
                         <div class="col-6 pl-0">
-                            <div class="mt-5 text-right pr-4">
+                            <div class="text-right pr-4">
                                 <?php
-                                $get_sale = get('sale', 'WHERE product_id=' . $product_id);
-                                if (mysqli_num_rows($get_sale) > 0) :
-                                    $data_sale = mysqli_fetch_assoc($get_sale);
-                                    $sale = $data_sale['sale'];
+                                if (isset($sale)) :
                                     $price_sale = $price - $price * (int)$sale / 100;
                                 ?>
                                     <span class="old_price mr-1" style="color:#9d9d9d;"><?= rupiah($price) ?></span>
@@ -114,10 +117,6 @@ foreach ($result as $data) :
                                     <span class="new_price" style="font-size:x-large"><?= rupiah($price) ?></span>
                                 <?php endif ?>
                                 <?php
-                                $get_product_list = get('review', 'WHERE product_id="' . $product_id . '"', 'sum(rating)');
-                                $data_product_list = mysqli_fetch_assoc($get_product_list);
-                                $total_rating = (int)$data_product_list['sum(rating)'];
-
                                 $get_product_list = get('review', 'WHERE product_id="' . $product_id . '"', 'count(rating)');
                                 $data_product_list = mysqli_fetch_assoc($get_product_list);
                                 $count_rating = (int)$data_product_list['count(rating)'];
@@ -125,6 +124,11 @@ foreach ($result as $data) :
                                 <div>
                                     <?php
                                     if ($count_rating > 0) {
+                                        $get_product_list = get('review', 'WHERE product_id="' . $product_id . '"', 'sum(rating)');
+                                        $data_product_list = mysqli_fetch_assoc($get_product_list);
+
+                                        $total_rating = (int)$data_product_list['sum(rating)'];
+
                                         $average_rating = round($total_rating / $count_rating);
 
                                         for ($i = $average_rating; $i > 0; $i--) {
@@ -140,32 +144,33 @@ foreach ($result as $data) :
                                         }
                                     }
                                     ?>
+                                    <span style="color:#9d9d9d">(<?= $total_rating ?>)</span>
                                 </div>
                                 <p style="color:#9d9d9d;" class="mb-0"><?= $sold ?> sold • 0 discussions</p>
                             </div>
                         </div>
                     </div>
                     <hr class="hr hr-blurry border-5 mt-2 mb-2">
-                    <!-- <b class="m-0" style="font-size:smaller; color:black">Description</b> -->
                     <?php
-                    $desc_array = explode(' ', $description);
-                    $desc_count = count($desc_array);
+                    $description_array = explode(' ', $description);
+                    $description_count = count($description_array);
 
-                    $desc_cut = '';
+                    $description_cut = '';
 
-                    if ($desc_count > 50) :
+                    if ($description_count > 50) :
                         for ($i = 0; $i < 50; $i++) {
-                            $desc_cut .= $desc_array[$i] . ' ';
+                            $description_cut .= $description_array[$i] . ' ';
                         }
                     ?>
-                        <p style="color:black"><?= $desc_cut ?> ...</p>
+                        <p class="pr-4" style="color:black"><?= $description_cut ?> ...</p>
                     <?php
                     else :
                     ?>
-                        <p style="color:black"><?= $description ?></p>
+                        <p class="pr-4" style="color:black"><?= $description ?></p>
 
                     <?php endif ?>
-                    <p style="color:#9d9d9d; font-size:small;"><?= $category_name ?> > <?= $subcategory_name ?></p>
+                    <p class="m-0 pr-4" style="color:#9d9d9d; font-size:small;"><?= $category_name ?> > <?= $subcategory_name ?></p>
+                    <!-- <a href="">wishlist, add to cart</a> -->
                 </div>
             </div>
         </a>

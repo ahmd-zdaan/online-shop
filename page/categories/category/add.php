@@ -32,7 +32,6 @@ check('login');
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -49,7 +48,6 @@ check('login');
 					</div>
 					<h1 class="pt-3">Add Category</h1>
 				</div>
-
 				<form action="" method="POST">
 					<div class="container pb-5">
 						<div class="row">
@@ -68,7 +66,6 @@ check('login');
 						</div>
 					</div>
 				</form>
-
 				<?php
 				if (isset($_POST['submit'])) {
 					$name = $_POST['name'];
@@ -90,8 +87,6 @@ check('login');
 		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
-
-
 </body>
 
 </html>

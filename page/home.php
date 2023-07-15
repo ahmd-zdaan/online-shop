@@ -43,11 +43,11 @@
 											<p class="owl-slide-subtitle mb-0" style="font-size:larger; font-weight:bold">
 												<?= rupiah($price) ?>
 											</p>
-											<p style="color:#9d9d9d" class="old_price">
+											<p class="old_price" style="color:#9d9d9d">
 												<?= rupiah($price) ?>
 											</p>
 										<?php else : ?>
-											<p class="owl-slide-subtitle">
+											<p class="owl-slide-subtitle" style="font-size:larger; font-weight:bold">
 												<?= rupiah($price) ?>
 											</p>
 										<?php endif ?>

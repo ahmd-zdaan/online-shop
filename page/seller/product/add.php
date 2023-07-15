@@ -32,7 +32,6 @@ check('login');
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -171,7 +170,8 @@ check('login');
 						'description' => $description,
 						'manifacturer_id' => $id,
 						'variant' => $variant,
-						'weight' => $weight
+						'weight' => $weight,
+						'date' => date("d-m-Y")
 					]);
 
 					$product_id = mysqli_insert_id($connect);

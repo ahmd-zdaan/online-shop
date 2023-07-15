@@ -138,30 +138,32 @@ switch ($page) {
         include 'page/product/delete.php';
         break;
 
+    case 'discussion_add':
+        include 'page/discussion/add.php';
+        break;
+    case 'discussion_list':
+        include 'page/discussion/list.php';
+        break;
+
     case 'category_list':
         include 'page/categories/list.php';
         break;
+    case 'category_delete':
+        include 'page/categories/delete.php';
+        break;
+
     case 'category_add':
         include 'page/categories/category/add.php';
         break;
     case 'category_edit':
         include 'page/categories/category/edit.php';
         break;
-    case 'category_delete':
-        include 'page/categories/category/delete.php';
-        break;
 
-    case 'subcategory_list':
-        include 'page/categories/subcategory/list.php';
-        break;
     case 'subcategory_add':
         include 'page/categories/subcategory/add.php';
         break;
     case 'subcategory_edit':
         include 'page/categories/subcategory/edit.php';
-        break;
-    case 'subcategory_delete':
-        include 'page/categories/subcategory/delete.php';
         break;
 
     case 'sale_list':

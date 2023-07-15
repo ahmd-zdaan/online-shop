@@ -120,7 +120,7 @@ $image_name = $product_image_table['image_name'];
 							'user_id' => $user_id,
 							'rating' => $rating,
 							'review' => $review,
-							'date' => date("Y-m-d")
+							'date' => date("d-m-Y")
 						]);
 
 						$review_id = mysqli_insert_id($connect);
