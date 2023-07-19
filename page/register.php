@@ -2,20 +2,22 @@
 check('register');
 ?>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
-<!-- GOOGLE WEB FONT -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
+	<!-- GOOGLE WEB FONT -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
 
-<!-- BASE CSS -->
-<link href="css/bootstrap.custom.min.css" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
+	<!-- BASE CSS -->
+	<link href="css/bootstrap.custom.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
 
-<!-- SPECIFIC CSS -->
-<link href="css/account.css" rel="stylesheet">
+	<!-- SPECIFIC CSS -->
+	<link href="css/account.css" rel="stylesheet">
 
-<!-- YOUR CUSTOM CSS -->
-<link href="css/custom.css" rel="stylesheet">
+	<!-- YOUR CUSTOM CSS -->
+	<link href="css/custom.css" rel="stylesheet">
+</head>
 
 <main class="bg_gray py-5">
 	<div class="container margin_30">
@@ -25,6 +27,21 @@ check('register');
 					<h3 class="new_client">Register</h3>
 					<form action="" method="POST">
 						<div class="form_container">
+							<div class="row mb-2">
+								<div class="col">
+									<span class="ml-1" style="font-weight:500">Sign up as</span>
+								</div>
+								<div class="col text-right">
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="role" value="seller">
+										<label class="form-check-label" for="inlineRadio1">Seller</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="role" value="user" checked>
+										<label class="form-check-label" for="inlineRadio2">User</label>
+									</div>
+								</div>
+							</div>
 							<div class="form-group">
 								<input type="text" class="form-control" name="name" required placeholder="Name">
 							</div>
@@ -89,6 +106,7 @@ check('register');
 						<?php
 						if (isset($_POST['submit'])) {
 							$user_name = $_POST['name'];
+							$role = $_POST['role'];
 							$email = $_POST['email'];
 							$password = $_POST['password'];
 							$confirm_password = $_POST['confirm_password'];
@@ -96,7 +114,7 @@ check('register');
 							$country_id = $_POST['country'];
 							$telephone = $_POST['telephone'];
 
-							register($user_name, 'user', $email, $password, $confirm_password, $address, $country_id, $telephone);
+							register($user_name, $role, $email, $password, $confirm_password, $address, $country_id, $telephone);
 						}
 						?>
 				</div>
