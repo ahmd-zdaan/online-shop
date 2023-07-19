@@ -3,7 +3,6 @@ check('login');
 
 $email = $_SESSION['email'];
 
-// $result = get('user', 'JOIN country ON user.country_id=country.id_country WHERE email="' . $_SESSION['email'] . '"');
 $get_user = get('user', 'WHERE email="' . $email . '"');
 $table_user = mysqli_fetch_assoc($get_user);
 
@@ -49,7 +48,6 @@ $user_country_name = $table_country['country_name'];
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -67,8 +65,8 @@ $user_country_name = $table_country['country_name'];
 					<h1 class="pt-3">Edit Profile</h1>
 				</div>
 			</div>
-			<form action="" method="POST" enctype="multipart/form-data">
-				<div class="container pb-5">
+			<form class="pb-5" action="" method="POST" enctype="multipart/form-data">
+				<div class="container mb-5 pb-5">
 					<div class="row">
 						<div class="col-3">
 							<?php
@@ -82,7 +80,7 @@ $user_country_name = $table_country['country_name'];
 							<?php
 							else :
 							?>
-								<img src="uploads/user/default.jpg" class="lazy" alt="user_image" width="100%">
+								<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
 							<?php endif ?>
 							<div class="mt-3">
 								<label class="form-label">Profile Image</label>
@@ -119,9 +117,18 @@ $user_country_name = $table_country['country_name'];
 									<label class="form-label">Telephone</label>
 									<input type="text" name="telephone" class="form-control" value="<?= $telephone ?>">
 								</li>
-								<li class="mt-3">
-									<a type="submit" href="index.php?page=view_profile" class="btn_1">BACK</a>
-									<button type="submit" name="submit" class="btn_1">SAVE</button>
+								<li class="mt-4">
+									<div class="row">
+										<div class="col">
+											<div class="btn-group btn-sm">
+												<a class="btn btn-outline-primary" href="index.php?page=view_profile">BACK</a>
+												<button class="btn btn-primary" type="submit" name="submit">SAVE</button>
+											</div>
+										</div>
+										<div class="col text-right">
+											<a class="btn btn-outline-danger" href="index.php?page=delete_profile&user_id=<?= $user_id ?>" onclick="confirm('WARNING: This action cannot be undone!\nAre you sure you want to DELETE your PROFILE?\nAll of your profile data will be permanently deleted.')">DELETE PROFILE</a>
+										</div>
+									</div>
 								</li>
 							</ul>
 						</div>
@@ -145,7 +152,7 @@ $user_country_name = $table_country['country_name'];
 					$tmp = $_FILES['image']['tmp_name'];
 
 					if (move_uploaded_file($tmp, "uploads/user/" . $new_user_image)) {
-						$old_user_image_get = get('user_image', 'WHERE user_id='.$user_id);
+						$old_user_image_get = get('user_image', 'WHERE user_id=' . $user_id);
 						if (mysqli_num_rows($old_user_image_get) > 0) {
 							$old_user_image_table = mysqli_fetch_assoc($old_user_image_get);
 							$old_user_image = $old_user_image_table['user_image'];
@@ -172,7 +179,6 @@ $user_country_name = $table_country['country_name'];
 			}
 			?>
 		</main>
-		<div id="toTop"></div><!-- Back to top button -->
 </body>
 
 </html>
