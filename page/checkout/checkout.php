@@ -240,7 +240,7 @@ function printExampleWarningMessage()
 												<span style="color:#004cd7">
 													<?= $quantity ?>x
 												</span>
-												<?= $product_name ?>
+												<?= $product_name_50 ?>
 											</p>
 										</div>
 										<div class="col-6 text-right">
@@ -293,8 +293,6 @@ function printExampleWarningMessage()
 				</div>
 			</div>
 		</main>
-
-		<div id="toTop"></div><!-- Back to top button -->
 
 		<div class="modal fade" id="payments_method" tabindex="-1" role="dialog" aria-labelledby="payments_method_title" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
