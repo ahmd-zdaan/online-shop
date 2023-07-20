@@ -68,20 +68,31 @@
         $('input:checkbox').prop('checked', false);
     }
 
-
-
-
-
     $(document).ready(function() {
+        console.log(<?= $_GET['category_id'] ?>);
+
+        const categoryId = <?php echo (isset($_GET['category_id']) ? $_GET['category_id'] : 0) ?>;
+        const subcategoryId = <?php echo (isset($_GET['subcategory_id']) ? $_GET['subcategory_id'] : 0) ?>;
+
+        console.log(categoryId);
+
         if ('<?= $view ?>' == 'list') {
-            loadProductList();
+            if (categoryId != 0) {
+                if (subcategoryId != 0) {
+                    loadProductList(categoryId, subcategoryId);
+                } else {
+                    loadProductList(categoryId);
+                }
+            } else {
+                loadProductList();
+            }
         } else if ('<?= $view ?>' == 'grid') {
             loadProductGrid();
         }
         $('#form_search').on('submit', function(event) {
             let search_input = $('#search_input').val();
             resetFilter(search_input);
-          
+
             event.preventDefault();
         })
 
