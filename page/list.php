@@ -36,11 +36,6 @@
 			<div class="row">
 				<aside class="col-lg-3 mt-3 mb-5" id="sidebar_fixed">
 					<div class="filter_col">
-						<div class="inner_bt">
-							<a href="#" class="open_filters">
-								<i class="ti-close"></i>
-							</a>
-						</div>
 						<div class="filter_type version_2">
 							<h4>
 								<a href="#filter_1" data-toggle="collapse" class="opened">Category</a>
