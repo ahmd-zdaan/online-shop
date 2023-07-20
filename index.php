@@ -84,11 +84,11 @@ include_once 'config/connect.php';
 												$result = get('category');
 												foreach ($result as $data) :
 													$category_id = $data['category_id'];
-													$name = $data['category_name'];
+													$category_name = $data['category_name'];
 												?>
 													<li>
 														<span>
-															<a href="index.php?page=list&view=list"><?= $name ?></a>
+															<a href="index.php?page=list&view=list&category_id=<?= $category_id ?>"><?= $category_name ?></a>
 														</span>
 														<?php
 														$result = get('subcategory', 'WHERE category_id=' . $category_id);
@@ -96,9 +96,10 @@ include_once 'config/connect.php';
 														?>
 															<ul>
 																<?php foreach ($result as $data) :
+																	$subcategory_id = $data['subcategory_id'];
 																	$subcategory_name = $data['subcategory_name'];
 																?>
-																	<li><a href="index.php?page=list&view=list"><?= $subcategory_name ?></a></li>
+																	<li><a href="index.php?page=list&view=list&category_id=<?= $category_id ?>&subcategory_id=<?= $subcategory_id ?>"><?= $subcategory_name ?></a></li>
 																<?php endforeach ?>
 															</ul>
 														<?php endif ?>
@@ -218,7 +219,7 @@ include_once 'config/connect.php';
 																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
 																			<p class="old_price m-0" style="font-size:small"><?= rupiah($cart_product_price) ?></p>
 																		<?php else : ?>
-																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
+																			<p class="new_price m-0"><?= rupiah($cart_product_price) ?></p>
 																		<?php endif ?>
 																	</div>
 																</a>
@@ -273,6 +274,14 @@ include_once 'config/connect.php';
 
 											$user_name = $data_user['user_name'];
 											$user_role = $data_user['role'];
+											$address = $data_user['address'];
+											$country_id = $data_user['country_id'];
+											$phone = $data_user['phone'];
+
+											$get_country = get('country', 'WHERE country_id=' . $country_id);
+											$data_country = mysqli_fetch_assoc($get_country);
+
+											$country_name = $data_country['country_name'];
 
 											$get_user_image = get('user_image', 'WHERE user_id=' . $user_id);
 											if (mysqli_num_rows($get_user_image) > 0) :
@@ -301,13 +310,17 @@ include_once 'config/connect.php';
 														</div>
 														<div class="col pl-0">
 															<h5 class="m-0"><?= $user_name ?></h5>
-															<?php if ($user_role == 'user') : ?>
-																<span class="badge text-bg-primary">User</span>
-															<?php elseif ($user_role == 'seller') : ?>
-																<span class="badge text-bg-warning">Seller</span>
-															<?php elseif ($user_role == 'admin') : ?>
-																<span class="badge text-bg-danger">Admin</span>
-															<?php endif ?>
+															<div class="mb-1">
+																<?php if ($user_role == 'user') : ?>
+																	<span class="badge text-bg-primary">User</span>
+																<?php elseif ($user_role == 'seller') : ?>
+																	<span class="badge text-bg-warning">Seller</span>
+																<?php elseif ($user_role == 'admin') : ?>
+																	<span class="badge text-bg-danger">Admin</span>
+																<?php endif ?>
+															</div>
+															<p class="m-0"><?= $address ?>, <?= $country_name ?></p>
+															<p class="mb-2"><?= $phone ?></p>
 														</div>
 													</div>
 													<?php
@@ -320,16 +333,16 @@ include_once 'config/connect.php';
 															</a>
 														</li>
 													<?php endif ?>
-													<li>
+													<!-- <li>
 														<a href="index.php?page=order">
 															<i class="ti-package"></i>
 															Orders
 														</a>
-													</li>
+													</li> -->
 													<li>
 														<a href="index.php?page=history_list">
 															<i class="ti-timer"></i>
-															History
+															Purchase History
 														</a>
 													</li>
 													<li>
@@ -388,9 +401,12 @@ include_once 'config/connect.php';
 								<?php
 								$result = get('category');
 								foreach ($result as $data) :
+									$category_id = $data['category_id'];
 									$category_name = $data['category_name'];
 								?>
-									<li><a href="index.php?page=list&view=list"><?= $category_name ?></a></li>
+									<li>
+										<a href="index.php?page=list&view=list"><?= $category_name ?></a>
+									</li>
 								<?php endforeach ?>
 							</ul>
 						</div>

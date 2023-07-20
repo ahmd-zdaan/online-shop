@@ -19,7 +19,8 @@ $role = $table_user['role'];
 $email = $table_user['email'];
 $address = $table_user['address'];
 $country_id = $table_user['country_id'];
-$telephone = $table_user['telephone'];
+$postal_code = $table_user['postal_code'];
+$phone = $table_user['phone'];
 
 $get_country = get('country', 'WHERE country_id=' . $country_id);
 $table_country = mysqli_fetch_assoc($get_country);
@@ -112,12 +113,16 @@ $country_name = $table_country['country_name'];
 								<?php endif ?>
 							</li>
 							<li>
-								<h5>Address</h5>
-								<p><?= $address ?>, <?= $country_name ?></p>
+								<h5 class="m-0">Address</h5>
+								<p class="mb-3"><?= $address ?>, <?= $country_name ?></p>
 							</li>
 							<li>
-								<h5>Telephone</h5>
-								<p><?= $telephone ?></p>
+								<h5 class="m-0">Postal Code</h5>
+								<p class="mb-3"><?= $postal_code ?></p>
+							</li>
+							<li>
+								<h5 class="m-0">Phone</h5>
+								<p class="mb-3"><?= $phone ?></p>
 							</li>
 							<?php
 							if (isset($_SESSION['email'])) :
@@ -133,12 +138,6 @@ $country_name = $table_country['country_name'];
 				</div>
 			</div>
 		</main>
-
-		<div id="toTop"></div><!-- Back to top button -->
-
-		<!-- COMMON SCRIPTS -->
-		<script src="js/common_scripts.min.js"></script>
-		<script src="js/main.js"></script>
 </body>
 
 </html>

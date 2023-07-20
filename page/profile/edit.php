@@ -8,10 +8,12 @@ $table_user = mysqli_fetch_assoc($get_user);
 
 $user_id = $table_user['user_id'];
 $user_name = $table_user['user_name'];
+$role = $table_user['role'];
 $email = $table_user['email'];
 $address = $table_user['address'];
 $user_country_id = $table_user['country_id'];
-$telephone = $table_user['telephone'];
+$postal_code = $table_user['postal_code'];
+$phone = $table_user['phone'];
 
 $get_country = get('country', 'WHERE country_id=' . $user_country_id);
 $table_country = mysqli_fetch_assoc($get_country);
@@ -94,28 +96,40 @@ $user_country_name = $table_country['country_name'];
 									<input type="text" name="user_name" class="form-control" value="<?= $user_name ?>">
 								</li>
 								<li class="mb-2">
-									<label class="form-label">Country</label>
-									<select class="form-control form-select" name="country">
-										<option selected disabled hidden>-</option>
-										<?php
-										$result = get('country');
-										foreach ($result as $data) :
-											$country_id = $data['country_id'];
-											$country_name = $data['country_name'];
-										?>
-											<option value="<?= $country_id ?>" <?= ($country_id == $user_country_id) ? 'selected' : '' ?>><?= $country_name ?></option>
-										<?php
-										endforeach
-										?>
-									</select>
-								</li>
-								<li class="mb-2">
 									<label class="form-label">Full Address</label>
 									<textarea name="address" class="form-control"><?= $address ?></textarea>
 								</li>
+								<li>
+									<div class="row no-gutters">
+										<div class="col">
+											<label class="form-label">Country</label>
+											<div class="form-group">
+												<div class="custom-select-form">
+													<select class="wide add_bottom_10" name="country_id" required>
+														<option selected disabled hidden value="">Country</option>
+														<?php
+														$result = get('country');
+														foreach ($result as $data) :
+															$country_id = $data['country_id'];
+															$country_name = $data['country_name'];
+														?>
+															<option value="<?= $country_id ?>" <?= ($country_id == $user_country_id) ? 'selected' : '' ?>><?= $country_name ?></option>
+														<?php
+														endforeach
+														?>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col">
+											<label class="form-label">Postal Code</label>
+											<input type="number" name="postal_code" class="form-control" value="<?= $postal_code ?>">
+										</div>
+									</div>
+								</li>
 								<li class="mb-2">
-									<label class="form-label">Telephone</label>
-									<input type="text" name="telephone" class="form-control" value="<?= $telephone ?>">
+									<label class="form-label">Phone</label>
+									<input type="text" name="phone" class="form-control" value="<?= $phone ?>">
 								</li>
 								<li class="mt-4">
 									<div class="row">
@@ -138,11 +152,12 @@ $user_country_name = $table_country['country_name'];
 			<?php
 			if (isset($_POST['submit'])) {
 				$name = $_POST['user_name'];
-				$country = $_POST['country'];
 				$address = $_POST['address'];
-				$telephone = $_POST['telephone'];
+				$country_id = $_POST['country_id'];
+				$postal_code = $_POST['postal_code'];
+				$phone = $_POST['phone'];
 
-				$query = "UPDATE user SET user_name='" . $name . "', address='" . $address . "', country_id='" . $country . "' WHERE email='" . $email . "'";
+				$query = "UPDATE user SET user_name='" . $name . "', address='" . $address . "', country_id=" . $country_id . ", postal_code=" . $postal_code . ", phone=" . $phone . " WHERE email='" . $email . "'";
 				$result = mysqli_query($connect, $query);
 
 				if (!empty($_FILES['image']['name'])) {
@@ -174,7 +189,11 @@ $user_country_name = $table_country['country_name'];
 				}
 
 				if ($result) {
-					echo '<script>window.location.href = "index.php?page=view_profile"</script>';
+					if ($role == 'seller') {
+						echo '<script>window.location.href = "index.php"</script>';
+					} else {
+						echo '<script>window.location.href = "index.php?page=view_profile"</script>';
+					}
 				}
 			}
 			?>

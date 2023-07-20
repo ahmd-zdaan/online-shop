@@ -9,7 +9,7 @@ $user_name = $data_user['user_name'];
 $email = $data_user['email'];
 $address = $data_user['address'];
 $country_id = $data_user['country_id'];
-$telephone = $data_user['telephone'];
+$phone = $data_user['phone'];
 
 $get_country = get('country', 'WHERE country_id=' . $country_id);
 $data_country = mysqli_fetch_assoc($get_country);
@@ -91,8 +91,8 @@ $country_name = $data_country['country_name'];
 								<p><?= $address ?>, <?= $country_name ?></p>
 							</li>
 							<li>
-								<h5>Telephone</h5>
-								<p><?= $telephone ?></p>
+								<h5>Phone</h5>
+								<p><?= $phone ?></p>
 							</li>
 						</ul>
 					</div>

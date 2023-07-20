@@ -9,7 +9,8 @@ $name = $data_user['user_name'];
 $email = $data_user['email'];
 $address = $data_user['address'];
 $country_id = $data_user['country_id'];
-$telephone = $data_user['telephone'];
+$postal_code = $data_user['postal_code'];
+$phone = $data_user['phone'];
 
 $get_country = get('country', 'WHERE country_id=' . $country_id);
 $data_country = mysqli_fetch_assoc($get_country);
@@ -47,6 +48,13 @@ $country_name = $data_country['country_name'];
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
 </head>
+
+<style>
+	.danger:hover {
+		background-color: #F33 !important;
+
+	}
+</style>
 
 <body>
 	<div id="page">
@@ -87,17 +95,23 @@ $country_name = $data_country['country_name'];
 								<span class="mb-4 badge text-bg-warning">Seller</span>
 							</li>
 							<li>
-								<h5>Address</h5>
-								<p><?= $address ?>, <?= $country_name ?></p>
+								<h5 class="m-0">Address</h5>
+								<p class="mb-3"><?= $address ?>, <?= $country_name ?></p>
 							</li>
 							<li>
-								<h5>Telephone</h5>
-								<p><?= $telephone ?></p>
+								<h5 class="m-0">Postal Code</h5>
+								<p class="mb-3"><?= $postal_code ?></p>
 							</li>
 							<li>
-								<a href="index.php?page=discussion_list" class="btn btn-warning">Discussions</a>
-								<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
-								<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
+								<h5 class="m-0">Phone</h5>
+								<p class="mb-3"><?= $phone ?></p>
+							</li>
+							<li>
+								<div class="mt-4">
+									<a href="index.php?page=discussion_list" class="btn btn-warning">Discussions</a>
+									<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
+									<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
+								</div>
 							</li>
 						</ul>
 					</div>
@@ -110,7 +124,7 @@ $country_name = $data_country['country_name'];
 				</a>
 				<div class="owl-carousel owl-theme products_carousel">
 					<?php
-					$get_product = get('product', 'WHERE seller_id='.$user_id);
+					$get_product = get('product', 'WHERE seller_id=' . $user_id);
 
 					foreach ($get_product as $data) :
 						$product_id = $data['product_id'];
@@ -142,7 +156,7 @@ $country_name = $data_country['country_name'];
 								<figure>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 										<?php
-										$result = get('product_image', 'WHERE product_id=' . $product_id);
+										$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 										if (mysqli_num_rows($result) > 0) :
 											$data = mysqli_fetch_assoc($result);
 											$image_name = $data['image_name'];
@@ -221,7 +235,7 @@ $country_name = $data_country['country_name'];
 										</a>
 									</li>
 									<li>
-										<a href="index.php?page=product_delete&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Edit Product" onclick="return confirm('Are you sure to DELETE this PRODUCT?')" data-toggle="tooltip" data-placement="left">
+										<a href="index.php?page=product_delete&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1 danger" title="Delete Product" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" data-toggle="tooltip" data-placement="left">
 											<i class="ti-trash"></i>
 										</a>
 									</li>
