@@ -8,9 +8,9 @@ foreach ($get_cart as $data_cart) {
     $quantity = $data_cart['quantity'];
 
     $query = "DELETE FROM cart WHERE product_id=" . $product_id;
-    $result = mysqli_query($connect, $query);
+    $delete_cart = mysqli_query($connect, $query);
 
-    if ($result) {
+    if ($delete_cart) {
         $get_product = get('product', 'WHERE product_id=' . $product_id);
         $data_product  = mysqli_fetch_assoc($get_product);
 
@@ -18,10 +18,19 @@ foreach ($get_cart as $data_cart) {
         $sold = (int)$sold + (int)$quantity;
 
         $query = 'UPDATE product SET sold=' . $sold . ' WHERE product_id=' . $product_id;
-        $result = mysqli_query($connect, $query);
+        $product_sold = mysqli_query($connect, $query);
 
-        if ($result) {
-            echo "<script>window.location.href = 'index.php?page=cart_list'</script>";
+        if ($product_sold) {
+            $product_history = insert('history', [
+                'user_id' => $user_id,
+                'product_id' => $product_id,
+                'quantity' => $quantity,
+                'date' => date("d-m-Y")
+            ]);
+
+            if ($product_history) {
+                echo "<script>window.location.href = 'index.php?page=cart_list'</script>";
+            }
         }
     }
 }
