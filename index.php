@@ -67,26 +67,26 @@ include_once 'config/connect.php';
 									<li>
 										<span>
 											<a>
-												<span class="hamburger hamburger--spin">
+												<button class="hamburger hamburger--spin" type="button">
 													<span class="hamburger-box">
 														<span class="hamburger-inner"></span>
 													</span>
-												</span>
+												</button>
 											</a>
 										</span>
 										<span>
 											<a href="index.php" class="pl-3">LOGO</a>
 										</span>
 										<div id="menu">
-											<ul>
-												<h5 class="p-3 m-0">Categories</h5>
+											<ul class="pb-4">
+												<h5 class="pt-3 px-3 m-0">Categories</h5>
 												<?php
 												$result = get('category');
 												foreach ($result as $data) :
 													$category_id = $data['category_id'];
 													$category_name = $data['category_name'];
 												?>
-													<li>
+													<li class="my-2" style="height:20px">
 														<span>
 															<a href="index.php?page=list&view=list&category_id=<?= $category_id ?>"><?= $category_name ?></a>
 														</span>
@@ -99,7 +99,9 @@ include_once 'config/connect.php';
 																	$subcategory_id = $data['subcategory_id'];
 																	$subcategory_name = $data['subcategory_name'];
 																?>
-																	<li><a href="index.php?page=list&view=list&category_id=<?= $category_id ?>&subcategory_id=<?= $subcategory_id ?>"><?= $subcategory_name ?></a></li>
+																	<li class="my-2" style="height:20px">
+																		<a href="index.php?page=list&view=list&category_id=<?= $category_id ?>&subcategory_id=<?= $subcategory_id ?>"><?= $subcategory_name ?></a>
+																	</li>
 																<?php endforeach ?>
 															</ul>
 														<?php endif ?>
@@ -113,14 +115,13 @@ include_once 'config/connect.php';
 								</ul>
 							</nav>
 						</div>
-						<!-- SEARCH -->
 						<form id="form_search" class="col-xl-6 col-lg-7 col-md-6 d-none d-md-block" method="GET" action="">
 							<div class="custom-search-input">
 								<input type="hidden" name="page" value="list">
 								<input type="hidden" name="view" value="list">
 								<input id="search_input" name="search_input" type="text" placeholder="Search over 10.000 products">
 								<button name="search_submit" type="submit">
-									<i class="header-icon_search_custom"></i>
+									<i style="font-size:smaller" class="header-icon_search_custom"></i>
 								</button>
 							</div>
 						</form>
@@ -132,134 +133,144 @@ include_once 'config/connect.php';
 
 									$result = get('user', 'WHERE email="' . $email . '"');
 									$data = mysqli_fetch_assoc($result);
+
 									$user_id = $data['user_id'];
+									$user_role = $data['role'];
+
+									if ($user_role != 'seller') :
 								?>
-									<li>
-										<div class="dropdown dropdown-cart">
-											<a href="index.php?page=cart_list" class="cart_bt">
-												<?php
-												$result = get('cart', 'WHERE user_id=' . $user_id);
-												if (mysqli_fetch_assoc($result) > 0) :
-													$result = get('cart', 'WHERE user_id=' . $user_id, '*,SUM(quantity) AS total_quantity');
-													$data = mysqli_fetch_assoc($result);
-													$total_quantity = $data['total_quantity'];
-													if ($total_quantity > 0) :
-												?>
-														<strong><?= $total_quantity ?></strong>
-													<?php endif ?>
-												<?php endif ?>
-											</a>
-											<?php
-											$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
-
-											if (mysqli_num_rows($get_cart) > 0) :
-											?>
-												<div class="dropdown-menu" style="width: 300px;">
-													<ul>
-														<?php
-														$subtotal_price = 0;
-
-														foreach ($get_cart as $data_cart) :
-															$cart_id = $data_cart['cart_id'];
-															$product_id = $data_cart['product_id'];
-															$total_quantity = $data_cart['total_quantity'];
-
-															$get_cart_product = get('product', 'WHERE product_id=' . $product_id);
-															$data_cart_product = mysqli_fetch_assoc($get_cart_product);
-
-															$cart_product_name = $data_cart_product['product_name'];
-															$cart_product_price = $data_cart_product['price'];
-
-															$get_cart_product_image = get('product_image', 'WHERE product_id=' . $product_id);
-															$data_cart_product_image = mysqli_fetch_assoc($get_cart_product_image);
-
-															if (isset($data_cart_product_image['image_name'])) {
-																$product_image = $data_cart_product_image['image_name'];
-															}
-
-															$get_sale = get('sale', 'WHERE product_id=' . $product_id);
-															if (mysqli_num_rows($get_sale) > 0) {
-																$data_sale = mysqli_fetch_assoc($get_sale);
-																$sale = $data_sale['sale'];
-																$price_sale = $cart_product_price - $cart_product_price * (int)$sale / 100;
-
-																$subtotal_product = $total_quantity * $price_sale;
-																$subtotal_price += $subtotal_product;
-															} else {
-																$subtotal_product = $total_quantity * $cart_product_price;
-																$subtotal_price += $subtotal_product;
-															}
-
-														?>
-															<li>
-																<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
-																	<figure style="width:70px; height:70px;">
-																		<?php
-																		$result = get('product_image', 'WHERE product_id=' . $product_id);
-																		if (mysqli_num_rows($result) > 0) :
-																			$data = mysqli_fetch_assoc($result);
-																			$image_name = $data['image_name'];
-																		?>
-																			<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="image" style="width:80%; height:auto">
-																		<?php else : ?>
-																			<img src="uploads/product/default.jpg" class="lazy" alt="image" style="width:80%; height:auto">
-																		<?php endif ?>
-																	</figure>
-																	<div class="ml-4">
-																		<p class="m-0" style="font-size:larger; font-weight:500">
-																			<span style="color:#004cd7">
-																				<?= $total_quantity . 'x ' ?>
-																			</span>
-																			<?= $cart_product_name ?>
-																		</p>
-																		<?php
-																		$get_sale = get('sale', 'WHERE product_id=' . $product_id);
-																		if (mysqli_num_rows($get_sale) > 0) :
-																		?>
-																			<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
-																			<p class="old_price m-0" style="font-size:small"><?= rupiah($cart_product_price) ?></p>
-																		<?php else : ?>
-																			<p class="new_price m-0"><?= rupiah($cart_product_price) ?></p>
-																		<?php endif ?>
-																	</div>
-																</a>
-																<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')" class="action">
-																	<i class="ti-trash"></i>
-																</a>
-															</li>
-														<?php endforeach ?>
-													</ul>
+										<li>
+											<div class="dropdown dropdown-cart">
+												<a href="index.php?page=cart_list" class="cart_bt">
 													<?php
-													$shipping_price = 17000;
-													$total_price = $subtotal_price + $shipping_price;
+													$result = get('cart', 'WHERE user_id=' . $user_id);
+													if (mysqli_fetch_assoc($result) > 0) :
+														$result = get('cart', 'WHERE user_id=' . $user_id, '*,SUM(quantity) AS total_quantity');
+														$data = mysqli_fetch_assoc($result);
+														$total_quantity = $data['total_quantity'];
+														if ($total_quantity > 0) :
 													?>
-													<div class="row mt-4">
-														<div class="col-6">
-															<p class="m-0">Subtotal</p>
-															<p class="m-0">Shipping</p>
+															<strong><?= $total_quantity ?></strong>
+														<?php endif ?>
+													<?php endif ?>
+												</a>
+												<?php
+												$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
+
+												if (mysqli_num_rows($get_cart) > 0) :
+												?>
+													<div class="dropdown-menu" style="width: 300px;">
+														<ul>
+															<?php
+															$subtotal_price = 0;
+
+															foreach ($get_cart as $data_cart) :
+																$cart_id = $data_cart['cart_id'];
+																$product_id = $data_cart['product_id'];
+																$total_quantity = $data_cart['total_quantity'];
+
+																$get_cart_product = get('product', 'WHERE product_id=' . $product_id);
+																$data_cart_product = mysqli_fetch_assoc($get_cart_product);
+
+																$cart_product_name = $data_cart_product['product_name'];
+																$cart_product_price = $data_cart_product['price'];
+
+																$get_cart_product_image = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+
+																if (mysqli_num_rows($get_cart_product_image) > 0) {
+																	$data_cart_product_image = mysqli_fetch_assoc($get_cart_product_image);
+
+																	$product_image = $data_cart_product_image['image_name'];
+																}
+
+																$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+																if (mysqli_num_rows($get_sale) > 0) {
+																	$data_sale = mysqli_fetch_assoc($get_sale);
+																	$sale = $data_sale['sale'];
+																	$price_sale = $cart_product_price - $cart_product_price * (int)$sale / 100;
+
+																	$subtotal_product = $total_quantity * $price_sale;
+																	$subtotal_price += $subtotal_product;
+																} else {
+																	$subtotal_product = $total_quantity * $cart_product_price;
+																	$subtotal_price += $subtotal_product;
+																}
+
+															?>
+																<li style="border:none">
+																	<a style="border-bottom:1px solid #ededed" href="index.php?page=product_view&product_id=<?= $product_id ?>">
+																		<figure style="width:70px; height:70px;">
+																			<?php
+																			if (mysqli_num_rows($get_cart_product_image) > 0) :
+																			?>
+																				<img src="uploads/product/<?= $product_image ?>" alt="product_image" width="100%" style="width:60px; height:60px; object-fit:scale-down">
+																			<?php else : ?>
+																				<img src="uploads/product/default.jpg" alt="product_image" width="100%" style="width:60px; height:60px; object-fit:scale-down">
+																			<?php endif ?>
+																		</figure>
+																		<div class="ml-4">
+																			<p class="m-0" style="font-size:larger; font-weight:500">
+																				<span style="color:#004cd7">
+																					<?= $total_quantity . 'x ' ?>
+																				</span>
+																				<?= $cart_product_name ?>
+																			</p>
+																			<?php
+																			$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+																			if (mysqli_num_rows($get_sale) > 0) :
+																			?>
+																				<p class="new_price m-0"><?= rupiah($price_sale) ?></p>
+																				<p class="old_price m-0" style="font-size:small"><?= rupiah($cart_product_price) ?></p>
+																			<?php else : ?>
+																				<p class="new_price m-0"><?= rupiah($cart_product_price) ?></p>
+																			<?php endif ?>
+																		</div>
+																	</a>
+																	<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')" class="action">
+																		<i class="ti-trash"></i>
+																	</a>
+																</li>
+															<?php endforeach ?>
+														</ul>
+														<?php
+														$shipping_price = 17000;
+														$total_price = $subtotal_price + $shipping_price;
+														?>
+														<div class="row mt-4">
+															<div class="col-6">
+																<p class="m-0">Subtotal</p>
+																<p class="m-0">Shipping</p>
+															</div>
+															<div class="col-6">
+																<span style="float: right"><?= rupiah($subtotal_price) ?></span>
+																<span style="float: right"><?= rupiah($shipping_price) ?></span>
+															</div>
 														</div>
-														<div class="col-6">
-															<span style="float: right"><?= rupiah($subtotal_price) ?></span>
-															<span style="float: right"><?= rupiah($shipping_price) ?></span>
+														<div style="font-size: large; font-weight:bold;" class="mt-2 row">
+															<div class="col-6">
+																<p class="m-0">Total</p>
+															</div>
+															<div class="col-6">
+																<span style="float: right"><?= rupiah($total_price) ?></span>
+															</div>
 														</div>
+														<a href="index.php?page=cart_list" class="btn_1 outline mt-3">View Cart</a>
+														<a href="index.php?page=checkout" class="btn_1 mt-1">Checkout</a>
 													</div>
-													<div style="font-size: large; font-weight:bold;" class="mt-2 row">
-														<div class="col-6">
-															<p class="m-0">Total</p>
-														</div>
-														<div class="col-6">
-															<span style="float: right"><?= rupiah($total_price) ?></span>
-														</div>
-													</div>
-													<a href="index.php?page=cart_list" class="btn_1 outline mt-3">View Cart</a>
-													<a href="index.php?page=checkout" class="btn_1 mt-1">Checkout</a>
-												</div>
-											<?php endif ?>
-										</div>
-									</li>
-									<li>
-										<a href="index.php?page=wishlist_list" class="wishlist"></a>
-									</li>
+												<?php endif ?>
+											</div>
+										</li>
+										<li>
+											<a href="index.php?page=wishlist_list" class="wishlist"></a>
+										</li>
+									<?php else : ?>
+										<li>
+											<a class="discuss pt-1" href="index.php?page=discussion_list">
+												<i style="font-size:17pt" class="ti-comment-alt"></i>
+												<strong style="background-color: #083487; border-radius:100px; color:white; padding:0 5px">4</strong>
+											</a>
+										</li>
+									<?php endif ?>
 								<?php else : ?>
 									<a href="index.php?page=login" class="btn_1  mt-2">
 										<b>Login</b> or <b>Register</b>
@@ -319,8 +330,8 @@ include_once 'config/connect.php';
 																	<span class="badge text-bg-danger">Admin</span>
 																<?php endif ?>
 															</div>
-															<p class="m-0"><?= $address ?>, <?= $country_name ?></p>
-															<p class="mb-2"><?= $phone ?></p>
+															<p class="m-0" style="font-size:smaller"><?= $address ?>, <?= $country_name ?></p>
+															<p class="mb-2" style="font-size:smaller"><?= $phone ?></p>
 														</div>
 													</div>
 													<?php
@@ -339,12 +350,16 @@ include_once 'config/connect.php';
 															Orders
 														</a>
 													</li> -->
-													<li>
-														<a href="index.php?page=history_list">
-															<i class="ti-timer"></i>
-															Purchase History
-														</a>
-													</li>
+													<?php
+													if ($user_role != 'seller') :
+													?>
+														<li>
+															<a href="index.php?page=history_list">
+																<i class="ti-timer"></i>
+																Purchase History
+															</a>
+														</li>
+													<?php endif ?>
 													<li>
 														<a href="index.php?page=help">
 															<i class="ti-help-alt"></i>
@@ -517,6 +532,14 @@ include_once 'config/connect.php';
 			</div>
 		</footer>
 	</div>
+
+	<script>
+		var $hamburger = $(".hamburger");
+		$hamburger.on("click", function(e) {
+			$hamburger.toggleClass("is-active");
+			// Do something else, like open/close menu
+		});
+	</script>
 
 	<div id="toTop"></div><!-- Back to top button -->
 

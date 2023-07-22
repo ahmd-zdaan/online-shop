@@ -59,7 +59,7 @@ foreach ($item_details as $item) {
 
 $transaction_details = array(
 	'order_id' => rand(),
-	'gross_amount' => $total_price + 17000 // no decimal allowed for creditcard
+	'gross_amount' => $total_price + 17000
 );
 
 $enable_payments = array('credit_card', 'mandiri_clickpay', 'gopay', 'indomaret', 'kredivo', 'echannel');
@@ -71,7 +71,7 @@ $user_name = $data['user_name'];
 $address = $data['address'];
 $country_id = $data['country_id'];
 $postal_code = $data['postal_code'];
-$telephone = $data['telephone'];
+$phone = $data['phone'];
 
 $get_country = get('country', 'WHERE country_id=' . $country_id);
 $data_country = mysqli_fetch_assoc($get_country);
@@ -95,7 +95,7 @@ $shipping_address = array(
 	'address'       => $address,
 	'city'          => $country_name,
 	'postal_code'   => $postal_code,
-	'phone'         => $telephone,
+	'phone'         => $phone,
 	'country_code'  => $code
 );
 
@@ -103,7 +103,7 @@ $customer_details = array(
 	'first_name'    => $user_name,
 	// 'last_name'     => "NAME",
 	'email'         => $email,
-	'phone'         => $telephone,
+	'phone'         => $phone,
 	'billing_address'  => $billing_address,
 	'shipping_address' => $shipping_address
 );
@@ -166,8 +166,26 @@ function printExampleWarningMessage()
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
+
+<style>
+	.step h3 {
+		background: #172134;
+	}
+
+	.step h3:after {
+		width: 0;
+		height: 0;
+		border-top: 20px inset transparent;
+		border-bottom: 20px inset transparent;
+		border-left: 10px solid #172134;
+		position: absolute;
+		content: "";
+		top: 0;
+		right: -10px;
+		z-index: 2;
+	}
+</style>
 
 <body>
 	<div id="page">
@@ -184,19 +202,20 @@ function printExampleWarningMessage()
 					<h1>Checkout</h1>
 				</div>
 				<div class="row">
-					<div class="col-lg-4 col-md-6">
+					<div class="col-3 p-0">
 						<div class="step first payments">
-							<h3>Shipping Method</h3>
-							<h6 class="pb-2">Shipping Method</h6>
+							<h3>Shipping Methods</h3>
 							<ul>
 								<li>
-									<label class="container_radio">Standard shipping<a href="#0" class="info" data-toggle="modal" data-target="#payments_method"></a>
+									<label class="container_radio">Standard shipping
+										<a href="#0" class="info ml-1" data-toggle="modal" data-target="#payments_method"></a>
 										<input type="radio" name="shipping" checked>
 										<span class="checkmark"></span>
 									</label>
 								</li>
-								<li>
-									<label class="container_radio">Express shipping<a href="#0" class="info" data-toggle="modal" data-target="#payments_method"></a>
+								<li style="border:none">
+									<label class="container_radio">Express shipping
+										<a href="#0" class="info ml-1" data-toggle="modal" data-target="#payments_method"></a>
 										<input type="radio" name="shipping">
 										<span class="checkmark"></span>
 									</label>
@@ -209,64 +228,70 @@ function printExampleWarningMessage()
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-6">
+					<div class="col p-0 mx-3">
 						<div class="step middle payments">
 							<h3 class="pl-4">Order Summary</h3>
-							<div style="font-size: 11pt;" class="box_general summary">
+							<div class="box_general summary px-4 pb-3" style="font-size:11pt">
+								<ul class="mb-4" style="border:none">
+									<?php
+									$subtotal_price = 0;
+
+									foreach ($item_details as $item) :
+										$product_id = $item['id'];
+										$product_price = $item['price'];
+										$quantity = $item['quantity'];
+										$product_name_50 = $item['name'];
+
+										$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+										if (mysqli_num_rows($get_sale) > 0) {
+											$data_sale = mysqli_fetch_assoc($get_sale);
+
+											$sale = $data_sale['sale'];
+
+											$total_product = $quantity * $price_sale;
+											$subtotal_price += $total_product;
+										} else {
+											$total_product = $quantity * $product_price;
+											$subtotal_price += $total_product;
+										}
+									?>
+										<li class="mb-3" style="border:none">
+											<div class="row">
+												<div class="col">
+													<p class="m-0 mr-1" style="color:#004cd7; float:left">
+														<?= $quantity ?>x
+													</p>
+													<p class="m-0 mr-1" style="float:left; font-weight:normal">
+
+														<?= $product_name_50 ?>
+													</p>
+													<p class="m-0" style="font-weight:normal">
+
+														(<?= rupiah($product_price) ?>)
+													</p>
+												</div>
+												<div class="col-3">
+													<p class="m-0 text-right">
+														<?= rupiah($total_product) ?>
+													</p>
+												</div>
+											</div>
+										</li>
+									<?php endforeach ?>
+								</ul>
 								<?php
-								$subtotal_price = 0;
-
-								foreach ($item_details as $item) :
-									$product_id = $item['id'];
-									$product_price = $item['price'];
-									$quantity = $item['quantity'];
-
-									$get_sale = get('sale', 'WHERE product_id=' . $product_id);
-									if (mysqli_num_rows($get_sale) > 0) {
-										$data_sale = mysqli_fetch_assoc($get_sale);
-
-										$sale = $data_sale['sale'];
-
-										$total_product = $quantity * $price_sale;
-										$subtotal_price += $total_product;
-									} else {
-										$total_product = $quantity * $product_price;
-										$subtotal_price += $total_product;
-									}
-								?>
-									<div class="row" style="font-weight:bold">
-										<div class="col-6">
-											<p>
-												<span style="color:#004cd7">
-													<?= $quantity ?>x
-												</span>
-												<?= $product_name_50 ?>
-											</p>
-										</div>
-										<div class="col-6 text-right">
-											<p>
-												<span style="color:gray; font-weight:normal">
-													(<?= $quantity ?>x <?= rupiah($product_price) ?>)
-												</span>
-												<?= rupiah($total_product) ?>
-											</p>
-										</div>
-									</div>
-								<?php
-								endforeach;
-
 								$shipping_price = 17000;
 								$total_price = $subtotal_price + $shipping_price;
 								?>
 								<hr class="hr border-3 m-0 mb-3">
-								<div class="row mb-3" style="font-weight: bold; font-size: 13pt">
-									<div class="col-6">
+								<div class="row mb-3" style="font-weight:bold">
+									<div class="col">
 										<p class="m-0">Subtotal</p>
 										<p class="m-0">Shipping</p>
 									</div>
-									<div class="col-6 text-right">
-										<span><?= rupiah($subtotal_price) ?></span>
-										<span><?= rupiah($shipping_price) ?></span>
+									<div class="col text-right">
+										<p class="m-0"><?= rupiah($subtotal_price) ?></p>
+										<p class="m-0"><?= rupiah($shipping_price) ?></p>
 									</div>
 								</div>
 								<hr class="hr border-3 m-0 mb-3">
@@ -279,11 +304,11 @@ function printExampleWarningMessage()
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-6">
+					<div class="col-3 p-0">
 						<div class="step last">
 							<h3 class="pl-4">Total Price</h3>
 							<div style="font-size: 11pt;" class="box_general summary">
-								<div style="font-size: 17pt" class="total clearfix">Total
+								<div class="total clearfix">Total
 									<span><?= rupiah($total_price) ?></span>
 								</div>
 								<button class="text-center btn_1 full-width" id="pay-button">CONFIRM AND PAY</button>
@@ -298,12 +323,12 @@ function printExampleWarningMessage()
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="payments_method_title">Shipping Method</h5>
+						<h5 class="modal-title" id="payments_method_title">Shipping Methods</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body pt-4">
 						<p>Lorem ipsum dolor sit amet, oratio possim ius cu. Labore prompta nominavi sea ei. Sea no animal saperet gloriatur, ius iusto ullamcorper ad. Qui ignota reformidans ei, vix in elit conceptam adipiscing, quaestio repudiandae delicatissimi vis ei. Fabulas accusamus no has.</p>
 						<p>Et nam vidit zril, pri elaboraret suscipiantur ut. Duo mucius gloriatur at, in vis integre labitur dolores, mei omnis utinam labitur id. An eum prodesset appellantur. Ut alia nemore mei, at velit veniam vix, nonumy propriae conclusionemque ea cum.</p>
 					</div>

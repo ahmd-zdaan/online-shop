@@ -40,7 +40,7 @@ $seller_name = $data_seller['user_name'];
 	<div id="page">
 		<main class="bg_gray">
 			<div class="container margin_30">
-				<div class="page_header">
+				<div class="page_header mb-3">
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
@@ -50,7 +50,7 @@ $seller_name = $data_seller['user_name'];
 						</ul>
 					</div>
 					<a href="index.php?page=seller_view&seller_id=<?=$seller_id?>" style="text-decoration:underline;">&lt; Back</a>
-					<h1 class="mt-2">All <?= $seller_name ?>'s Products</h1>
+					<h1 class="mt-3">All <?= $seller_name ?>'s Products</h1>
 				</div>
 				<table class="table table-striped table-hover table-sm">
 					<tbody>
@@ -90,7 +90,7 @@ $seller_name = $data_seller['user_name'];
 												<img src="uploads/product/default.jpg" alt="product_image" style="width:250px; height:250px; object-fit:scale-down">
 											<?php endif ?>
 										</a>
-										<div class="col-3 p-0">
+										<div class="col-3">
 											<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 												<h4 class="mt-2"><?= $product_name ?></h5>
 											</a>
@@ -109,7 +109,7 @@ $seller_name = $data_seller['user_name'];
 											<p>Stock: <?= $stock ?></p>
 											<p style="color:#9d9d9d"><?= $category_name ?> > <?= $subcategory_name ?></p>
 										</div>
-										<div class="col p-0">
+										<div class="col pl-0 pr-5">
 											<?= $description ?>
 										</div>
 									</div>

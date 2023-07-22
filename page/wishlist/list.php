@@ -1,5 +1,13 @@
 <?php
 check('login');
+
+$user_email = $_SESSION['email'];
+
+$get_user = get('user', 'WHERE email="' . $user_email . '"');
+$data_user = mysqli_fetch_assoc($get_user);
+
+$user_id = $data_user['user_id'];
+$user_name = $data_user['user_name'];
 ?>
 
 <!DOCTYPE html>
@@ -37,148 +45,135 @@ check('login');
 <body>
 	<div id="page">
 		<main class="bg_gray">
-			<div class="container margin_30 pb-0">
-				<div class="page_header">
+			<div class="container margin_30">
+				<div class="page_header mb-3">
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
+							<li><a href="index.php?page=view_profile"><?= $user_name ?></a></li>
 							<li>Wishlist</li>
 						</ul>
 					</div>
-					<div class="row">
-						<div class="col-6">
-							<h1 class="pt-3">Wishlist</h1>
-						</div>
-					</div>
+					<a href="index.php" style="text-decoration:underline;">&lt; Back</a>
+					<h1 class="pt-3">Your Wishlist</h1>
 				</div>
 				<?php
-				$user_email = $_SESSION['email'];
-				$result = get('user', 'WHERE email="' . $user_email . '"');
-				$data = mysqli_fetch_assoc($result);
-
-				$user_id = $data['user_id'];
-
-				$result = get('wishlist', 'WHERE user_id=' . $user_id);
-				if (mysqli_num_rows($result) > 0) :
+				$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id);
+				if (mysqli_num_rows($get_wishlist) > 0) :
 				?>
 					<table class="table table-striped table-hover table-sm">
-						<thead>
-							<tr>
-								<th width="150px">
-									Name
-								</th>
-								<th width="150px">
-									Price
-								</th>
-								<th width="150px">
-									Category
-								</th>
-								<th width="150px">
-									Subcategory
-								</th>
-								<th>
-									Description
-								</th>
-								<th width="150px">
-									Actions
-								</th>
-							</tr>
-						</thead>
 						<tbody>
 							<?php
-							foreach ($result as $data) :
-								$product_id = $data['product_id'];
+							foreach ($get_wishlist as $data_wishlist) :
+								$product_id_wishlist = $data_wishlist['product_id'];
 
-								$result_product = get('product', 'WHERE product_id=' . $product_id);
-								$data_product = mysqli_fetch_assoc($result_product);
+								$get_product = get('product', 'WHERE product_id=' . $product_id_wishlist);
+								$data_product = mysqli_fetch_assoc($get_product);
 
 								$product_id = $data_product['product_id'];
 								$product_name = $data_product['product_name'];
 								$category_id = $data_product['category_id'];
 								$subcategory_id = $data_product['subcategory_id'];
 								$price = $data_product['price'];
+								$stock = $data_product['stock'];
 								$description = $data_product['description'];
+
+								$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
+								$data = mysqli_fetch_assoc($result);
+								$category_name = $data['category_name'];
+
+								$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id);
+								$data = mysqli_fetch_assoc($result);
+								$subcategory_name = $data['subcategory_name']
 							?>
 								<tr style="font-size: medium;">
 									<td>
-										<div class="thumb_cart">
-											<?php
-											$result = get('product_image', 'WHERE product_id=' . $product_id);
-											if (mysqli_num_rows($result) > 0) :
-												$data = mysqli_fetch_assoc($result);
-												$image_name = $data['image_name'];
-											?>
-												<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
-											<?php
-											else :
-											?>
-												<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
-											<?php endif ?>
+										<div class="row">
+											<div class="col-3">
+												<a class="product-image" href="index.php?page=product_view&product_id=<?= $product_id ?>">
+													<?php
+													$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+													if (mysqli_num_rows($result) > 0) :
+														$data = mysqli_fetch_assoc($result);
+														$image_name = $data['image_name'];
+													?>
+														<img src="uploads/product/<?= $image_name ?>" alt="product_image" style="width:250px; height:250px; object-fit:scale-down">
+													<?php
+													else :
+													?>
+														<img src="uploads/product/default.jpg" alt="product_image" style="width:250px; height:250px; object-fit:scale-down">
+													<?php endif ?>
+												</a>
+											</div>
+											<div class="col-3 p-0">
+												<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+													<h4 class="mt-2 product"><?= $product_name ?></h5>
+												</a>
+												<?php
+												$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+												if (mysqli_num_rows($get_sale) > 0) :
+													$data_sale = mysqli_fetch_assoc($get_sale);
+													$sale = $data_sale['sale'];
+													$price_sale = $price - $price * (int)$sale / 100;
+												?>
+													<span style="font-size:larger" class="new_price"><?= rupiah($price_sale) ?></span>
+													<span style="color:#9d9d9d" class="old_price"><?= rupiah($price) ?></span>
+												<?php else : ?>
+													<span style="font-size:larger" class="new_price"><?= rupiah($price) ?></span>
+												<?php endif ?>
+												<p>Stock: <?= $stock ?></p>
+												<p style="color:#9d9d9d"><?= $category_name ?> > <?= $subcategory_name ?></p>
+											</div>
+											<div class="col pl-0 pr-4 pb-3">
+												<?php
+												$description_array = explode(' ', $description);
+												$description_count = count($description_array);
+
+												$description1 = '';
+												$description2 = '';
+
+												if ($description_count > 55) :
+													for ($i = 0; $i < 55; $i++) {
+														$description1 .= $description_array[$i] . ' ';
+													}
+													for ($i = 55; $i < $description_count; $i++) {
+														$description2 .= $description_array[$i] . ' ';
+													}
+												?>
+													<p class="m-0 description">
+														<?= $description1 ?>
+														<span id="dots">...</span>
+														<span id="more"><?= $description2 ?></span>
+													</p>
+													<button onclick="readMore(<?= $product_id ?>)" id="readmore<?= $product_id ?>" class="btn btn-link p-0" style="font-size:small;">read more</button>
+												<?php else : ?>
+													<p><?= $description ?></p>
+												<?php endif ?>
+											</div>
+											<div class="col-1 p-0" style="max-width:57px">
+												<div class="btn-group-vertical btn-group-sm">
+													<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-primary tooltip-1" title="View" data-placement="left" href="index.php?page=product_view&product_id=<?= $product_id ?>">
+														<i class="ti-eye"></i>
+													</a>
+													<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-danger tooltip-1" title="Delete" data-placement="left" href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')">
+														<i class="ti-trash"></i>
+													</a>
+												</div>
+											</div>
 										</div>
-										<span class="item_cart">
-											<h5 class="mt-2"><?= $product_name ?></h5>
-										</span>
-									</td>
-									<td>
-										<strong>
-											<?php
-											$get_sale = get('sale', 'WHERE product_id=' . $product_id);
-											if (mysqli_num_rows($get_sale) > 0) :
-												$data_sale = mysqli_fetch_assoc($get_sale);
-												$sale = $data_sale['sale'];
-												$price_sale = $price - $price * (int)$sale / 100;
-											?>
-												<span class="new_price"><?= rupiah($price_sale) ?></span>
-												<span style="color:#9d9d9d" class="old_price mt-2"><?= rupiah($price) ?></span>
-											<?php else : ?>
-												<span class="new_price"><?= rupiah($price) ?></span>
-											<?php endif ?>
-										</strong>
-									</td>
-									<td>
-										<?php
-										$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
-										$data = mysqli_fetch_assoc($result);
-										$category_name = $data['category_name'];
-										?>
-										<p><?= $category_name ?></p>
-									</td>
-									<td>
-										<?php
-										$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id);
-										$data = mysqli_fetch_assoc($result);
-										$subcategory_name = $data['subcategory_name']
-										?>
-										<p><?= $subcategory_name ?></p>
-									</td>
-									<td>
-										<p>
-											<?php
-											if (strlen($description) > 400) {
-												echo substr($description, 0, 400);
-												echo ' ...';
-											} else {
-												echo $description;
-											}
-											?>
-										</p>
-									</td>
-									<td>
-										<a href="index.php?page=product_view&product_id=<?= $product_id ?>" class="btn_1 col p-3 my-1">VIEW PRODUCT</a>
-										<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" class="btn_1 col p-3 my-1">REMOVE</a>
 									</td>
 								</tr>
 							<?php endforeach ?>
 						</tbody>
 					</table>
 				<?php else : ?>
-					<div class="text-center my-5 pb-5">
+					<div class="text-center my-5 py-5">
 						<img src="img/empty.png" alt="empty">
 						<h3 class="mt-4">Nothing to see here</h3>
 						<p class="mb-5 pb-5">You have not wishlisted any products</p>
 					</div>
-					<div class="container margin_60_35 mt-5 pb-0" style="background-color: white;">
-						<div class="main_title">
+					<div class="container mt-5 p-5" style="background-color: white;">
+						<div class="mb-4">
 							<h3 class="m-0">Create Your Dream Wishlist</h3>
 							<p style="font-size:large;">Explore and Save Your Favorite Products</p>
 						</div>
@@ -196,9 +191,6 @@ check('login');
 							?>
 								<div class="item">
 									<div class="grid_item">
-										<!-- <span class="ribbon hot">Hot</span>
-							<span class="ribbon off">-30%</span>
-							<span class="ribbon new">New</span> -->
 										<?php
 										$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 										if (mysqli_num_rows($get_sale) > 0) :
@@ -218,11 +210,11 @@ check('login');
 													$data = mysqli_fetch_assoc($result);
 													$image_name = $data['image_name'];
 												?>
-													<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+													<img src="uploads/product/<?= $image_name ?>" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 												<?php
 												else :
 												?>
-													<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+													<img src="img/products/product_placeholder_square_medium.jpg" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 												<?php endif ?>
 											</a>
 										</figure>
@@ -250,8 +242,8 @@ check('login');
 												$n = 5 - $average_rating;
 												for ($i = $n; $i > 0; $i--) {
 													echo '<i class="icon-star"></i>';
-													echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 												}
+												echo '<em class="ml-1" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 											}
 											?>
 										</div>

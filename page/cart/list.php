@@ -269,8 +269,8 @@ check('login')
 												$n = 5 - $average_rating;
 												for ($i = $n; $i > 0; $i--) {
 													echo '<i class="icon-star"></i>';
-													echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 												}
+												echo '<em class="ml-1" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 											}
 											?>
 										</div>

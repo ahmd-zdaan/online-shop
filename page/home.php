@@ -365,11 +365,11 @@
 										$data = mysqli_fetch_assoc($result);
 										$image_name = $data['image_name'];
 									?>
-										<img src="uploads/product/<?= $image_name ?>" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
+										<img src="uploads/product/<?= $image_name ?>" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 									<?php
 									else :
 									?>
-										<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
+										<img src="img/products/product_placeholder_square_medium.jpg" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 									<?php endif ?>
 								</a>
 							</figure>
@@ -554,7 +554,7 @@
 									for ($i = $n; $i > 0; $i--) {
 										echo '<i class="icon-star"></i>';
 									}
-									echo '<em class="ml-2" style="color:#9d9d9d">(' . $count_rating . ')</em>';
+									echo '<em class="ml-1" style="color:#9d9d9d">(' . $count_rating . ')</em>';
 								}
 								?>
 							</div>

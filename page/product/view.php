@@ -75,6 +75,7 @@ $subcategory_name = $data['subcategory_name'];
 	<link href="css/custom.css" rel="stylesheet">
 
 	<style>
+		/* READ MORE */
 		#more {
 			display: none;
 		}
@@ -84,6 +85,16 @@ $subcategory_name = $data['subcategory_name'];
 			text-decoration-thickness: 2px;
 		}
 
+		.all .slider-two .left-t,
+		.all .slider-two .right-t {
+			transition: none;
+		}
+
+		.all .slider-two .item.active {
+			border: solid 3px #004dda;
+		}
+
+		/* ENLARGE REVIEW IMAGE */
 		.review-image {
 			cursor: pointer;
 			transition: opacity .1s;
@@ -106,24 +117,21 @@ $subcategory_name = $data['subcategory_name'];
 		/* The Modal (background) */
 		.modal {
 			display: none;
-			/* Hidden by default */
 			position: fixed;
 			/* Stay in place */
 			z-index: 1;
 			/* Sit on top */
-			padding-top: 100px;
+			padding-top: 50px;
 			/* Location of the box */
 			left: 0;
 			top: 0;
 			width: 100%;
-			/* Full width */
 			height: 100%;
-			/* Full height */
-			overflow: auto;
+			/* overflow: auto; */
 			/* Enable scroll if needed */
 			background-color: rgb(0, 0, 0);
 			/* Fallback color */
-			background-color: rgba(0, 0, 0, 0.9);
+			background-color: rgba(0, 0, 0, 0.5);
 			/* Black w/ opacity */
 		}
 
@@ -135,7 +143,6 @@ $subcategory_name = $data['subcategory_name'];
 			max-width: 700px;
 		}
 
-		/* Caption of Modal Image */
 		#caption {
 			margin: auto;
 			display: block;
@@ -147,13 +154,12 @@ $subcategory_name = $data['subcategory_name'];
 			height: 150px;
 		}
 
-		/* Add Animation */
 		.modal-content,
 		#caption {
 			-webkit-animation-name: zoom;
 			-webkit-animation-duration: 0.6s;
 			animation-name: zoom;
-			animation-duration: 0.6s;
+			animation-duration: 0.1s;
 		}
 
 		@-webkit-keyframes zoom {
@@ -176,11 +182,10 @@ $subcategory_name = $data['subcategory_name'];
 			}
 		}
 
-		/* The Close Button */
 		.close {
 			position: absolute;
-			top: 15px;
-			right: 35px;
+			top: 75px;
+			right: 25px;
 			color: #f1f1f1;
 			font-size: 40px;
 			font-weight: bold;
@@ -199,6 +204,10 @@ $subcategory_name = $data['subcategory_name'];
 			.modal-content {
 				width: 100%;
 			}
+		}
+
+		.product-image img:hover {
+			opacity: 75%;
 		}
 	</style>
 </head>
@@ -232,7 +241,7 @@ $subcategory_name = $data['subcategory_name'];
 							<?php endif ?>
 						</div>
 						<div class="slider-two">
-							<div class="owl-carousel owl-theme thumbs">
+							<div class="owl-carousel owl-theme thumbs product-image">
 								<?php
 								$i = 0;
 
@@ -250,6 +259,8 @@ $subcategory_name = $data['subcategory_name'];
 								endforeach
 								?>
 							</div>
+							<div class="left-t nonl-t"></div>
+							<div class="right-t"></div>
 						</div>
 					</div>
 				</div>
@@ -521,14 +532,14 @@ $subcategory_name = $data['subcategory_name'];
 						<div id="collapse-A" class="collapse" role="tabpanel" aria-labelledby="heading-A">
 							<div class="card-body">
 								<div class="row justify-content-between">
-									<div class="col-6">
+									<div class="col pr-5">
 										<h3 class="mb-2">
 											<b>Description</b>
 										</h3>
 										<p><?= $description ?></p>
 									</div>
 									<div class="col-5">
-										<div class="mb-5">
+										<div>
 											<a href="index.php?page=seller_view&seller_id=<?= $seller_id ?>">
 												<img class="mb-4 mr-3" src="uploads/user/<?= $seller_image ?>" style="border-radius:50%; float:left" width="60px" alt="seller_image">
 												<h4 class="pt-3"><?= $seller_name ?></h4>
@@ -758,7 +769,7 @@ $subcategory_name = $data['subcategory_name'];
 							<p>Browse more products from <?= $seller_name ?></p>
 						</div>
 						<div class="col text-right mt-4">
-							<a href="index.php?page=seller_view&seller_id=<?= $seller_id ?>" style="text-decoration:underline;">Show All</a>
+							<a href="index.php?page=seller_product_list&seller_id=<?= $seller_id ?>" style="text-decoration:underline;">View All</a>
 						</div>
 					</div>
 					<div class="owl-carousel owl-theme products_carousel">
@@ -1006,7 +1017,6 @@ $subcategory_name = $data['subcategory_name'];
 													<?php endif ?>
 												<?php endif ?>
 											</li>
-											<!-- <li><a href="#0" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li> -->
 										</ul>
 									</div>
 								</div>
@@ -1070,12 +1080,14 @@ $subcategory_name = $data['subcategory_name'];
 			modal.style.display = "none";
 		}
 
+
+
 		function readMore() {
 			let dots = document.getElementById("dots");
 			let moreText = document.getElementById("more");
 			let btnText = document.getElementById("readMoreBtn");
 
-			if (dots.style.display === "none") {
+			if (dots.style.display == "none") {
 				dots.style.display = "inline";
 				btnText.innerHTML = "read more";
 				moreText.style.display = "none";
