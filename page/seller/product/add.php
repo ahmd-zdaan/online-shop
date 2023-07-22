@@ -57,7 +57,7 @@ check('login');
 								</div>
 								<div class="mt-3">
 									<label class="form-label">Product Image</label>
-									<input class="form-control" type="file" name="image[]" oninvalid="this.setCustomValidity('At least one product image is required')" multiple required onvalid="this.setCustomValidity('')">
+									<input class="form-control" type="file" name="image[]" accept="image/*" oninvalid="this.setCustomValidity('At least one product image is required')" multiple required onvalid="this.setCustomValidity('')">
 								</div>
 							</div>
 							<div class="col-9">
