@@ -195,17 +195,22 @@
 					<div class="toolbox elemento_stick add_bottom_30 row">
 						<div class="col-10">
 							<span class="mt-1 mr-2" style="float:left">Sort by</span>
-							<select class="form-select form-select-sm" name="sort" id="sort" style="width:150px">
-								<option selected>-</option>
+							<select class="form-select form-select-sm" id="sort" style="width:175px">
+								<option value="" selected>-</option>
 								<option value="relevance">Relevance</option>
-								<option value="date">Date added</option>
-								<option value="price_lth">Price (low to high)</option>
-								<option value="price_htl">Price (high to low)</option>
+								<option value="newest">Date added (newest)</option>
+								<option value="oldest">Date added (oldest)</option>
+								<option value="low-to-high">Price (low to high)</option>
+								<option value="high-to-low">Price (high to low)</option>
 							</select>
 						</div>
 						<div class="col text-right mt-1" style="font-size:large">
-							<a class="mr-1" href="index.php?page=list&view=grid"><i class="ti-view-grid"></i></a>
-							<a href="index.php?page=list&view=list"><i class="ti-view-list"></i></a>
+							<a class="mr-1" href="index.php?page=list&view=grid">
+								<i class="ti-view-grid"></i>
+							</a>
+							<a href="index.php?page=list&view=list">
+								<i class="ti-view-list"></i>
+							</a>
 						</div>
 					</div>
 					<?php

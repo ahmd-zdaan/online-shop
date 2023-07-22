@@ -9,52 +9,74 @@ $filter_min_price = $_GET['min_price'];
 $filter_max_price = $_GET['max_price'];
 $filter_manifacturer_id = $_GET['manifacturer_id'];
 
-$where = 'WHERE ';
+$filter = '';
 
 if ($filter_subcategory_id != 0) {
-    if ($where == 'WHERE ') {
-        $where .= 'subcategory_id IN (' . $filter_subcategory_id . ')';
+    if ($filter == '') {
+        $filter .= ' WHERE subcategory_id IN (' . $filter_subcategory_id . ')';
     } else {
-        $where .= ' AND subcategory_id IN (' . $filter_subcategory_id . ')';
+        $filter .= ' AND subcategory_id IN (' . $filter_subcategory_id . ')';
     }
 }
 if ($filter_category_id != 0) {
-    if ($where == 'WHERE ') {
-        $where .= 'category_id IN (' . $filter_category_id . ')';
+    if ($filter == '') {
+        $filter .= ' WHERE category_id IN (' . $filter_category_id . ')';
     } else {
-        $where .= ' AND category_id IN (' . $filter_category_id . ')';
+        $filter .= ' AND category_id IN (' . $filter_category_id . ')';
     }
 }
 if ($filter_max_price != 0) {
     if ($filter_max_price == -1) {
-        if ($where == 'WHERE ') {
-            $where .= 'price > ' . $filter_min_price;
+        if ($filter == '') {
+            $filter .= ' WHERE price > ' . $filter_min_price;
         } else {
-            $where .= ' AND price > ' . $filter_min_price;
+            $filter .= ' AND price > ' . $filter_min_price;
         }
     } else {
-        if ($where == 'WHERE ') {
-            $where .= 'price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
+        if ($filter == '') {
+            $filter .= ' WHERE price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
         } else {
-            $where .= ' AND price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
+            $filter .= ' AND price BETWEEN ' . $filter_min_price . ' AND ' . $filter_max_price;
         }
     }
 }
 if ($filter_manifacturer_id != 0) {
-    if ($where == 'WHERE ') {
-        $where .= 'manifacturer_id IN (' . $filter_manifacturer_id . ')';
+    if ($filter == '') {
+        $filter .= ' WHERE manifacturer_id IN (' . $filter_manifacturer_id . ')';
     } else {
-        $where .= ' AND manifacturer_id IN (' . $filter_manifacturer_id . ')';
+        $filter .= ' AND manifacturer_id IN (' . $filter_manifacturer_id . ')';
     }
 }
 
-if ($where != 'WHERE ') {
-    $result = get('product', $where . ' AND product_name LIKE "%' . $search . '%"');
-} else {
-    $result = get('product', 'WHERE product_name LIKE "%' . $search . '%"');
+$filter_sort = $_GET['sort'];
+
+$sort = '';
+
+switch ($filter_sort) {
+    case 'relevance':
+        $sort = ' ORDER BY sold DESC';
+        break;
+    case 'newest':
+        $sort = ' ORDER BY date DESC';
+        break;
+    case 'oldest':
+        $sort = ' ORDER BY date ASC';
+        break;
+    case 'low-to-high':
+        $sort = ' ORDER BY price ASC';
+        break;
+    case 'high-to-low':
+        $sort = ' ORDER BY price DESC';
+        break;
 }
 
-foreach ($result as $data) :
+if ($filter != '') {
+    $get_product = get('product', $filter . ' AND product_name LIKE "%' . $search . '%"' . $sort);
+} else {
+    $get_product = get('product', 'WHERE product_name LIKE "%' . $search . '%"' . $sort);
+}
+
+foreach ($get_product as $data) :
     $product_id = $data['product_id'];
     $product_name = $data['product_name'];
     $price = $data['price'];
@@ -108,7 +130,7 @@ foreach ($result as $data) :
                         <div class="col-6 pl-0">
                             <div class="text-right pr-4">
                                 <?php
-                                if (isset($sale)) :
+                                if (mysqli_num_rows($get_sale) > 0) :
                                     $price_sale = $price - $price * (int)$sale / 100;
                                 ?>
                                     <span class="old_price mr-1" style="color:#9d9d9d;"><?= rupiah($price) ?></span>
@@ -142,11 +164,11 @@ foreach ($result as $data) :
                                         for ($i = $n; $i > 0; $i--) {
                                             echo '<i class="icon-star" style="color:#cccccc"></i>';
                                         }
+                                        echo '<span class="ml-1" style="color:#9d9d9d">(' . $total_rating . ')</span>';
                                     }
                                     ?>
-                                    <span style="color:#9d9d9d">(<?= $total_rating ?>)</span>
                                 </div>
-                                <p style="color:#9d9d9d;" class="mb-0"><?= $sold ?> sold • 0 discussions</p>
+                                <p style="color:gray;" class="mb-0"><?= $sold ?> sold • 0 discussions</p>
                             </div>
                         </div>
                     </div>
@@ -178,7 +200,7 @@ foreach ($result as $data) :
 <?php
 endforeach;
 
-if (mysqli_num_rows($result) == 0) :
+if (mysqli_num_rows($get_product) == 0) :
 ?>
     <li class="mb-3" style="list-style: none">
         <p class="m-5" style="color: #c1c1c1; font-size:20px">No product found</p>

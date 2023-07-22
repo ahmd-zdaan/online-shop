@@ -1,8 +1,8 @@
 <script>
-    function loadProductList(category_data = 0, subcategory_data = 0, search = '', min_price = 0, max_price = 0, manifacturer_id = 0) {
+    function loadProductList(category_data = 0, subcategory_data = 0, search = '', min_price = 0, max_price = 0, manifacturer_id = 0, sort = '') {
         $.ajax({
             type: 'get',
-            url: `page/product/display/list.php?category_id=${category_data}&subcategory_id=${subcategory_data}&search=${search}&min_price=${min_price}&max_price=${max_price}&manifacturer_id=${manifacturer_id}`,
+            url: `page/product/display/list.php?category_id=${category_data}&subcategory_id=${subcategory_data}&search=${search}&min_price=${min_price}&max_price=${max_price}&manifacturer_id=${manifacturer_id}&sort=${sort}`,
             dataType: 'html',
             success: function(response) {
                 $('#display-product-list').children().remove();
@@ -69,26 +69,37 @@
     }
 
     $(document).ready(function() {
-        console.log(<?= $_GET['category_id'] ?>);
-
         const categoryId = <?php echo (isset($_GET['category_id']) ? $_GET['category_id'] : 0) ?>;
         const subcategoryId = <?php echo (isset($_GET['subcategory_id']) ? $_GET['subcategory_id'] : 0) ?>;
-
-        console.log(categoryId);
 
         if ('<?= $view ?>' == 'list') {
             if (categoryId != 0) {
                 if (subcategoryId != 0) {
                     loadProductList(categoryId, subcategoryId);
+                    $(`[data-subcategoryid='${subcategoryId}']`).prop('checked', true);
+                    $(`[data-subcategoryid='${subcategoryId}']`).parents('.category-group').find('.category-checkbox').prop('checked', true);
                 } else {
                     loadProductList(categoryId);
+                    $(`[data-categoryid='${categoryId}']`).prop('checked', true);
                 }
             } else {
                 loadProductList();
             }
         } else if ('<?= $view ?>' == 'grid') {
-            loadProductGrid();
+            if (categoryId != 0) {
+                if (subcategoryId != 0) {
+                    loadProductGrid(categoryId, subcategoryId);
+                    $(`[data-subcategoryid='${subcategoryId}']`).prop('checked', true);
+                    $(`[data-subcategoryid='${subcategoryId}']`).parents('.category-group').find('.category-checkbox').prop('checked', true);
+                } else {
+                    loadProductGrid(categoryId);
+                    $(`[data-categoryid='${categoryId}']`).prop('checked', true);
+                }
+            } else {
+                loadProductGrid();
+            }
         }
+
         $('#form_search').on('submit', function(event) {
             let search_input = $('#search_input').val();
             resetFilter(search_input);
@@ -131,11 +142,38 @@
         }
 
         let manifacturerData = (checkManifacturer()[0].length > 0) ? checkManifacturer()[0] : 0;
+        
+        let sort = $('#sort').val();
 
         if ('<?= $view ?>' == 'list') {
-            loadProductList(categoryData, subcategoryData, '', minPrice, maxPrice, manifacturerData);
+            loadProductList(categoryData, subcategoryData, '', minPrice, maxPrice, manifacturerData, sort);
         } else if ('<?= $view ?>' == 'grid') {
-            loadProductGrid(categoryData, subcategoryData, '', minPrice, maxPrice, manifacturerData);
+            loadProductGrid(categoryData, subcategoryData, '', minPrice, maxPrice, manifacturerData, sort);
+        }
+    });
+
+    $('#sort').change(function() {
+        let minPrice, maxPrice;
+        let categoryData = (checkCategory()[0].length > 0) ? checkCategory()[0] : 0;
+        let subcategoryData = (checkCategory()[1].length > 0) ? checkCategory()[1] : 0;
+
+        if ($('.price-check').is(':checked')) {
+            minPrice = $(this).attr('data-min-price');
+            maxPrice = $(this).attr('data-max-price');
+        } else {
+            minPrice = 0;
+            maxPrice = 0;
+        }
+
+        let manifacturerData = (checkManifacturer()[0].length > 0) ? checkManifacturer()[0] : 0;
+        
+        let sort = $(this).val();
+
+        console.log(minPrice, maxPrice, categoryData, subcategoryData, manifacturerData, sort)
+        if ('<?= $view ?>' == 'list') {
+            loadProductList(categoryData, subcategoryData, '', minPrice, maxPrice, manifacturerData, sort);
+        } else if ('<?= $view ?>' == 'grid') {
+            loadProductGrid(categoryData, subcategoryData, '', minPrice, maxPrice, manifacturerData, sort);
         }
     });
 </script>
