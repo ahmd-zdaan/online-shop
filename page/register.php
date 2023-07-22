@@ -27,50 +27,52 @@ check('register');
 					<h3 class="new_client">Register</h3>
 					<form action="" method="POST">
 						<div class="form_container">
-							<div class="row mb-2">
-								<div class="col">
-									<span class="ml-1" style="font-weight:500">Sign up as</span>
-								</div>
-								<div class="col text-right">
+							<div class="form-group">
+								<label class="form-label">Sign up as</label>
+								<div>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="role" value="seller">
-										<label class="form-check-label" for="inlineRadio1">Seller</label>
+										<label>Seller</label>
 									</div>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="role" value="user" checked>
-										<label class="form-check-label" for="inlineRadio2">User</label>
+										<label>User</label>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
+								<label class="form-label">Name</label>
 								<input type="text" class="form-control" name="name" required placeholder="Name">
 							</div>
 							<div class="form-group">
+								<label class="form-label">Email</label>
 								<input type="email" class="form-control" name="email" required placeholder="Email">
 							</div>
 							<div class="private box">
+								<label class="form-label">Password</label>
 								<div class="row no-gutters">
 									<div class="col-6 pr-1">
 										<div class="form-group">
 											<input type="password" class="form-control" required name="password" value="" placeholder="Password">
 										</div>
 									</div>
-									<div class="col-6 pr-1">
+									<div class="col-6">
 										<div class="form-group">
 											<input type="password" class="form-control" required name="confirm_password" value="" placeholder="Confirm Password">
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" name="address" required placeholder="Full Address">
+							<div class="form-group mb-1">
+								<label class="form-label">Full Address</label>
+								<input type="text" class="form-control" name="address" required placeholder="Address">
 							</div>
 							<div class="private box">
 								<div class="row no-gutters">
 									<div class="col-6 pr-1">
 										<div class="form-group">
 											<div class="custom-select-form">
-												<select class="wide add_bottom_10" name="country" required>
+												<select class="wide add_bottom_10" name="country_id" required>
 													<option selected disabled hidden value="">Country</option>
 													<option value="1">Indonesia</option>
 													<option value="2">Singapore</option>
@@ -81,14 +83,18 @@ check('register');
 											</div>
 										</div>
 									</div>
-									<div class="col-6 pr-1">
+									<div class="col-6">
 										<div class="form-group">
-											<input type="number" class="form-control" required name="telephone" placeholder="Telephone">
+											<input type="number" class="form-control" required name="postal_code" placeholder="Postal Code">
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="form-group mt-2 mb-3">
+							<div class="form-group">
+								<label class="form-label">Phone</label>
+								<input type="number" class="form-control" required name="phone" placeholder="Phone">
+							</div>
+							<div class="form-group mt-4 mb-3">
 								<label class="container_check">Accept
 									<a href="index.php?page=terms">Terms and Conditions</a>
 									<input required type="checkbox">
@@ -111,10 +117,11 @@ check('register');
 							$password = $_POST['password'];
 							$confirm_password = $_POST['confirm_password'];
 							$address = $_POST['address'];
-							$country_id = $_POST['country'];
-							$telephone = $_POST['telephone'];
+							$country_id = $_POST['country_id'];
+							$postal_code = $_POST['postal_code'];
+							$phone = $_POST['phone'];
 
-							register($user_name, $role, $email, $password, $confirm_password, $address, $country_id, $telephone);
+							register($user_name, $role, $email, $password, $confirm_password, $address, $country_id, $postal_code, $phone);
 						}
 						?>
 				</div>
