@@ -17,3 +17,9 @@
 - Admin
     - Email: karisma@karisma.com
     - Password: 123
+
+### Payments
+- Cerdit
+    - Card Number: 4811 1111 1111 1114
+    - Expiration Date: 01/2025
+    - CVV: 123
