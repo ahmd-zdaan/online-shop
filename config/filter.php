@@ -123,7 +123,9 @@
             if ($(this).is(':checked')) {
                 $(this).parents('.category-group').find('.category-checkbox').prop('checked', true);
             } else {
-                $(this).parents('.category-group').find('.category-checkbox').prop('checked', false);
+                if ($('.subcategory-checkbox').is(':checked') == false) {
+                    $(this).parents('.category-group').find('.category-checkbox').prop('checked', false);
+                }
             }
         })
     })
