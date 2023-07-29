@@ -35,9 +35,6 @@ $user_name = $data_user['user_name'];
 	<link href="css/bootstrap.custom.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 
-	<!-- SPECIFIC CSS -->
-	<!-- <link href="css/cart.css" rel="stylesheet"> -->
-
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
 </head>
@@ -142,8 +139,8 @@ $user_name = $data_user['user_name'];
 												?>
 													<p class="m-0 description">
 														<?= $description1 ?>
-														<span id="dots">...</span>
-														<span id="more"><?= $description2 ?></span>
+														<span id="dots<?= $product_id ?>">...</span>
+														<span style="display:none" id="more<?= $product_id ?>"><?= $description2 ?></span>
 													</p>
 													<button onclick="readMore(<?= $product_id ?>)" id="readmore<?= $product_id ?>" class="btn btn-link p-0" style="font-size:small;">read more</button>
 												<?php else : ?>
@@ -300,5 +297,23 @@ $user_name = $data_user['user_name'];
 			</div>
 		</main>
 </body>
+
+<script>
+	function readMore(product_id) {
+		let dots = document.getElementById("dots" + product_id);
+		let moreText = document.getElementById("more" + product_id);
+		let btnText = document.getElementById("readmore" + product_id);
+
+		if (dots.style.display == "none") {
+			dots.style.display = "inline";
+			btnText.innerHTML = "read more";
+			moreText.style.display = "none";
+		} else {
+			dots.style.display = "none";
+			btnText.innerHTML = "read less";
+			moreText.style.display = "inline";
+		}
+	}
+</script>
 
 </html>

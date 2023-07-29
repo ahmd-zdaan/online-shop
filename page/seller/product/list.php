@@ -44,10 +44,6 @@ if (isset($_SESSION['email'])) {
 </head>
 
 <style>
-	#more {
-		display: none;
-	}
-
 	.product:hover {
 		text-decoration: underline;
 	}
@@ -157,8 +153,8 @@ if (isset($_SESSION['email'])) {
 											?>
 												<p class="m-0 description">
 													<?= $description1 ?>
-													<span id="dots">...</span>
-													<span id="more"><?= $description2 ?></span>
+													<span id="dots<?= $product_id ?>">...</span>
+													<span style="display:none" id="more<?= $product_id ?>"><?= $description2 ?></span>
 												</p>
 												<button onclick="readMore(<?= $product_id ?>)" id="readmore<?= $product_id ?>" class="btn btn-link p-0" style="font-size:small;">read more</button>
 											<?php else : ?>
@@ -191,8 +187,8 @@ if (isset($_SESSION['email'])) {
 
 		<script>
 			function readMore(i) {
-				let dots = document.getElementById("dots");
-				let moreText = document.getElementById("more");
+				let dots = document.getElementById("dots" + i);
+				let moreText = document.getElementById("more" + i);
 				let btnText = document.getElementById("readmore" + i);
 
 				if (dots.style.display == "none") {
