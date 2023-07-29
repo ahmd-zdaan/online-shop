@@ -55,6 +55,28 @@ include_once 'config/connect.php';
 	<link href="css/custom.css" rel="stylesheet">
 </head>
 
+<style>
+	.discuss strong {
+		font-size: 0.625rem;
+		font-weight: 700;
+		width: 16px;
+		height: 16px;
+		text-indent: 0;
+		display: block;
+		text-align: center;
+		position: absolute;
+		bottom: 12px;
+		right: -7px;
+		line-height: 17px !important;
+		-moz-border-radius: 50%;
+		-ms-border-radius: 50%;
+		border-radius: 50%;
+
+		background-color: #083487;
+		color: #fff !important;
+	}
+</style>
+
 <body>
 	<div id="page">
 		<header class="version_1">
@@ -266,8 +288,16 @@ include_once 'config/connect.php';
 									<?php else : ?>
 										<li>
 											<a class="discuss pt-1" href="index.php?page=discussion_list">
-												<i style="font-size:17pt" class="ti-comment-alt"></i>
-												<strong style="background-color: #083487; border-radius:100px; color:white; padding:0 5px">4</strong>
+												<i style="font-size:14pt" class="ti-comment-alt"></i>
+												<?php
+												$get_discussion = get('discussion', 'WHERE seller_id=' . $user_id, 'count(user_id)');
+												$data_discussion = mysqli_fetch_assoc($get_discussion);
+
+												$discussion_count = $data_discussion['count(user_id)'];
+												if ($discussion_count > 0) :
+												?>
+													<strong><?= $discussion_count ?></strong>
+												<?php endif ?>
 											</a>
 										</li>
 									<?php endif ?>
@@ -330,7 +360,7 @@ include_once 'config/connect.php';
 																	<span class="badge text-bg-danger">Admin</span>
 																<?php endif ?>
 															</div>
-															<p class="m-0" style="font-size:smaller"><?= $address ?>, <?= $country_name ?></p>
+															<p class="m-0 pr-4" style="font-size:smaller"><?= $address ?>, <?= $country_name ?></p>
 															<p class="mb-2" style="font-size:smaller"><?= $phone ?></p>
 														</div>
 													</div>
@@ -541,13 +571,11 @@ include_once 'config/connect.php';
 		});
 	</script>
 
-	<div id="toTop"></div><!-- Back to top button -->
+	<div id="toTop"></div>
 
-	<!-- COMMON SCRIPTS -->
 	<script src="js/common_scripts.min.js"></script>
 	<script src="js/main.js"></script>
 
-	<!-- SPECIFIC SCRIPTS -->
 	<script src="js/carousel-home.min.js"></script>
 </body>
 
