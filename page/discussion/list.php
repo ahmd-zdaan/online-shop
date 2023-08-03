@@ -17,20 +17,21 @@ $seller_id = $data_user['user_id'];
 	<meta name="description" content="">
 	<meta name="author" content="Ansonika">
 	<title>Allaia | Bootstrap eCommerce Template - ThemeForest</title>
+
 	<!-- Favicons-->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
 	<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
 	<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
 	<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+
 	<!-- GOOGLE WEB FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
+
 	<!-- BASE CSS -->
 	<link href="css/bootstrap.custom.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
-	<!-- SPECIFIC CSS -->
-	<!-- <link href="css/product_page.css" rel="stylesheet"> -->
-	<!-- <link href="css/cart.css" rel="stylesheet"> -->
+
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
 </head>
@@ -51,11 +52,13 @@ $seller_id = $data_user['user_id'];
 					<a href="index.php" style="text-decoration:underline;">&lt; Back</a>
 					<h1 class="mt-2">Product Discussions</h1>
 				</div>
-				<table class="table table-striped table-hover table-sm">
-					<tbody>
-						<?php
-						$get_discussion = get('discussion', 'WHERE seller_id=' . $seller_id);
-						if (mysqli_num_rows($get_discussion) > 0) :
+				<?php
+				$get_discussion = get('discussion', 'WHERE seller_id=' . $seller_id);
+				if (mysqli_num_rows($get_discussion) > 0) :
+				?>
+					<table class="table table-striped table-hover table-sm">
+						<tbody>
+							<?php
 							foreach ($get_discussion as $data_discussion) :
 								$product_id = $data_discussion['product_id'];
 								$user_id = $data_discussion['user_id'];
@@ -71,7 +74,7 @@ $seller_id = $data_user['user_id'];
 								$get_user_discussion = get('user', 'WHERE user_id=' . $user_id);
 								$data_user_discussion = mysqli_fetch_assoc($get_user_discussion);
 								$user_name = $data_user_discussion['user_name'];
-						?>
+							?>
 								<tr style="font-size: medium;">
 									<td>
 										<div class="row">
@@ -121,9 +124,15 @@ $seller_id = $data_user['user_id'];
 									</td>
 								</tr>
 							<?php endforeach ?>
-						<?php endif ?>
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				<?php else : ?>
+					<div class="text-center my-5 py-5">
+						<img src="img/empty.png" alt="empty">
+						<h3 class="mt-4">Nothing to see here</h3>
+						<p class="mb-5 pb-5">You have not recieved any discussions</p>
+					</div>
+				<?php endif ?>
 			</div>
 		</main>
 </body>

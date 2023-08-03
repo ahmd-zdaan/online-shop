@@ -32,7 +32,6 @@ check('login')
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -50,9 +49,6 @@ check('login')
 					<h1 class="pt-3 mb-5">Dashboard</h1>
 					<div>
 						<ul>
-							<li>
-								<a href="index.php?page=product_list">Products</a>
-							</li>
 							<li>
 								<a href="index.php?page=category_list">Categories and Subcategories</a>
 							</li>

@@ -39,7 +39,7 @@
 											$sale = $data_sale['sale'];
 											$price_sale = $price - $price * (int) $sale / 100;
 										?>
-											<span style="font-size:medium;" class="ribbon off ml-3 mt-3 px-3 py-2">- <?= $sale ?>%</span>
+											<span style="font-size:medium" class="ribbon off ml-3 mt-3 px-3 py-2">- <?= $sale ?>%</span>
 											<p class="owl-slide-subtitle mb-0" style="font-size:larger; font-weight:bold">
 												<?= rupiah($price) ?>
 											</p>
@@ -104,7 +104,7 @@
 			</div>
 			<div class="owl-carousel owl-theme products_carousel">
 				<?php
-				$result = get('sale', 'ORDER BY sale DESC');
+				$result = get('sale', 'ORDER BY sale DESC LIMIT 12');
 
 				foreach ($result as $data) :
 					$product_id = $data['product_id'];
@@ -140,9 +140,7 @@
 										$image_name = $data['image_name'];
 									?>
 										<img src="uploads/product/<?= $image_name ?>" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
-									<?php
-									else :
-									?>
+									<?php else : ?>
 										<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 									<?php endif ?>
 								</a>
@@ -336,7 +334,7 @@
 			</div>
 			<div class="owl-carousel owl-theme products_carousel">
 				<?php
-				$result = get('product', 'WHERE sold > 0 ORDER BY sold DESC');
+				$result = get('product', 'WHERE sold > 0 ORDER BY sold DESC LIMIT 12');
 				foreach ($result as $data) :
 					$product_id = $data['product_id'];
 					$product_name = $data['product_name'];
@@ -484,7 +482,7 @@
 			</div>
 			<div class="owl-carousel owl-theme products_carousel">
 				<?php
-				$get_product = get('review', 'WHERE rating >= 3 GROUP BY product_id');
+				$get_product = get('review', 'WHERE rating >= 3 GROUP BY product_id LIMIT 12');
 
 				foreach ($get_product as $data) :
 					$product_id = $data['product_id'];
@@ -636,7 +634,7 @@
 		<div class="bg_gray">
 			<div class="container margin_30">
 				<div id="brands" class="owl-carousel owl-theme">
-					<div class="item">
+					<!-- <div class="item">
 						<a href="#0">
 							<img data-src="img/brands/ikea.png" class="owl-lazy">
 						</a>
@@ -665,7 +663,7 @@
 						<a href="#0">
 							<img data-src="img/brands/adidas.png" class="owl-lazy">
 						</a>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>

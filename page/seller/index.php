@@ -108,9 +108,14 @@ $country_name = $data_country['country_name'];
 							</li>
 							<li>
 								<div class="mt-4">
-									<a href="index.php?page=discussion_list" class="btn btn-warning">Discussions</a>
-									<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
-									<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
+									<div class="mb-1">
+										<a href="index.php?page=discussion_list" class="btn btn-warning">Discussions</a>
+										<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
+										<a href="index.php?page=sale_list" class="btn btn-primary">Sales</a>
+									</div>
+										<div>
+										<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
+									</div>
 								</div>
 							</li>
 						</ul>

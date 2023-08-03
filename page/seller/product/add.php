@@ -175,11 +175,13 @@ check('login');
 					]);
 
 					$product_id = mysqli_insert_id($connect);
-					$i = 0; $image_index = 1;
+					$i = 0;
+					$image_index = 1;
 					$upload = array_reverse($_FILES['image']['name']);
 
 					foreach ($upload as $file_name) {
-						list($file_name, $extension) = explode(".", $file_name);
+						$list = explode(".", $file_name);
+						$extension = $list[count($list) - 1];
 						$image_name = uniqid() . "." . $extension;
 
 						$tmp_path = $_FILES['image']['tmp_name'][$i];
@@ -195,9 +197,10 @@ check('login');
 							}
 						}
 
-						$i++; $image_index++;
+						$i++;
+						$image_index++;
 					}
-
+					die;
 					if ($result_insert) {
 						echo '<script>window.location.href = "index.php"</script>';
 					}

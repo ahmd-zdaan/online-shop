@@ -73,13 +73,11 @@ $country_name = $table_country['country_name'];
 						</ul>
 					</div>
 					<?php
-					if (isset($_SESSION['email'])) :
+					if (isset($_SESSION['email']) && $email == $_SESSION['email']) :
 					?>
-						<h1 class="pt-3">Your Profile</h1>
-					<?php
-					else :
-					?>
-						<h1 class="pt-3">View Profile</h1>
+						<h1 class="pt-3 m-0">Your Profile</h1>
+					<?php else : ?>
+						<h1 class="pt-3 m-0">View Profile</h1>
 					<?php endif ?>
 				</div>
 			</div>
@@ -93,50 +91,170 @@ $country_name = $table_country['country_name'];
 							$data = mysqli_fetch_assoc($result);
 							$user_image = $data['user_image'];
 						?>
-							<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+							<img src="uploads/user/<?= $user_image ?>" style="width:280px; height:280px; border-radius:50%" alt="user_image">
 						<?php
 						else :
 						?>
-							<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+							<img src="uploads/user/default.jpg" style="width:280px; height:280px; border-radius:50%" alt="user_image">
 						<?php endif ?>
 					</div>
 					<div class="col-9">
-						<ul style="list-style: none;" class="pl-4">
+						<ul style="list-style:none">
 							<li>
 								<h1 class="m-0"><?= $name ?></h1>
-								<?php if ($user_role == 'user') : ?>
+								<?php if ($role == 'user') : ?>
 									<span class="mb-4 badge text-bg-primary">User</span>
-								<?php elseif ($user_role == 'seller') : ?>
+								<?php elseif ($role == 'seller') : ?>
 									<span class="mb-4 badge text-bg-warning">Seller</span>
-								<?php elseif ($user_role == 'admin') : ?>
+								<?php elseif ($role == 'admin') : ?>
 									<span class="mb-4 badge text-bg-danger">Admin</span>
 								<?php endif ?>
 							</li>
 							<li>
 								<h5 class="m-0">Address</h5>
-								<p class="mb-3"><?= $address ?>, <?= $country_name ?></p>
+								<p class="mb-2"><?= $address ?>, <?= $country_name ?></p>
 							</li>
 							<li>
 								<h5 class="m-0">Postal Code</h5>
-								<p class="mb-3"><?= $postal_code ?></p>
+								<p class="mb-2"><?= $postal_code ?></p>
 							</li>
 							<li>
 								<h5 class="m-0">Phone</h5>
-								<p class="mb-3"><?= $phone ?></p>
+								<p class="mb-2"><?= $phone ?></p>
 							</li>
 							<?php
-							if (isset($_SESSION['email'])) :
-								if ($email == $_SESSION['email']) :
+							if (isset($_SESSION['email']) && $email == $_SESSION['email']) :
 							?>
-									<li>
-										<a href="index.php?page=edit_profile" class="mt-3 btn btn-outline-primary">Edit Profile</a>
-									</li>
-								<?php endif ?>
+								<li>
+									<a href="index.php?page=edit_profile" class="mt-3 btn btn-outline-primary">Edit Profile</a>
+								</li>
 							<?php endif ?>
 						</ul>
 					</div>
 				</div>
 			</div>
+			<!-- <div class="container mt-5 p-5" style="background-color: white;">
+				<div class="mb-4">
+					<h3 class="m-0">Create Your Dream Wishlist</h3>
+					<p style="font-size:large;">Explore and Save Your Favorite Products</p>
+				</div>
+				<div class="owl-carousel owl-theme products_carousel">
+					<?php
+					$result = get('product');
+					foreach ($result as $data) :
+						$product_id = $data['product_id'];
+						$product_name = $data['product_name'];
+						$category_id = $data['category_id'];
+						$subcategory_id = $data['subcategory_id'];
+						$price = $data['price'];
+						$sold = $data['sold'];
+						$description = $data['description'];
+					?>
+						<div class="item">
+							<div class="grid_item">
+								<?php
+								$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+								if (mysqli_num_rows($get_sale) > 0) :
+									$data_sale = mysqli_fetch_assoc($get_sale);
+									$sale = $data_sale['sale'];
+									$price_sale = $price - $price * (int) $sale / 100;
+								?>
+									<span class="ribbon off">-
+										<?= $sale ?>
+									</span>
+								<?php endif ?>
+								<figure>
+									<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+										<?php
+										$result = get('product_image', 'WHERE product_id=' . $product_id);
+										if (mysqli_num_rows($result) > 0) :
+											$data = mysqli_fetch_assoc($result);
+											$image_name = $data['image_name'];
+										?>
+											<img src="uploads/product/<?= $image_name ?>" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
+										<?php
+										else :
+										?>
+											<img src="img/products/product_placeholder_square_medium.jpg" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
+										<?php endif ?>
+									</a>
+								</figure>
+								<div class="rating">
+									<?php
+									$get_review = get('review', 'WHERE product_id="' . $product_id . '"', 'sum(rating)');
+									$data_review = mysqli_fetch_assoc($get_review);
+									$total_rating = (int)$data_review['sum(rating)'];
+
+									$get_review = get('review', 'WHERE product_id="' . $product_id . '"', 'count(rating)');
+									$data_review = mysqli_fetch_assoc($get_review);
+									$count_rating = (int)$data_review['count(rating)'];
+
+									if ($count_rating > 0) {
+										$average_rating = round($total_rating / $count_rating);
+
+										for ($i = $average_rating; $i > 0; $i--) {
+											echo '<i class="icon-star voted"></i>';
+										}
+									}
+
+									if ($count_rating == 0) {
+										echo '<p class="mb-0">No review</p>';
+									} else {
+										$n = 5 - $average_rating;
+										for ($i = $n; $i > 0; $i--) {
+											echo '<i class="icon-star"></i>';
+										}
+										echo '<em class="ml-1" style="color:#9d9d9d">(' . $count_rating . ')</em>';
+									}
+									?>
+								</div>
+								<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+									<h3>
+										<?= $product_name ?>
+									</h3>
+								</a>
+								<div class="price_box mb-0">
+									<?php
+									$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+									if (mysqli_num_rows($get_sale) > 0) :
+										$data_sale = mysqli_fetch_assoc($get_sale);
+										$sale = $data_sale['sale'];
+										$price_sale = $price - $price * (int) $sale / 100;
+									?>
+										<span class="new_price">
+											<?= rupiah($price_sale) ?>
+										</span>
+										<span class="old_price" style="font-size:small">
+											<?= rupiah($price) ?>
+										</span>
+									<?php else : ?>
+										<span class="new_price">
+											<?= rupiah($price) ?>
+										</span>
+									<?php endif ?>
+								</div>
+								<div>
+									<p style="color: #9d9d9d;" class="mb-3">
+										<?= $sold ?> sold • 0 discussions
+									</p>
+								</div>
+								<ul>
+									<li>
+										<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+											<i class="ti-heart"></i>
+										</a>
+									</li>
+									<li>
+										<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+											<i class="ti-shopping-cart"></i>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					<?php endforeach ?>
+				</div>
+			</div> -->
 		</main>
 </body>
 

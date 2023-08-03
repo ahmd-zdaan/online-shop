@@ -90,8 +90,8 @@ switch ($page) {
     case 'review_delete':
         include 'page/review/delete.php';
         break;
-    case 'review_submit':
-        include 'page/review/submit.php';
+    case 'review_delete_image':
+        include 'page/review/delete-image.php';
         break;
 
     case 'review_helpful_add':
@@ -131,9 +131,6 @@ switch ($page) {
         include 'page/admin/index.php';
         break;
 
-    case 'product_list':
-        include 'page/product/list.php';
-        break;
     case 'product_view':
         include 'page/product/view.php';
         break;
@@ -167,16 +164,16 @@ switch ($page) {
         break;
 
     case 'sale_list':
-        include 'page/sale/list.php';
+        include 'page/seller/sale/list.php';
         break;
     case 'sale_add':
-        include 'page/sale/add.php';
+        include 'page/seller/sale/add.php';
         break;
     case 'sale_edit':
-        include 'page/sale/edit.php';
+        include 'page/seller/sale/edit.php';
         break;
     case 'sale_delete':
-        include 'page/sale/delete.php';
+        include 'page/seller/sale/delete.php';
         break;
 
     case 'manifacturer_list':

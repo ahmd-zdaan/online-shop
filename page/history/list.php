@@ -166,14 +166,21 @@ $user_id = $data_user['user_id'];
 								<h3 class="mt-4">Nothing to see here</h3>
 								<p class="mb-5 pb-5">You have not purchased any products</p>
 							</div>
-							<div class="container mt-5 p-5" style="background-color: white;">
-								<div class="mb-4">
-									<h3 class="m-0">Fill up Your Cart</h3>
-									<p style="font-size:large;">Explore Millions of Products</p>
+							<div class="container mt-5 px-5 pt-5" style="background-color: white;">
+								<div class="row mb-4">
+									<div class="col">
+										<h3 class="m-0">Fill up Your Cart</h3>
+										<p style="font-size:large">Explore Millions of Products</p>
+									</div>
+									<div class="col-2">
+										<a href="index.php?page=list&view=list">
+											<p class="m-0 text-right" style="text-decoration:underline">View All</p>
+										</a>
+									</div>
 								</div>
 								<div class="owl-carousel owl-theme products_carousel">
 									<?php
-									$result = get('product');
+									$result = get('product', 'LIMIT 12');
 									foreach ($result as $data) :
 										$product_id = $data['product_id'];
 										$product_name = $data['product_name'];

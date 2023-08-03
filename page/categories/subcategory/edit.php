@@ -40,7 +40,6 @@ $category_id = $data_subcategory['category_id'];
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -93,7 +92,6 @@ $category_id = $data_subcategory['category_id'];
 			</div>
 		</main>
 
-		<!-- COMMON SCRIPTS -->
 		<script src="js/common_scripts.min.js"></script>
 		<script src="js/main.js"></script>
 </body>

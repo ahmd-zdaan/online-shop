@@ -8,7 +8,6 @@ foreach ($get_image as $data_image) {
     $image_name = $data_image['image_name'];
 
     $delete_product_image = unlink("uploads/product/" . $image_name);
-    var_dump($delete_product_image);
 }
 
 if ($delete_product_image) {

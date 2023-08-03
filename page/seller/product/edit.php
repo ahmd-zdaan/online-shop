@@ -195,8 +195,9 @@ check('login');
 						$file_name_array = array_reverse($_FILES['image']['name']);
 
 						foreach ($file_name_array as $file_name) {
-							list($file_name, $extension) = explode(".", $file_name);
-							$image_name = uniqid() . "." . $extension;
+							$list = explode(".", $file_name);
+							$extension = $list[count($list) - 1];
+							$image_name = uniqid() . "." . $extension;	
 
 							$tmp_path = $_FILES['image']['tmp_name'][$i];
 							$upload = move_uploaded_file($tmp_path, "uploads/product/" . $image_name);

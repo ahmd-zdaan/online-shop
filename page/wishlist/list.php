@@ -292,8 +292,6 @@ $user_name = $data_user['user_name'];
 						</div>
 					</div>
 				<?php endif ?>
-				<div class="row add_top_30 flex-sm-row-reverse">
-				</div>
 			</div>
 		</main>
 </body>

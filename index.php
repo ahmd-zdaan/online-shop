@@ -56,6 +56,14 @@ include_once 'config/connect.php';
 </head>
 
 <style>
+	.hover-opacity:hover {
+		opacity: 75%;
+	}
+
+	.hover-underline:hover {
+		text-decoration: underline;
+	}
+
 	.discuss strong {
 		font-size: 0.625rem;
 		font-weight: 700;
@@ -329,9 +337,9 @@ include_once 'config/connect.php';
 												$data_user_image = mysqli_fetch_assoc($get_user_image);
 												$user_image = $data_user_image['user_image'];
 										?>
-												<a class="access_link mt-3" style="width:30px; height:auto; content:url('uploads/user/<?= $user_image ?>'); border-radius:50%"></a>
+												<a class="access_link mt-3" style="width:30px; height:30px; content:url('uploads/user/<?= $user_image ?>'); border-radius:50%"></a>
 											<?php else : ?>
-												<a class="access_link mt-3" style="width:30px; height:auto; content:url('uploads/user/default.jpg'); border-radius:50%"></a>
+												<a class="access_link mt-3" style="width:30px; height:30px; content:url('uploads/user/default.jpg'); border-radius:50%"></a>
 											<?php endif ?>
 											<div class="dropdown-menu">
 												<ul class="mt-0">
@@ -343,14 +351,16 @@ include_once 'config/connect.php';
 																	<a class="pl-3 pb-3" href="index.php?page=view_profile">
 																	<?php endif ?>
 																	<?php if (mysqli_num_rows($get_user_image) > 0) : ?>
-																		<img src="uploads/user/<?= $user_image ?>" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+																		<img src="uploads/user/<?= $user_image ?>" class="hover-opacity" style="width:73px; height:73px; border-radius:50%" alt="user_image">
 																	<?php else : ?>
-																		<img src="uploads/user/default.jpg" class="lazy" style="border-radius:50%" alt="user_image" width="100%">
+																		<img src="uploads/user/default.jpg" class="hover-opacity" style="width:73px; height:73px; border-radius:50%" alt="user_image">
 																	<?php endif ?>
 																	</a>
 														</div>
-														<div class="col pl-0">
-															<h5 class="m-0"><?= $user_name ?></h5>
+														<div class="col pl-0 mb-2">
+															<a href="index.php?page=view_profile">
+																<h5 class="m-0 hover-underline"><?= $user_name ?></h5>
+															</a>
 															<div class="mb-1">
 																<?php if ($user_role == 'user') : ?>
 																	<span class="badge text-bg-primary">User</span>
@@ -361,7 +371,7 @@ include_once 'config/connect.php';
 																<?php endif ?>
 															</div>
 															<p class="m-0 pr-4" style="font-size:smaller"><?= $address ?>, <?= $country_name ?></p>
-															<p class="mb-2" style="font-size:smaller"><?= $phone ?></p>
+															<p class="m-0" style="font-size:smaller"><?= $phone ?></p>
 														</div>
 													</div>
 													<?php
@@ -420,9 +430,7 @@ include_once 'config/connect.php';
 			</div>
 		</header>
 
-		<?php
-		include 'config/page.php'
-		?>
+		<?php include 'config/page.php' ?>
 
 		<footer class="revealed">
 			<div class="container">
