@@ -34,6 +34,13 @@ check('login')
 	<link href="css/custom.css" rel="stylesheet">
 </head>
 
+<style>
+	.button-menu a {
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
 <body>
 	<div id="page">
 		<main class="bg_gray">
@@ -41,30 +48,40 @@ check('login')
 				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
-							<li><a href="#">Home</a></li>
-							<li><a href="#">Admin</a></li>
-							<li>Dashboard</li>
+							<li>
+								<a href="index.php">Home</a>
+							</li>
+							<li>Admin Dashboard</li>
 						</ul>
 					</div>
-					<h1 class="pt-3 mb-5">Dashboard</h1>
-					<div>
-						<ul>
-							<li>
-								<a href="index.php?page=category_list">Categories and Subcategories</a>
-							</li>
-							<li>
-								<a href="index.php?page=manifacturer_list">Manifacturers</a>
-							</li>
-							<li>
-								<a href="index.php?page=sale_list">Sales</a>
-							</li>
-							<li>
-								<a href="index.php?page=report_product_list">Product Reports</a>
-							</li>
-							<li>
-								<a href="index.php?page=report_review_list">Review Reports</a>
-							</li>
-						</ul>
+					<h1 class="pt-3 mb-3">Dashboard</h1>
+					<div class="mb-5">
+						<div class="button-menu row p-0">
+							<div class="col p-1">
+								<a class="btn btn-outline-primary py-3" href="index.php?page=category_list">
+									<p>Categories and Subcategories</p>
+									<i class="ti-layers" style="font-size:70px"></i>
+								</a>
+							</div>
+							<div class="col p-1">
+								<a class="btn btn-outline-primary" href="index.php?page=coupon_list">
+									<p>Coupon Codes</p>
+									<i class="ti-ticket" style="font-size:70px"></i>
+								</a>
+							</div>
+							<div class="col p-1">
+								<a class="btn btn-outline-primary" href="index.php?page=report_list">
+									<p>Reports</p>
+									<i class="ti-announcement" style="font-size:70px"></i>
+								</a>
+							</div>
+							<div class="col p-1">
+								<a class="btn btn-outline-primary" href="index.php?page=manifacturer_list">
+									<p>Manifacturers</p>
+									<i class="ti-package" style="font-size:70px"></i>
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
