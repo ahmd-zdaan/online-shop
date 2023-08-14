@@ -87,7 +87,7 @@ $product_name = $product_table['product_name'];
 						foreach ($get_product_image as $data_product_image) :
 							$image_name = $data_product_image['image_name'];
 						?>
-							<img src="uploads/product/<?= $image_name ?>" class="mb-3" style="width:100%; height:auto; object-fit:scale-down;">
+							<img src="uploads/product/<?= $image_name ?>" class="mb-3" style="width:100%; height:auto">
 						<?php endforeach ?>
 					</div>
 					<div class="col-9">

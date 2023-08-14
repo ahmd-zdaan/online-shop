@@ -86,7 +86,7 @@ $user_name = $data_user['user_name'];
 								<tr style="font-size: medium;">
 									<td>
 										<div class="row">
-											<div class="col-3">
+											<div class="col-2">
 												<a class="product-image" href="index.php?page=product_view&product_id=<?= $product_id ?>">
 													<?php
 													$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
@@ -94,17 +94,15 @@ $user_name = $data_user['user_name'];
 														$data = mysqli_fetch_assoc($result);
 														$image_name = $data['image_name'];
 													?>
-														<img src="uploads/product/<?= $image_name ?>" alt="product_image" style="width:250px; height:250px; object-fit:scale-down">
-													<?php
-													else :
-													?>
-														<img src="uploads/product/default.jpg" alt="product_image" style="width:250px; height:250px; object-fit:scale-down">
+														<img src="uploads/product/<?= $image_name ?>" class="hover-opacity" alt="product_image" style="width:100%; height:100%; object-fit:scale-down">
+													<?php else : ?>
+														<img src="uploads/product/default.jpg" class="hover-opacity" alt="product_image" style="width:100%; height:100%; object-fit:scale-down">
 													<?php endif ?>
 												</a>
 											</div>
-											<div class="col-3 p-0">
+											<div class="col-3 pl-3 pt-2">
 												<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
-													<h4 class="mt-2 product"><?= $product_name ?></h5>
+													<h4 class="hover-underline"><?= $product_name ?></h5>
 												</a>
 												<?php
 												$get_sale = get('sale', 'WHERE product_id=' . $product_id);
@@ -121,7 +119,7 @@ $user_name = $data_user['user_name'];
 												<p>Stock: <?= $stock ?></p>
 												<p style="color:#9d9d9d"><?= $category_name ?> > <?= $subcategory_name ?></p>
 											</div>
-											<div class="col pl-0 pr-4 pb-3">
+											<div class="col pl-0 pt-2">
 												<?php
 												$description_array = explode(' ', $description);
 												$description_count = count($description_array);

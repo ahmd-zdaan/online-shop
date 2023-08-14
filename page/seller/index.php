@@ -107,14 +107,17 @@ $country_name = $data_country['country_name'];
 								<p class="mb-3"><?= $phone ?></p>
 							</li>
 							<li>
+								<a href="index.php?page=edit_profile" class="btn btn-sm btn-outline-primary">Edit Profile</a>
+							</li>
+							<li>
 								<div class="mt-4">
-									<div class="mb-1">
+									<div class="my-1">
 										<a href="index.php?page=discussion_list" class="btn btn-warning">Discussions</a>
+										<a href="index.php?page=report_review_list" class="btn btn-success">Purchased Products</a>
+									</div>
+									<div class="my-1" class="mb-1">
 										<a href="index.php?page=product_add" class="btn btn-primary">Add New Product</a>
 										<a href="index.php?page=sale_list" class="btn btn-primary">Sales</a>
-									</div>
-										<div>
-										<a href="index.php?page=edit_profile" class="btn btn-outline-primary">Edit Profile</a>
 									</div>
 								</div>
 							</li>
@@ -149,9 +152,6 @@ $country_name = $data_country['country_name'];
 						?>
 							<div class="item">
 								<div class="grid_item">
-									<!-- <span class="ribbon hot">Hot</span>
-							<span class="ribbon off">-30%</span>
-							<span class="ribbon new">New</span> -->
 									<?php
 									$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 									if (mysqli_num_rows($get_sale) > 0) :
@@ -162,7 +162,7 @@ $country_name = $data_country['country_name'];
 										<span class="ribbon off">- <?= $sale ?>%</span>
 									<?php endif ?>
 									<figure>
-										<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+										<a href="index.php?page=product_edit&product_id=<?= $product_id ?>">
 											<?php
 											$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 											if (mysqli_num_rows($result) > 0) :
@@ -170,9 +170,7 @@ $country_name = $data_country['country_name'];
 												$image_name = $data['image_name'];
 											?>
 												<img src="uploads/product/<?= $image_name ?>" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
-											<?php
-											else :
-											?>
+											<?php else : ?>
 												<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
 											<?php endif ?>
 										</a>
@@ -238,12 +236,7 @@ $country_name = $data_country['country_name'];
 									</div>
 									<ul>
 										<li>
-											<a href="index.php?page=product_edit&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Edit Product" data-toggle="tooltip" data-placement="left">
-												<i class="ti-pencil"></i>
-											</a>
-										</li>
-										<li>
-											<a href="index.php?page=product_delete&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1 danger" title="Delete Product" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" data-toggle="tooltip" data-placement="left">
+											<a href="index.php?page=product_delete&product_id=<?= $product_id ?>" class="tooltip-1 danger" title="Delete Product" onclick="return confirm('Are you sure you want to DELETE this PRODUCT?')" data-toggle="tooltip" data-placement="left">
 												<i class="ti-trash"></i>
 											</a>
 										</li>

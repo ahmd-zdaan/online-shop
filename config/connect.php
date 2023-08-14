@@ -9,10 +9,10 @@ $dbname = 'online_shop';
 $connect = mysqli_connect($severname, $username, $password, $dbname);
 
 if (!$connect) {
-    die('Failed to Connect : ' . mysqli_connect_error());
+    die('Failed to Connect: ' . mysqli_connect_error());
 }
 
-// ================== Function ==================
+// ================== Functions ==================
 
 function get($table, $condition = '', $select = '*')
 {
@@ -32,8 +32,6 @@ function login($email, $password)
         $result = mysqli_fetch_assoc($result);
         if (password_verify($password, $result['password'])) {
             $_SESSION['email'] = $result['email'];
-
-            // echo '<script>alert("Successfully login!")</>';
             echo '<script>window.location.href = "index.php"</script>';
         } else {
             echo '<script>alert("Password incorrect")</script>';

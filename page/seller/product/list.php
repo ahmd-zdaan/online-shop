@@ -57,7 +57,7 @@ if (isset($_SESSION['email'])) {
 	<div id="page">
 		<main class="bg_gray">
 			<div class="container margin_30">
-				<div class="page_header">
+				<div class="page_header mb-3">
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
@@ -69,7 +69,7 @@ if (isset($_SESSION['email'])) {
 					<div class="row">
 						<div class="col">
 							<a href="index.php" style="text-decoration:underline;">&lt; Back</a>
-							<h1 class="mt-2">Your Products</h1>
+							<h1 class="mt-3">Your Products</h1>
 						</div>
 						<div class="col-3 text-right">
 							<a href="index.php?page=product_add" class="mt-3 btn btn-outline-primary">Add New Product</a>
@@ -101,7 +101,7 @@ if (isset($_SESSION['email'])) {
 								<td>
 									<div class="row">
 										<div class="col-3">
-											<a class="product-image" href="index.php?page=product_view&product_id=<?= $product_id ?>">
+											<a class="product-image" href="index.php?page=product_edit&product_id=<?= $product_id ?>">
 												<?php
 												$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 												if (mysqli_num_rows($result) > 0) :
@@ -115,7 +115,7 @@ if (isset($_SESSION['email'])) {
 											</a>
 										</div>
 										<div class="col-3 p-0">
-											<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+											<a href="index.php?page=product_edit&product_id=<?= $product_id ?>">
 												<h4 class="mt-2 product"><?= $product_name ?></h5>
 											</a>
 											<?php
@@ -161,7 +161,7 @@ if (isset($_SESSION['email'])) {
 										</div>
 										<div class="col-1 p-0" style="max-width:57px">
 											<div class="btn-group-vertical btn-group-sm">
-												<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-primary tooltip-1" title="View" data-placement="left" href="index.php?page=product_view&product_id=<?= $product_id ?>">
+												<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-primary tooltip-1" title="View" data-placement="left" href="index.php?page=product_view_as_user&product_id=<?= $product_id ?>">
 													<i class="ti-eye"></i>
 												</a>
 												<a style="width:40px; max-height:40px; font-size:large" class="pt-2 btn btn-outline-primary tooltip-1" title="Edit" data-placement="left" href="index.php?page=product_edit&product_id=<?= $product_id ?>">

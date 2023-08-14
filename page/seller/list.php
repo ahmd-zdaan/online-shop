@@ -118,8 +118,6 @@ $seller_name = $data_seller['user_name'];
 						<?php endforeach ?>
 					</tbody>
 				</table>
-				<div class="row add_top_30 flex-sm-row-reverse">
-				</div>
 			</div>
 		</main>
 </body>

@@ -78,7 +78,7 @@ check('login');
 									foreach ($get_image as $data_image) :
 										$image_name = $data_image['image_name'];
 									?>
-										<img src="uploads/product/<?= $image_name ?>" class="mt-3" alt="Image" width="100%">
+										<img src="uploads/product/<?= $image_name ?>" class="mb-3" style="width:100%; height:auto" alt="product_image">
 									<?php endforeach ?>
 								</div>
 								<div class="mt-3">
@@ -88,68 +88,66 @@ check('login');
 								</div>
 							</div>
 							<div class="col-9">
-								<ul style="list-style: none;" class="pl-0">
-									<li class="mb-2">
-										<label class="form-label">Product Name</label>
-										<input type="text" name="name" class="form-control" value="<?= $product_name ?>">
-									</li>
-									<div class="row">
-										<div class="col-4">
-											<label class="form-label">Category</label>
-											<select id="list-category" class="form-control form-select" name="category">
-												<?php
-												$get_category = get('category');
-												foreach ($get_category as $data_category) :
-													$category_id = $data_category['category_id'];
-													$category_name = $data_category['category_name'];
-												?>
-													<option value="<?= $category_id ?>" <?= ($product_category_id == $category_id) ? 'selected' : '' ?>><?= $category_name ?></option>
-												<?php
-												endforeach
-												?>
-											</select>
-										</div>
-										<div class="col-4">
-											<label class="form-label">Subcategory</label>
-											<select id="list-subcategory" class="form-control form-select" name="subcategory"></select>
-										</div>
-										<div class="col-4">
-											<li class="mb-2">
-												<label class="form-label">Price</label>
-												<input type="text" name="price" class="form-control" value="<?= $price ?>">
-											</li>
-										</div>
+								<div class="mb-2">
+									<label class="form-label">Product Name</label>
+									<input type="text" name="name" class="form-control" value="<?= $product_name ?>">
+								</div>
+								<div class="row mb-2">
+									<div class="col">
+										<label class="form-label">Category</label>
+										<select id="list-category" class="form-control form-select" name="category">
+											<?php
+											$get_category = get('category');
+											foreach ($get_category as $data_category) :
+												$category_id = $data_category['category_id'];
+												$category_name = $data_category['category_name'];
+											?>
+												<option value="<?= $category_id ?>" <?= ($product_category_id == $category_id) ? 'selected' : '' ?>><?= $category_name ?></option>
+											<?php endforeach ?>
+										</select>
 									</div>
-									<li class="mb-2">
-										<label class="form-label">Description</label>
-										<textarea name="description" class="form-control"><?= $description ?></textarea>
-									</li>
-									<li class="mb-2">
-										<label class="form-label">Manifacturer</label>
-										<?php
-										$get_manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
-										$data_manifacturer = mysqli_fetch_assoc($get_manifacturer);
-										$manifacturer_name = $data_manifacturer['manifacturer_name'];
-										?>
-										<input type="text" name="manifacturer" class="form-control" value="<?= $manifacturer_name ?>">
-									</li>
-									<li class="mb-2">
-										<label class="form-label">Variants</label>
-										<input type="text" name="variant" class="form-control" value="<?= $variant ?>">
-									</li>
-									<li class="mb-2">
+									<div class="col">
+										<label class="form-label">Subcategory</label>
+										<select id="list-subcategory" class="form-control form-select" name="subcategory"></select>
+									</div>
+									<div class="col">
+										<label class="form-label">Price</label>
+										<input type="text" name="price" class="form-control" value="<?= $price ?>">
+									</div>
+								</div>
+								<div class="mb-2">
+									<label class="form-label">Description</label>
+									<textarea style="height:300px" name="description" class="form-control"><?= $description ?></textarea>
+								</div>
+								<div class="mb-2">
+									<label class="form-label">Manifacturer</label>
+									<?php
+									$get_manifacturer = get('manifacturer', 'WHERE manifacturer_id=' . $manifacturer_id);
+									$data_manifacturer = mysqli_fetch_assoc($get_manifacturer);
+									$manifacturer_name = $data_manifacturer['manifacturer_name'];
+									?>
+									<input type="text" name="manifacturer" class="form-control" value="<?= $manifacturer_name ?>">
+								</div>
+								<div class="mb-2">
+									<label class="form-label">Variants</label>
+									<input type="text" name="variant" class="form-control" value="<?= $variant ?>">
+								</div>
+								<div class="row mb-2">
+									<div class="col">
 										<label class="form-label">Weight</label>
 										<input type="number" name="weight" class="form-control" value="<?= $weight ?>">
-									</li>
-									<li class="mb-2">
+									</div>
+									<div class="col">
 										<label class="form-label">Stock</label>
 										<input type="number" name="stock" class="form-control" value="<?= $stock ?>">
-									</li>
-									<li class="mt-3">
-										<a type="submit" href="index.php?page=seller_product" class="btn_1">BACK</a>
-										<button type="submit" name="submit" class="btn_1">SAVE</button>
-									</li>
-								</ul>
+									</div>
+								</div>
+								<div class="mt-4">
+									<div class="btn-group mb-3" role="group">
+										<a class="btn btn-outline-primary" href="index.php?page=seller_product">BACK</a>
+										<button class="btn btn-primary" type="submit" name="submit">SAVE</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -182,10 +180,10 @@ check('login');
 						if (mysqli_num_rows($get_image) > 0) {
 							foreach ($get_image as $data_image) {
 								$image_name = $data_image['image_name'];
-	
+
 								unlink("uploads/product/" . $image_name);
 							}
-	
+
 							$query = "DELETE FROM product_image WHERE product_id=" . $product_id;
 							$result = mysqli_query($connect, $query);
 						}
@@ -197,7 +195,7 @@ check('login');
 						foreach ($file_name_array as $file_name) {
 							$list = explode(".", $file_name);
 							$extension = $list[count($list) - 1];
-							$image_name = uniqid() . "." . $extension;	
+							$image_name = uniqid() . "." . $extension;
 
 							$tmp_path = $_FILES['image']['tmp_name'][$i];
 							$upload = move_uploaded_file($tmp_path, "uploads/product/" . $image_name);

@@ -358,7 +358,7 @@
 							<figure>
 								<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 									<?php
-									$result = get('product_image', 'WHERE product_id=' . $product_id);
+									$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 									if (mysqli_num_rows($result) > 0) :
 										$data = mysqli_fetch_assoc($result);
 										$image_name = $data['image_name'];

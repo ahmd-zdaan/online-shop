@@ -109,7 +109,9 @@ include_once 'config/connect.php';
 										</span>
 										<div id="menu">
 											<ul class="pb-4">
-												<h5 class="pt-3 px-3 m-0">Categories</h5>
+												<a href="index.php?page=list&view=list">
+													<h5 class="pt-3 px-3 m-0 hover-underline">Categories</h5>
+												</a>
 												<?php
 												$result = get('category');
 												foreach ($result as $data) :
@@ -241,7 +243,7 @@ include_once 'config/connect.php';
 																		<div class="ml-4">
 																			<p class="m-0" style="font-size:larger; font-weight:500">
 																				<span style="color:#004cd7">
-																					<?= $total_quantity . 'x ' ?>
+																					<?= $total_quantity . '&times; ' ?>
 																				</span>
 																				<?= $cart_product_name ?>
 																			</p>
@@ -295,13 +297,17 @@ include_once 'config/connect.php';
 										</li>
 									<?php else : ?>
 										<li>
-											<a class="discuss pt-1" href="index.php?page=discussion_list">
-												<i style="font-size:14pt" class="ti-comment-alt"></i>
+											<a class="discuss pt-1" href="index.php?page=seller_notification">
+												<i style="font-size:14pt" class="ti-announcement"></i>
 												<?php
-												$get_discussion = get('discussion', 'WHERE seller_id=' . $user_id, 'count(user_id)');
-												$data_discussion = mysqli_fetch_assoc($get_discussion);
+												$get_report_review = get(
+													'review_report',
+													'INNER JOIN review ON review_report.review_id = review.review_id INNER JOIN product ON review.product_id = product.product_id WHERE product.seller_id =' . $user_id,
+													'count(seller_id)'
+												);
+												$data_discussion = mysqli_fetch_assoc($get_report_review);
 
-												$discussion_count = $data_discussion['count(user_id)'];
+												$discussion_count = $data_discussion['count(seller_id)'];
 												if ($discussion_count > 0) :
 												?>
 													<strong><?= $discussion_count ?></strong>
@@ -394,9 +400,9 @@ include_once 'config/connect.php';
 													if ($user_role != 'seller') :
 													?>
 														<li>
-															<a href="index.php?page=history_list">
+															<a href="index.php?page=transaction_list">
 																<i class="ti-timer"></i>
-																Purchase History
+																Transactions
 															</a>
 														</li>
 													<?php endif ?>
@@ -571,13 +577,7 @@ include_once 'config/connect.php';
 		</footer>
 	</div>
 
-	<script>
-		var $hamburger = $(".hamburger");
-		$hamburger.on("click", function(e) {
-			$hamburger.toggleClass("is-active");
-			// Do something else, like open/close menu
-		});
-	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
 	<div id="toTop"></div>
 

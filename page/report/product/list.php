@@ -38,17 +38,16 @@ check('login')
 	<div id="page">
 		<main class="bg_gray">
 			<div class="container margin_30">
-				<div class="page_header">
+				<div class="page_header m-0">
 					<div class="breadcrumbs">
 						<ul>
-							<li><a href="#">Home</a></li>
-							<li><a href="#">Admin</a></li>
-							<li><a href="#">Report</a></li>
-							<li><a href="#">Product</a></li>
-							<li>List</li>
+							<li><a href="index.php">Home</a></li>
+							<li><a href="index.php?page=admin">Admin</a></li>
+							<li><a href="index.php?page=report_list">Reports</a></li>
+							<li>Product Reports</li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Product Report List</h1>
+					<h1 class="py-3">Product Reports List</h1>
 				</div>
 				<?php
 				$get_product_report = get('product_report');
@@ -57,22 +56,19 @@ check('login')
 					<table class="table table-striped table-hover table-sm">
 						<thead>
 							<tr>
-								<th scope="col" style="width: 50px">
-									ID
-								</th>
-								<th scope="col" style="width: 150px">
+								<th scope="col" style="width: 130px">
 									User
 								</th>
-								<th scope="col">
+								<th scope="col" style="width: 170px">
 									Product
 								</th>
 								<th scope="col">
 									Report
 								</th>
 								<th scope="col" style="width: 150px"">
-									Date
+									Date Reported
 								</th>
-								<th scope="col" style="width: 200px">
+								<th scope=" col">
 									Actions
 								</th>
 							</tr>
@@ -80,7 +76,6 @@ check('login')
 						<tbody>
 							<?php
 							foreach ($get_product_report as $data) :
-								$product_report_id = $data['product_report_id'];
 								$user_id = $data['user_id'];
 								$product_id = $data['product_id'];
 								$report = $data['report'];
@@ -95,25 +90,50 @@ check('login')
 								$product_name = $data_product['product_name'];
 							?>
 								<tr>
-									<td>
-										<p><?= $product_report_id ?></p>
+									<td class="p-3">
+										<a href="index.php?page=view_profile&user_id=<?= $user_id ?>">
+											<?php
+											$get_user_image = get('user_image', 'WHERE user_id=' . $user_id);
+											if (mysqli_num_rows($get_user_image) > 0) :
+												$data_user_image = mysqli_fetch_assoc($get_user_image);
+												$user_image = $data_user_image['user_image'];
+											?>
+												<img src="uploads/user/<?= $user_image ?>" class="hover-opacity" style="width:40px; height:40px; border-radius:50%" alt="user_image">
+											<?php else : ?>
+												<img src="uploads/user/default.jpg" class="hover-opacity" style="width:40px; height:40px; border-radius:50%" alt="user_image">
+											<?php endif ?>
+											<span class="ml-1 hover-underline" style="font-weight:bolder; color:black"><?= $user_name ?></span>
+										</a>
 									</td>
 									<td>
-										<p><?= $user_name ?></p>
+										<a class="hover-underline" style="font-weight:bolder; color:black" href="index.php?page=product_view&product_id=<?= $product_id ?>">
+											<?php
+											$get_product_image = get('product_image', 'WHERE product_id=' . $product_id);
+											if (mysqli_num_rows($get_product_image) > 0) :
+												$data_product_image = mysqli_fetch_assoc($get_product_image);
+												$product_image = $data_product_image['image_name'];
+											?>
+												<img src="uploads/product/<?= $product_image ?>" class="hover-opacity" style="width:180px; max-height:180px; object-fit:scale-down" alt="product_image">
+											<?php else : ?>
+												<img src="uploads/product/default.jpg" class="hover-opacity" style="width:180px; max-height:180px; object-fit:scale-down" alt="product_image">
+											<?php endif ?>
+											<p class="my-3"><?= $product_name ?></p>
+										</a>
 									</td>
-									<td>
-										<p><?= $product_name ?></p>
-									</td>
-									<td>
+									<td class="p-3">
 										<p><?= $report ?></p>
 									</td>
-									<td>
+									<td class="p-3">
 										<p><?= dateConvert($date) ?></p>
 									</td>
 									<td>
-										<div class="btn-group">
-											<a class="col btn btn-outline-success" href="index.php?page=report_product_accept&product_report_id=<?= $product_report_id ?>">ACCEPT</a>
-											<a class="col btn btn-outline-danger" href="index.php?page=report_product_ignore&product_report_id=<?= $product_report_id ?>" onclick="return confirm('Are you sure you want to IGNORE this REPORT?')">IGNORE</a>
+										<div class="btn-group-vertical btn-group-sm">
+											<a class="pt-2 btn btn-outline-success tooltip-1" style="width:40px; max-height:40px; font-size:large" title="Accept" data-placement="left" href="index.php?page=report_product_accept&product_report_id=<?= $product_report_id ?>" onclick="return confirm('Are you sure you want to ACCEPT this REPORT?')">
+												<i class="ti-check"></i>
+											</a>
+											<a class="pt-2 btn btn-outline-danger tooltip-1" style="width:40px; max-height:40px; font-size:large" title="Ignore" data-placement="left" href="index.php?page=report_product_ignore&product_report_id=<?= $product_report_id ?>" onclick="return confirm('Are you sure you want to IGNORE this REPORT?')">
+												<i class="ti-close"></i>
+											</a>
 										</div>
 									</td>
 								</tr>
