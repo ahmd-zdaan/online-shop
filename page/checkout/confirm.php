@@ -1,36 +1,54 @@
 <?php
-$user_id = $_GET['user_id'];
+include_once 'config/connect.php';
+
+$email = $_SESSION['email'];
+$get_user = get('user', 'WHERE email="' . $email . '"');
+$data_user = mysqli_fetch_assoc($get_user);
+$user_id = $data_user['user_id'];
+
+insert('transaction', [
+    'user_id' => $user_id,
+    'date' => date("d-m-Y")
+]);
+
+$last_id = mysqli_insert_id($connect);
 
 $get_cart = get('cart', 'WHERE user_id=' . $user_id);
-
 foreach ($get_cart as $data_cart) {
     $product_id = $data_cart['product_id'];
     $quantity = $data_cart['quantity'];
+    
+    $get_product = get('product', 'WHERE product_id=' . $product_id);
+    $data_product = mysqli_fetch_assoc($get_product);
+
+    $get_sale = get('sale', 'WHERE product_id=' . $product_id);
+    if (mysqli_num_rows($get_sale) > 0) {
+        $data_sale = mysqli_fetch_assoc($get_sale);
+        $sale = $data_sale['sale'];
+        $price = $price - $price * (int)$sale / 100;
+    } else {
+        $price = $data_product['price'];
+    }
+    
+    insert('transaction_details', [
+        'transaction_id' => $last_id,
+        'product_id' => $product_id,
+        'price' => $price,
+        'quantity' => $quantity
+    ]);
+
+    // var_dump($connect->insert_id);
+
+    $sold = $data_product['sold'];
+    $sold = (int)$sold + (int)$quantity;
+
+    $query = 'UPDATE product SET sold=' . $sold . ' WHERE product_id=' . $product_id;
+    mysqli_query($connect, $query);
 
     $query = "DELETE FROM cart WHERE product_id=" . $product_id;
-    $delete_cart = mysqli_query($connect, $query);
-
-    if ($delete_cart) {
-        $get_product = get('product', 'WHERE product_id=' . $product_id);
-        $data_product  = mysqli_fetch_assoc($get_product);
-
-        $sold = $data_product['sold'];
-        $sold = (int)$sold + (int)$quantity;
-
-        $query = 'UPDATE product SET sold=' . $sold . ' WHERE product_id=' . $product_id;
-        $product_sold = mysqli_query($connect, $query);
-
-        if ($product_sold) {
-            $product_history = insert('history', [
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-                'quantity' => $quantity,
-                'date' => date("d-m-Y")
-            ]);
-
-            if ($product_history) {
-                echo "<script>window.location.href = 'index.php?page=cart_list'</script>";
-            }
-        }
-    }
+    mysqli_query($connect, $query);
 }
+
+var_dump(' outside foreach '.$connect->insert_id);
+
+echo "<script>window.location.href = 'index.php?page=cart_list'</script>";

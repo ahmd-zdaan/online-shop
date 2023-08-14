@@ -1,77 +1,33 @@
 <?php
-
 namespace Midtrans;
 
-check('login');
-
 require_once 'vendor/Midtrans.php';
+require_once 'config/connect.php';
+
+check('login');
 
 Config::$serverKey = 'SB-Mid-server-Qu4bvihLIlPfq5SBf4Cx1MzP';
 Config::$clientKey = 'SB-Mid-client-y_QtrBno-npZszyu';
 
-$result = get('user', 'WHERE email="' . $email . '"');
-$data = mysqli_fetch_assoc($result);
-$user_id = $data['user_id'];
-
-$item_details = [];
-
-$get_cart = get('cart', 'WHERE user_id=' . $user_id);
-foreach ($get_cart as $data_cart) :
-	$product_id = $data_cart['product_id'];
-	$quantity = $data_cart['quantity'];
-
-	$get_product = get('product', 'WHERE product_id=' . $product_id);
-	$data_product = mysqli_fetch_assoc($get_product);
-
-	$product_name_50 = $data_product['product_name'];
-
-	if (strlen($product_name_50) > 50) {
-		$product_name_50 = cutFromEnd($product_name_50, 4);
-		$product_name_50 .= '...';
-	}
-
-	$price = $data_product['price'];
-
-	$get_sale = get('sale', 'WHERE product_id=' . $product_id);
-	if (mysqli_num_rows($get_sale) > 0) {
-		$data_sale = mysqli_fetch_assoc($get_sale);
-
-		$sale = $data_sale['sale'];
-
-		$price = $price - $price * (int)$sale / 100;
-	}
-
-	$item_details[] = [
-		'id' => $product_id,
-		'price' => $price,
-		'quantity' => $quantity,
-		'name' => $product_name_50,
-	];
-endforeach;
-
-$total_price = 0;
-foreach ($item_details as $item) {
-	$price = (int)$item['price'];
-	$quantity = (int)$item['quantity'];
-
-	$total_price = $price * $quantity;
-}
+$item_details = $_POST['items'];
 
 $transaction_details = array(
 	'order_id' => rand(),
-	'gross_amount' => $total_price + 17000
+	'gross_amount' => $_POST['details']['gross']
 );
 
-$enable_payments = array('credit_card', 'mandiri_clickpay', 'gopay', 'indomaret', 'kredivo', 'echannel');
+$enable_payments = array('credit_card');
 
-$get_user = get('user', 'WHERE user_id=' . $user_id);
+$email = $_SESSION['email'];
+$get_user = get('user', 'WHERE email="' . $email . '"');
 $data_user = mysqli_fetch_assoc($get_user);
 
-$user_name = $data['user_name'];
-$address = $data['address'];
-$country_id = $data['country_id'];
-$postal_code = $data['postal_code'];
-$phone = $data['phone'];
+$user_id = $data_user['user_id'];
+$user_name = $data_user['user_name'];
+$address = $data_user['address'];
+$country_id = $data_user['country_id'];
+$postal_code = $data_user['postal_code'];
+$phone = $data_user['phone'];
 
 $get_country = get('country', 'WHERE country_id=' . $country_id);
 $data_country = mysqli_fetch_assoc($get_country);
@@ -86,7 +42,7 @@ $billing_address = array(
 	'city'          => "Jakarta",
 	'postal_code'   => "16602",
 	'phone'         => "081122334455",
-	'country_code'  => 'IDN'
+	'country_code'  => "IDN"
 );
 
 $shipping_address = array(
@@ -204,27 +160,29 @@ function printExampleWarningMessage()
 				<div class="row">
 					<div class="col-3 p-0">
 						<div class="step first payments">
-							<h3>Shipping Methods</h3>
-							<ul>
-								<li>
-									<label class="container_radio">Standard shipping
-										<a href="#0" class="info ml-1" data-toggle="modal" data-target="#payments_method"></a>
-										<input type="radio" name="shipping" checked>
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li style="border:none">
-									<label class="container_radio">Express shipping
-										<a href="#0" class="info ml-1" data-toggle="modal" data-target="#payments_method"></a>
-										<input type="radio" name="shipping">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-							</ul>
-							<div class="payment_info d-none d-sm-block">
-								<p>
-									Sensibus reformidans interpretaris sit ne, nec errem nostrum et, te nec meliore philosophia. At vix quidam periculis. Solet tritani ad pri, no iisque definitiones sea.
-								</p>
+							<h3>Methods</h3>
+							<div class="box_general px-4 pb-3">
+								<ul class="mb-3">
+									<li>
+										<label class="container_radio">Standard shipping
+											<a href="#0" class="info ml-1" data-toggle="modal" data-target="#payments_method"></a>
+											<input type="radio" name="shipping" checked>
+											<span class="checkmark"></span>
+										</label>
+									</li>
+									<li style="border:none">
+										<label class="container_radio">Express shipping
+											<a href="#0" class="info ml-1" data-toggle="modal" data-target="#payments_method"></a>
+											<input type="radio" name="shipping">
+											<span class="checkmark"></span>
+										</label>
+									</li>
+								</ul>
+								<div class="payment_info d-none d-sm-block">
+									<p>
+										Sensibus reformidans interpretaris sit ne, nec errem nostrum et, te nec meliore philosophia. At vix quidam periculis. Solet tritani ad pri, no iisque definitiones sea.
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -238,61 +196,77 @@ function printExampleWarningMessage()
 
 									foreach ($item_details as $item) :
 										$product_id = $item['id'];
-										$product_price = $item['price'];
+										$price = $item['price'];
+										$price_sale = $item['price_sale'];
 										$quantity = $item['quantity'];
-										$product_name_50 = $item['name'];
+										$product_name = $item['name'];
 
-										$get_sale = get('sale', 'WHERE product_id=' . $product_id);
-										if (mysqli_num_rows($get_sale) > 0) {
-											$data_sale = mysqli_fetch_assoc($get_sale);
-
-											$sale = $data_sale['sale'];
-
+										if ($price_sale > 0) {
 											$total_product = $quantity * $price_sale;
-											$subtotal_price += $total_product;
 										} else {
-											$total_product = $quantity * $product_price;
-											$subtotal_price += $total_product;
+											$total_product = $quantity * $price;
 										}
 									?>
 										<li class="mb-3" style="border:none">
 											<div class="row">
-												<div class="col">
-													<p class="m-0 mr-1" style="color:#004cd7; float:left">
+												<div class="col-1 pr-0">
+													<p class="m-0" style="color:#004cd7; float:left">
 														<?= $quantity ?>x
 													</p>
-													<p class="m-0 mr-1" style="float:left; font-weight:normal">
-
-														<?= $product_name_50 ?>
-													</p>
-													<p class="m-0" style="font-weight:normal">
-
-														(<?= rupiah($product_price) ?>)
+												</div>
+												<div class="col px-0">
+													<p class="m-0" style="float:left; font-weight:normal">
+														<?= $product_name ?>
 													</p>
 												</div>
-												<div class="col-3">
-													<p class="m-0 text-right">
+												<div class="col pl-0">
+													<p class="m-0" style="float:right">
 														<?= rupiah($total_product) ?>
+													</p>
+													<p class="m-0 mr-2" style="float:right; font-weight:normal">
+														<?php if ($price_sale > 0) : ?>
+															(<?= $quantity ?>&times; <?= rupiah($price_sale) ?>)
+														<?php else : ?>
+															(<?= $quantity ?>&times; <?= rupiah($price) ?>)
+														<?php endif ?>
 													</p>
 												</div>
 											</div>
 										</li>
-									<?php endforeach ?>
+									<?php
+									endforeach;
+
+									$coupon_name = $_POST['details']['coupon_name'];
+									$gross = $_POST['details']['gross'];
+									$promo = $_POST['details']['promo'];
+									$promo_price = $_POST['details']['promo_price'];
+									$shipping_price = $_POST['details']['shipping_price'];
+									$subtotal_price = $_POST['details']['subtotal_price'];
+									?>
 								</ul>
-								<?php
-								$shipping_price = 17000;
-								$total_price = $subtotal_price + $shipping_price;
-								?>
 								<hr class="hr border-3 m-0 mb-3">
 								<div class="row mb-3" style="font-weight:bold">
-									<div class="col">
-										<p class="m-0">Subtotal</p>
-										<p class="m-0">Shipping</p>
-									</div>
-									<div class="col text-right">
-										<p class="m-0"><?= rupiah($subtotal_price) ?></p>
-										<p class="m-0"><?= rupiah($shipping_price) ?></p>
-									</div>
+									<?php if (isset($promo)) : ?>
+										<div class="col">
+											<p class="m-0">Subtotal</p>
+											<p class="m-0">Shipping</p>
+											<p class="m-0" style="color:red">Promo (<?= $coupon_name ?>)</p>
+										</div>
+										<div class="col text-right">
+											<p class="m-0"><?= rupiah($subtotal_price) ?></p>
+											<p class="m-0"><?= rupiah($shipping_price) ?></p>
+											<p class="m-0" style="color:red">-<?= rupiah($promo_price) ?></p>
+										</div>
+									<?php else : ?>
+										<div class="col">
+											<p class="m-0">Subtotal</p>
+											<p class="m-0">Shipping</p>
+										</div>
+										<div class="col text-right">
+											<p class="m-0"><?= rupiah($subtotal_price) ?></p>
+											<p class="m-0"><?= rupiah($shipping_price) ?></p>
+										</div>
+									<?php endif ?>
 								</div>
 								<hr class="hr border-3 m-0 mb-3">
 								<div class="form-group">
@@ -306,10 +280,10 @@ function printExampleWarningMessage()
 					</div>
 					<div class="col-3 p-0">
 						<div class="step last">
-							<h3 class="pl-4">Total Price</h3>
+							<h3 class="pl-4">Confirm Purchase</h3>
 							<div style="font-size: 11pt;" class="box_general summary">
 								<div class="total clearfix">Total
-									<span><?= rupiah($total_price) ?></span>
+									<span><?= rupiah($gross) ?></span>
 								</div>
 								<button class="text-center btn_1 full-width" id="pay-button">CONFIRM AND PAY</button>
 							</div>
@@ -318,7 +292,6 @@ function printExampleWarningMessage()
 				</div>
 			</div>
 		</main>
-
 		<div class="modal fade" id="payments_method" tabindex="-1" role="dialog" aria-labelledby="payments_method_title" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
@@ -347,7 +320,8 @@ function printExampleWarningMessage()
 				snap.pay('<?= $snap_token ?>', {
 					onSuccess: function(result) {
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-						window.location.href = 'index.php?page=checkout_confirm&user_id=<?= $user_id ?>';
+						window.location.href = `index.php?page=checkout_confirm&user_id=<?= $user_id ?>&order_id=${result.order_id}`;
+						// window.location.href = 'index.php?page=checkout_confirm&user_id=<?= $user_id ?>';
 					},
 					onPending: function(result) {
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);

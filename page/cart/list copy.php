@@ -56,9 +56,9 @@ check('login')
 				$data = mysqli_fetch_assoc($result);
 				$user_id = $data['user_id'];
 
-				$get_cart = get('cart', 'WHERE user_id=' . $user_id);
-				if (mysqli_num_rows($get_cart) > 0) :
-					$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
+				$result = get('cart', 'WHERE user_id=' . $user_id);
+				if (mysqli_num_rows($result) > 0) :
+					$result = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
 				?>
 					<div>
 						<table class="table table-striped cart-list">
@@ -81,14 +81,11 @@ check('login')
 							<tbody>
 								<?php
 								$subtotal_price = 0;
-								$checkout = [];
-								$i = 0;
 
-								foreach ($get_cart as $data_cart) :
-									$product_id = $data_cart['product_id'];
-									$cart_id = $data_cart['cart_id'];
-									$quantity = $data_cart['quantity'];
-									$total_quantity = $data_cart['total_quantity'];
+								foreach ($result as $data) :
+									$cart_id = $data['cart_id'];
+									$product_id = $data['product_id'];
+									$total_quantity = $data['total_quantity'];
 
 									$result = get('product', 'WHERE product_id=' . $product_id);
 									$data = mysqli_fetch_assoc($result);
@@ -118,18 +115,16 @@ check('login')
 										<td>
 											<strong>
 												<?php
-												$price_sale = 0;
-
 												$get_sale = get('sale', 'WHERE product_id=' . $product_id);
 												if (mysqli_num_rows($get_sale) > 0) :
 													$data_sale = mysqli_fetch_assoc($get_sale);
 													$sale = $data_sale['sale'];
 													$price_sale = $price - $price * (int)$sale / 100;
 												?>
-													<p class="new_price m-0" style="color:black"><?= rupiah($price_sale) ?></p>
+													<p class="new_price m-0" style="font-size:larger"><?= rupiah($price_sale) ?></p>
 													<p class="old_price m-0" style="font-size:small; color:#9d9d9d"><?= rupiah($price) ?></p>
 												<?php else : ?>
-													<p class="new_price m-0" style="color:black"><?= rupiah($price) ?></p>
+													<p class="new_price m-0"><?= rupiah($price) ?></p>
 												<?php endif ?>
 											</strong>
 										</td>
@@ -147,22 +142,13 @@ check('login')
 												$subtotal_price += $subtotal_product;
 											}
 											?>
-											<strong style="color:#004dda"><?= rupiah($subtotal_product) ?></strong>
+											<strong><?= rupiah($subtotal_product) ?></strong>
 										</td>
 										<td class="options">
 											<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')" class="ti-trash"></a>
 										</td>
 									</tr>
 								<?php
-									$checkout['items'][$i] = [
-										'id' => $product_id,
-										'price' => $price,
-										'price_sale' => $price_sale,
-										'quantity' => $quantity,
-										'name' => $product_name
-									];
-
-									$i++;
 								endforeach
 								?>
 							</tbody>
@@ -177,81 +163,42 @@ check('login')
 								<label>Coupon Code</label>
 								<div class="input-group mb-3">
 									<input type="text" class="form-control" name="code" placeholder="Insert code" aria-describedby="button-addon2">
-									<button class="btn btn-outline-primary btn-sm" name="apply_coupon">Apply Coupon</button>
+									<button class="btn btn-outline-primary btn-sm" name="submit">Apply Coupon</button>
 								</div>
-								<?php
-								$shipping_price = 17000;
-
-								if (isset($_POST['apply_coupon'])) {
-									$code = $_POST['code'];
-
-									$get_coupon = get('coupon', 'WHERE code="' . $code . '" AND status=1');
-									if (mysqli_num_rows($get_coupon) > 0) {
-										$data_coupon = mysqli_fetch_assoc($get_coupon);
-
-										$coupon_name = $data_coupon['coupon_name'];
-										$promo = $data_coupon['%'];
-
-										$total_price_promo = $subtotal_price + $shipping_price;
-										$promo_price = $total_price_promo * (int)$promo / 100;
-										$total_price_promo = $total_price_promo - $promo_price;
-									} else {
-										$total_price = $subtotal_price + $shipping_price;
-									}
-								}
-								?>
 							</form>
+							<?php
+							if (isset($_POST['submit'])) {
+								$code = $_POST['code'];
+
+								$get_coupon = get('coupon', 'WHERE code="' . $code . '" AND status=1');
+								if (mysqli_num_rows($get_coupon) > 0) {
+									$data_coupon = mysqli_fetch_assoc($get_coupon);
+
+									$promo = $data_coupon['promo'];
+
+									$subtotal_price = $subtotal_price - $subtotal_price * (int)$promo / 100;
+								}
+							}
+
+							$shipping_price = 17000;
+							$total_price = $subtotal_price + $shipping_price;
+							?>
 						</div>
 						<div class="col"></div>
 						<div class="col-4 justify-content-right">
 							<ul>
-								<?php
-								$checkout['details']['subtotal_price'] = $subtotal_price;
-								$checkout['details']['shipping_price'] = $shipping_price;
-								$checkout['details']['gross'] = $total_price;
-
-								if (isset($promo)) :
-									$checkout['details']['gross'] = $total_price_promo;
-									$checkout['details']['coupon_name'] = $coupon_name;
-									$checkout['details']['promo'] = $promo;
-									$checkout['details']['promo_price'] = $promo_price;
-								?>
+								<?php if (isset($promo)) : ?>
 									<li><span>Subtotal</span><?= rupiah($subtotal_price) ?></li>
+									<li style="color:red"><span>Promo</span>-<?= rupiah($promo) ?></li>
 									<li><span>Shipping</span><?= rupiah($shipping_price) ?></li>
-									<li style="color:red">
-										<span>Promo (<?= $coupon_name ?>)</span>-<?= rupiah($promo_price) ?>
-									</li>
-									<li class="my-4" style="color:red"><span>Total</span><?= rupiah($total_price_promo) ?></li>
+									<li class="my-4" style="color:red"><span>Total</span><?= rupiah($total_price) ?></li>
 								<?php else : ?>
 									<li><span>Subtotal</span><?= rupiah($subtotal_price) ?></li>
 									<li><span>Shipping</span><?= rupiah($shipping_price) ?></li>
 									<li class="my-4" style="color:red"><span>Total</span><?= rupiah($total_price) ?></li>
 								<?php endif ?>
 							</ul>
-							<form method="POST" action="index.php?page=checkout">
-								<?php
-								$i = 0;
-								foreach ($checkout['items'] as $checkout_items) :
-								?>
-									<input name="items[<?= $i ?>][id]" value="<?= $checkout_items['id'] ?>" type="hidden">
-									<input name="items[<?= $i ?>][price]" value="<?= $checkout_items['price'] ?>" type="hidden">
-									<input name="items[<?= $i ?>][price_sale]" value="<?= $checkout_items['price_sale'] ?>" type="hidden">
-									<input name="items[<?= $i ?>][quantity]" value="<?= $checkout_items['quantity'] ?>" type="hidden">
-									<input name="items[<?= $i ?>][name]" value="<?= $checkout_items['name'] ?>" type="hidden">
-								<?php
-									$i++;
-								endforeach;
-								?>
-								<input name="details[subtotal_price]" value="<?= $checkout['details']['subtotal_price'] ?>" type="hidden">
-								<input name="details[shipping_price]" value="<?= $checkout['details']['shipping_price'] ?>" type="hidden">
-								<input name="details[gross]" value="<?= $checkout['details']['gross'] ?>" type="hidden">
-								<?php if (isset($promo)) : ?>
-									<input name="details[coupon_name]" value="<?= $checkout['details']['coupon_name'] ?>" type="hidden">
-									<input name="details[promo]" value="<?= $checkout['details']['promo'] ?>" type="hidden">
-									<input name="details[promo_price]" value="<?= $checkout['details']['promo_price'] ?>" type="hidden">
-								<?php endif ?>
-								<button href="index.php?page=checkout" class="btn_1 full-width cart" name="checkout">Proceed to Checkout</button>
-							</form>
+							<a href="index.php?page=checkout" class="btn_1 full-width cart">Proceed to Checkout</a>
 						</div>
 					</div>
 				</div>

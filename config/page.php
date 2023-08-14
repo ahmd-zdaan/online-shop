@@ -40,45 +40,33 @@ switch ($page) {
     case 'product_delete':
         include 'page/seller/product/delete.php';
         break;
-
-        // ACCOUNT
-    case 'register':
-        include 'page/register.php';
+    case 'product_view':
+        include 'page/product/view.php';
         break;
-    case 'login':
-        include 'page/login.php';
-        break;
-    case 'log-out':
-        log_out();
-        break;
-    case 'view_profile':
-        include 'page/profile/view.php';
-        break;
-    case 'edit_profile':
-        include 'page/profile/edit.php';
-        break;
-    case 'delete_profile':
-        include 'page/profile/delete.php';
+    case 'product_view_as_user':
+        include 'page/seller/product/view.php';
         break;
 
-    case 'cart_list':
-        include 'page/cart/list.php';
-        break;
-    case 'cart_add':
-        include 'page/cart/add.php';
-        break;
-    case 'cart_delete':
-        include 'page/cart/delete.php';
+    case 'seller_notification':
+        include 'page/notification/seller.php';
         break;
 
-    case 'order':
-        include 'page/order.php';
+    case 'sale_list':
+        include 'page/seller/sale/list.php';
         break;
-    case 'checkout':
-        include 'page/checkout/checkout.php';
+    case 'sale_add':
+        include 'page/seller/sale/add.php';
         break;
-    case 'checkout_confirm':
-        include 'page/checkout/confirm.php';
+    case 'sale_edit':
+        include 'page/seller/sale/edit.php';
+        break;
+    case 'sale_delete':
+        include 'page/seller/sale/delete.php';
+        break;
+
+        // USER
+    case 'discussion_add':
+        include 'page/discussion/add.php';
         break;
 
     case 'review_add':
@@ -111,19 +99,8 @@ switch ($page) {
         include 'page/wishlist/delete.php';
         break;
 
-    case 'history_list':
-        include 'page/history/list.php';
-        break;
-    case 'history_add':
-        include 'page/history/add.php';
-        break;
-
-        // MAIN
-    case 'home':
-        include 'page/home.php';
-        break;
-    case 'list':
-        include 'page/list.php';
+    case 'transaction_list':
+        include 'page/transaction/list.php';
         break;
 
         // ADMIN
@@ -131,15 +108,52 @@ switch ($page) {
         include 'page/admin/index.php';
         break;
 
-    case 'product_view':
-        include 'page/product/view.php';
+    case 'register':
+        include 'page/register.php';
+        break;
+    case 'login':
+        include 'page/login.php';
+        break;
+    case 'log-out':
+        log_out();
         break;
 
-    case 'discussion_add':
-        include 'page/discussion/add.php';
+    case 'home':
+        include 'page/home.php';
         break;
-    case 'discussion_list':
-        include 'page/discussion/list.php';
+    case 'list':
+        include 'page/list.php';
+        break;
+
+    case 'view_profile':
+        include 'page/profile/view.php';
+        break;
+    case 'edit_profile':
+        include 'page/profile/edit.php';
+        break;
+    case 'delete_profile':
+        include 'page/profile/delete.php';
+        break;
+
+    case 'cart_list':
+        include 'page/cart/list.php';
+        break;
+    case 'cart_add':
+        include 'page/cart/add.php';
+        break;
+    case 'cart_delete':
+        include 'page/cart/delete.php';
+        break;
+
+    case 'order':
+        include 'page/order.php';
+        break;
+
+    case 'checkout':
+        include 'page/checkout/checkout.php';
+        break;
+    case 'checkout_confirm':
+        include 'page/checkout/confirm.php';
         break;
 
     case 'category_list':
@@ -163,19 +177,6 @@ switch ($page) {
         include 'page/categories/subcategory/edit.php';
         break;
 
-    case 'sale_list':
-        include 'page/seller/sale/list.php';
-        break;
-    case 'sale_add':
-        include 'page/seller/sale/add.php';
-        break;
-    case 'sale_edit':
-        include 'page/seller/sale/edit.php';
-        break;
-    case 'sale_delete':
-        include 'page/seller/sale/delete.php';
-        break;
-
     case 'manifacturer_list':
         include 'page/manifacturer/list.php';
         break;
@@ -187,6 +188,10 @@ switch ($page) {
         break;
     case 'manifacturer_delete':
         include 'page/manifacturer/delete.php';
+        break;
+
+    case 'report_list':
+        include 'page/report/list.php';
         break;
 
     case 'report_product_list':
@@ -215,12 +220,19 @@ switch ($page) {
         include 'page/report/review/ignore.php';
         break;
 
-        //  BLOG
-    case 'blog':
-        include 'page/blog/index.php';
+    case 'coupon_list':
+        include 'page/coupon/list.php';
+        break;
+    case 'coupon_edit':
+        include 'page/coupon/edit.php';
+        break;
+    case 'coupon_add':
+        include 'page/coupon/add.php';
+        break;
+    case 'coupon_delete':
+        include 'page/coupon/delete.php';
         break;
 
-        // OTHER
     case 'about':
         include 'page/about.php';
         break;
@@ -232,6 +244,11 @@ switch ($page) {
         break;
     case '404':
         include 'page/404.php';
+        break;
+
+        //  BLOG
+    case 'blog':
+        include 'page/blog/index.php';
         break;
 
         // DEFAULT
