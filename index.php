@@ -438,56 +438,57 @@ include_once 'config/connect.php';
 
 		<?php include 'config/page.php' ?>
 
-		<footer class="revealed">
+		<footer class="revealed pt-5 pb-2">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-3 col-md-6">
+					<div class="col-2">
 						<h3 data-target="#collapse_1">Quick Links</h3>
 						<div class="collapse dont-collapse-sm links" id="collapse_1">
 							<ul>
-								<li><a href="index.php?page=view_profile">My Profile</a></li>
-								<li><a href="index.php?page=about">About Us</a></li>
-								<li><a href="index.php?page=help">Help & FAQ</a></li>
-								<li><a href="index.php?blog">Blog</a></li>
-								<!-- <li><a href="contacts.html">Contacts</a></li> -->
+								<li class="mb-1"><a href="index.php?page=view_profile">My Profile</a></li>
+								<li class="mb-1"><a href="index.php?page=about">About Us</a></li>
+								<li class="mb-1"><a href="index.php?page=help">Help & FAQ</a></li>
+								<li class="mb-1"><a href="index.php?blog">Blog</a></li>
 							</ul>
 						</div>
 					</div>
-					<div class="col-lg-3 col-md-6">
+					<div class="col-4">
 						<h3 data-target="#collapse_2">Categories</h3>
 						<div class="collapse dont-collapse-sm links" id="collapse_2">
-							<ul>
-								<?php
-								$result = get('category');
-								foreach ($result as $data) :
-									$category_id = $data['category_id'];
-									$category_name = $data['category_name'];
-								?>
-									<li>
-										<a href="index.php?page=list&view=list"><?= $category_name ?></a>
-									</li>
+							<div class="row">
+								<div class="col">
+									<ul>
+										<?php
+										$get_category = get('category');
+										foreach ($get_category as $i => $data_category) :
+											$category_id = $data_category['category_id'];
+											$category_name = $data_category['category_name'];
+
+											if ($i == round(mysqli_num_rows($get_category) / 2)) :
+										?>
+									</ul>
+								</div>
+								<div class="col">
+									<ul>
+									<?php endif ?>
+									<li class="mb-1"><a href="index.php?page=list&view=list"><?= $category_name ?></a></li>
 								<?php endforeach ?>
-							</ul>
+									</ul>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-lg-3 col-md-6">
+					<div class="col-3">
 						<h3 data-target="#collapse_3">Details</h3>
 						<div class="collapse dont-collapse-sm contacts" id="collapse_3">
 							<ul>
-								<li>
-									<i class="ti-home"></i>12345 Jl. Jalan no. 0<br>Malang - Indonesia
-								</li>
-								<li>
-									<i class="ti-headphone-alt"></i>+00 123-456-789
-								</li>
-								<li>
-									<i class="ti-email"></i>
-									<a href="#">online@shop.com</a>
-								</li>
+								<li class="mb-1"><i class="ti-home"></i>12345 Jl. Jalan no. 0<br>Malang - Indonesia</li>
+								<li class="mb-1"><i class="ti-headphone-alt"></i>+00 123-456-789</li>
+								<li class="mb-1"><i class="ti-email"></i><a href="#">online@shop.com</a></li>
 							</ul>
 						</div>
 					</div>
-					<div class="col-lg-3 col-md-6">
+					<div class="col-3">
 						<h3 data-target="#collapse_4">Keep in touch</h3>
 						<div class="collapse dont-collapse-sm" id="collapse_4">
 							<form action="" method="POST">

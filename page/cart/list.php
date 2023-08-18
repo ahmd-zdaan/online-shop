@@ -35,9 +35,7 @@ check('login')
 </head>
 
 <body>
-
 	<div id="page">
-
 		<main class="bg_gray">
 			<div class="container margin_30">
 				<div class="page_header">
@@ -301,9 +299,7 @@ check('login')
 											$image_name = $data['image_name'];
 										?>
 											<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
-										<?php
-										else :
-										?>
+										<?php else : ?>
 											<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
 										<?php endif ?>
 									</a>
@@ -377,8 +373,8 @@ check('login')
 				</div>
 			</div>
 		<?php endif ?>
+		</main>
 	</div>
-	</main>
 </body>
 
 </html>
