@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 03, 2023 at 10:28 AM
+-- Generation Time: Aug 18, 2023 at 10:23 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -88,6 +88,28 @@ INSERT INTO `country` (`country_id`, `country_name`, `code`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `coupon`
+--
+
+CREATE TABLE `coupon` (
+  `coupon_id` int(11) NOT NULL,
+  `coupon_name` varchar(100) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  `%` int(11) NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupon`
+--
+
+INSERT INTO `coupon` (`coupon_id`, `coupon_name`, `code`, `%`, `status`) VALUES
+(1, '10% Off', '12345', 10, 1),
+(2, 'Delivery Free', 'fr33delivery', 0, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discussion`
 --
 
@@ -98,28 +120,6 @@ CREATE TABLE `discussion` (
   `seller_id` int(11) NOT NULL,
   `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `history`
---
-
-CREATE TABLE `history` (
-  `history_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `date` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `history`
---
-
-INSERT INTO `history` (`history_id`, `user_id`, `product_id`, `quantity`, `date`) VALUES
-(4, 16, 91, 3, '22-07-2023'),
-(5, 16, 115, 1, '22-07-2023');
 
 -- --------------------------------------------------------
 
@@ -190,13 +190,13 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `product_name`, `seller_id`, `category_id`, `subcategory_id`, `price`, `stock`, `description`, `manifacturer_id`, `variant`, `weight`, `date`, `sold`, `report`) VALUES
-(62, 'Adilette Aqua Slides', 28, 3, 5, 380000, 36, 'POST-SWIM SLIDES WITH ENHANCED CUSHIONING\r\nRinse off after the pool in these shower-friendly sandals. Keeping it simple, the smooth slip-ons reveal their adidas DNA with signature 3-Stripes. Soft cushioning rewards tired feet with plush comfort.\r\n\r\nSPECIFICATIONS :\r\n- Regular fit\r\n- One-piece moulded EVA upper\r\n- Soft Cloudfoam footbed\r\n- Product code: F35550\r\n- Slip-on construction\r\n- EVA outsole\r\n- Lightweight feel; Quick-drying material', 12, '1', 1, '14-07-2023', 4, 0),
-(64, 'ADILS / LINNMON', 28, 7, 1, 579000, 36, 'Padu padankan pilihan permukaan meja dan kaki - atau pilih kombinasi yang siap pakai. Kuat dan ringan, dibuat dengan teknik yang menggunakan sedikit bahan mentah, mengurangi pengaruh negatif pada lingkungan.\r\n\r\nDaun meja\r\nAtas: Fibreboard, Cat akrilik\r\nRangka: Particleboard, Tepi plastik\r\nBahan pengisi: Isian kertas berstruktur sarang lebah (min. 70% didaur ulang)\r\nBawah: Fibreboard\r\nKaki\r\nBahan dasar: Baja, Dilapisi serbuk epoksi/poliester\r\nKaki: Plastik polipropilena', 18, '1', 2, '14-07-2023', 0, 0),
-(70, 'Nike Air Force 1 \'07 LV8', 28, 3, 5, 1909000, 5, 'The radiance lives on in the Air Force 1 \'07 LV8. Crossing hardwood comfort with off-court flair, these kicks add a touch of crafty style to a hoops original. Mixed materials and era-echoing \'80s construction add nothing-but-net style.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 0, 0),
-(71, 'Nike Air Max Impact 4', 28, 3, 5, 1349000, 13, 'Elevate your game and your hops. Charged with Max Air cushioning in the heel, this lightweight, secure shoe helps you get off the ground confidently and land comfortably. Plus, rubber wraps up the sides for added durability and stability.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 0, 0),
-(80, 'Utopia Kitchen 11 Inch Nonstick Frying Pan', 28, 4, 17, 250000, 15, 'The wobble-free bakelite handle is ergonomically designed and riveted strongly to the pan so you can have a safe cooking experience without worrying about the handle getting loose ever\r\nThe induction bottom of the frying pan is suitable for all types of cooking; including electric and ceramic cook tops\r\nFormed with multi-layered nonstick and top rated aluminum alloy which is used for highly durable professional grade frying pans\r\nHigh quality nonstick interior allows for easier cooking and cleanup; PFOA, lead and Cadmium-free\r\nFor hand cleaning, first use a paper towel, wooden, or plastic spatula to remove off any loose food from the pan; then use a soft nylon scrubber, sponge, or paper towel sprinkled with a few drops of dish-washing soap to wipe the nonstick surface clean', 25, '1', 1, '14-07-2023', 0, 0),
-(87, 'Hollyone Artificial Snake Plant Potted Faux Sansevieria Trifasciata Plants, 13', 28, 7, 1, 199000, 16, 'PREMIUM QUALITY\r\nRealistic artificial sansevieria plants are made of eco-friendly polyester material. Each fake Snake Plant with pot leaf is thick, upright, solid, has its own elegant arc, gives you a touch like a leathery. \"Hollyone\" brand assurance is worthy of your trust.\r\n\r\nPERFECT SIZE\r\nFaux snake plant height approximately: 13.2\", pots: 4.5\"W x 4.1\"H. Please read the measurement more attentively. It\'s a really good size for placing on a tabletop or on the floor. A matte white planter balances the sturdy leaves with the base of the plant, simulation soil makes it looks real enough.\r\n\r\nMAINTENANCE FREE\r\nDecorative 12 full leaves faux plants are a practical alternative to living plants. Our small fake snake plant artificial looks like you\'ve been babied it for years, but never need water or sun. The first choice of housewarming gift! Or present for your friends, family, and loved ones.', 18, '1', 0, '14-07-2023', 0, 0),
-(91, 'Reese\'s Puffs', 28, 11, 22, 49000, 147, 'The perfect combination of chocolate and peanut butter flavor in every crunchy bite\r\nSweet and crunchy corn puffs made with real REESE\'S peanut butter\r\nKids breakfast food that provides 15 g of whole grains per serving (at least 48 g recommended daily)\r\nPour REESE\'S PUFFS into your bowl for an epic breakfast cereal or take along the whole box for a sweet and crunchy snack\r\nCONTAINS: 11.5 oz box', 27, '1', 0, '14-07-2023', 3, 0),
+(62, 'Adilette Aqua Slides', 28, 3, 5, 380000, 36, 'POST-SWIM SLIDES WITH ENHANCED CUSHIONING\r\nRinse off after the pool in these shower-friendly sandals. Keeping it simple, the smooth slip-ons reveal their adidas DNA with signature 3-Stripes. Soft cushioning rewards tired feet with plush comfort.\r\n\r\nSPECIFICATIONS :\r\n- Regular fit\r\n- One-piece moulded EVA upper\r\n- Soft Cloudfoam footbed\r\n- Product code: F35550\r\n- Slip-on construction\r\n- EVA outsole\r\n- Lightweight feel; Quick-drying material', 12, '1', 1, '14-07-2023', 8, 0),
+(64, 'ADILS / LINNMON', 28, 7, 1, 579000, 36, 'Padu padankan pilihan permukaan meja dan kaki - atau pilih kombinasi yang siap pakai. Kuat dan ringan, dibuat dengan teknik yang menggunakan sedikit bahan mentah, mengurangi pengaruh negatif pada lingkungan.\r\n\r\nDaun meja\r\nAtas: Fibreboard, Cat akrilik\r\nRangka: Particleboard, Tepi plastik\r\nBahan pengisi: Isian kertas berstruktur sarang lebah (min. 70% didaur ulang)\r\nBawah: Fibreboard\r\nKaki\r\nBahan dasar: Baja, Dilapisi serbuk epoksi/poliester\r\nKaki: Plastik polipropilena', 18, '1', 2, '14-07-2023', 1, 0),
+(70, 'Nike Air Force 1 \'07 LV8', 28, 3, 5, 1909000, 5, 'The radiance lives on in the Air Force 1 \'07 LV8. Crossing hardwood comfort with off-court flair, these kicks add a touch of crafty style to a hoops original. Mixed materials and era-echoing \'80s construction add nothing-but-net style.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 2, 0),
+(71, 'Nike Air Max Impact 4', 28, 3, 5, 1349000, 13, 'Elevate your game and your hops. Charged with Max Air cushioning in the heel, this lightweight, secure shoe helps you get off the ground confidently and land comfortably. Plus, rubber wraps up the sides for added durability and stability.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 2, 0),
+(80, 'Utopia Kitchen 11 Inch Nonstick Frying Pan', 28, 4, 17, 250000, 15, 'The wobble-free bakelite handle is ergonomically designed and riveted strongly to the pan so you can have a safe cooking experience without worrying about the handle getting loose ever\r\nThe induction bottom of the frying pan is suitable for all types of cooking; including electric and ceramic cook tops\r\nFormed with multi-layered nonstick and top rated aluminum alloy which is used for highly durable professional grade frying pans\r\nHigh quality nonstick interior allows for easier cooking and cleanup; PFOA, lead and Cadmium-free\r\nFor hand cleaning, first use a paper towel, wooden, or plastic spatula to remove off any loose food from the pan; then use a soft nylon scrubber, sponge, or paper towel sprinkled with a few drops of dish-washing soap to wipe the nonstick surface clean', 25, '1', 1, '14-07-2023', 1, 0),
+(87, 'Hollyone Artificial Snake Plant Potted Faux Sansevieria Trifasciata Plants, 13', 28, 7, 1, 199000, 16, 'PREMIUM QUALITY\r\nRealistic artificial sansevieria plants are made of eco-friendly polyester material. Each fake Snake Plant with pot leaf is thick, upright, solid, has its own elegant arc, gives you a touch like a leathery. \"Hollyone\" brand assurance is worthy of your trust.\r\n\r\nPERFECT SIZE\r\nFaux snake plant height approximately: 13.2\", pots: 4.5\"W x 4.1\"H. Please read the measurement more attentively. It\'s a really good size for placing on a tabletop or on the floor. A matte white planter balances the sturdy leaves with the base of the plant, simulation soil makes it looks real enough.\r\n\r\nMAINTENANCE FREE\r\nDecorative 12 full leaves faux plants are a practical alternative to living plants. Our small fake snake plant artificial looks like you\'ve been babied it for years, but never need water or sun. The first choice of housewarming gift! Or present for your friends, family, and loved ones.', 18, '1', 0, '14-07-2023', 1, 0),
+(91, 'Reese\'s Puffs', 28, 11, 22, 49000, 147, 'The perfect combination of chocolate and peanut butter flavor in every crunchy bite\r\nSweet and crunchy corn puffs made with real REESE\'S peanut butter\r\nKids breakfast food that provides 15 g of whole grains per serving (at least 48 g recommended daily)\r\nPour REESE\'S PUFFS into your bowl for an epic breakfast cereal or take along the whole box for a sweet and crunchy snack\r\nCONTAINS: 11.5 oz box', 27, '1', 0, '14-07-2023', 8, 0),
 (115, 'Xbox Series S', 36, 15, 40, 6000000, 35, 'Experience next-gen speed and performance with our largest digital library yet. Enjoy more dynamic worlds, faster load times, and add Xbox Game Pass Ultimate (membership sold separately) to play new games on day one. Plus, enjoy hundreds of high-quality games like Minecraft, Forza Horizon 5, and Halo Infinite with friends on console, PC, and cloud.', 22, '1', 0, '21-07-2023', 1, 0);
 
 -- --------------------------------------------------------
@@ -259,6 +259,17 @@ CREATE TABLE `product_report` (
   `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `product_report`
+--
+
+INSERT INTO `product_report` (`product_report_id`, `user_id`, `product_id`, `report`, `date`) VALUES
+(10, 16, 62, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem dolores voluptatem dicta minus quibusdam, veritatis amet tempore quaerat eaque est eos hic nemo neque, magnam consequatur ab quidem deserunt. Id eos provident aspernatur quidem odit, accusantium delectus, repudiandae iste recusandae labore maxime fuga obcaecati. Veritatis officiis aut nemo laboriosam quam!', '03-08-2023'),
+(11, 16, 80, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, fugit.', '03-08-2023'),
+(12, 16, 62, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae id omnis numquam, nisi molestias consequatur?', '05-08-2023'),
+(13, 17, 87, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis doloribus dolores odit magnam iure ullam in libero dignissimos sint repudiandae nostrum et fugiat ducimus totam, labore quia neque nisi est? Consectetur, fugiat. Nesciunt laboriosam id sed doloribus in aut nulla illum iure doloremque.', '05-08-2023'),
+(14, 17, 64, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, eaque?', '05-08-2023');
+
 -- --------------------------------------------------------
 
 --
@@ -283,7 +294,7 @@ INSERT INTO `review` (`review_id`, `product_id`, `user_id`, `rating`, `review`, 
 (18, 62, 18, 3, '3 stars', '2023-06-21', 0),
 (19, 64, 18, 1, '1 star', '2023-06-21', 0),
 (103, 80, 18, 5, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea omnis blanditiis aliquam ex quae! Consequuntur quia placeat fugiat deserunt, exercitationem minus maiores optio adipisci quidem consequatur quaerat veritatis officiis aliquid eos, magnam tenetur ducimus, nulla vel eveniet error. Vero error voluptas sed tenetur nam provident officiis hic consequatur non? Excepturieeeeeeeee', '30-06-2023', 0),
-(105, 80, 16, 5, 'top', '15-07-2023', 0),
+(105, 80, 16, 1, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Necessitatibus, perferendis minima nisi mollitia placeat magnam.', '15-07-2023', 0),
 (107, 80, 18, 4, 'ok', '25-07-2023', 0),
 (108, 115, 18, 5, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum id architecto laboriosam. Cumque, nulla pariatur doloribus unde neque dolor quam ipsam labore asperiores suscipit minima, odio fugit consequuntur sapiente nostrum.', '27-07-2023', 0),
 (109, 62, 16, 5, 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo aspernatur unde cumque. Vel alias enim tenetur, vitae cumque minus provident nobis quasi expedita veniam deserunt illum eveniet illo, praesentium amet itaque placeat nostrum maxime? Tenetur repellat cumque architecto nobis in repellendus quasi inventore a corporis ullam! Molestiae totam beatae necessitatibus.', '29-07-2023', 0),
@@ -336,6 +347,14 @@ CREATE TABLE `review_report` (
   `report` longtext NOT NULL,
   `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `review_report`
+--
+
+INSERT INTO `review_report` (`review_report_id`, `user_id`, `review_id`, `report`, `date`) VALUES
+(6, 16, 110, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, alias facere obcaecati placeat nihil rem. Voluptatem doloremque odit et dolores voluptate? Iste, accusantium ex? Iusto alias numquam temporibus. Harum, dicta.', '03-08-2023'),
+(7, 17, 105, 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugit voluptate molestias officia dolorem recusandae nobis nemo explicabo, reprehenderit fugiat qui ea hic ipsa quaerat laudantium in error facere nostrum quasi voluptatem ducimus, deleniti iure?', '03-08-2023');
 
 -- --------------------------------------------------------
 
@@ -399,7 +418,9 @@ INSERT INTO `subcategory` (`subcategory_id`, `subcategory_name`, `category_id`) 
 (35, 'Mousepad', 14),
 (36, 'PC Components', 14),
 (40, 'Console', 15),
-(41, 'Video Game', 15);
+(41, 'Video Game', 15),
+(42, 'Shirt', 3),
+(43, 'pants', 3);
 
 -- --------------------------------------------------------
 
@@ -410,10 +431,47 @@ INSERT INTO `subcategory` (`subcategory_id`, `subcategory_name`, `category_id`) 
 CREATE TABLE `transaction` (
   `transaction_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `price` int(11) NOT NULL,
   `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaction`
+--
+
+INSERT INTO `transaction` (`transaction_id`, `user_id`, `date`) VALUES
+(16, 16, '09-08-2023'),
+(17, 17, '10-08-2023'),
+(18, 20, '10-08-2023'),
+(19, 16, '12-08-2023'),
+(20, 16, '14-08-2023');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transaction_details`
+--
+
+CREATE TABLE `transaction_details` (
+  `transaction_details_id` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaction_details`
+--
+
+INSERT INTO `transaction_details` (`transaction_details_id`, `transaction_id`, `product_id`, `price`, `quantity`) VALUES
+(8, 16, 87, 199000, 1),
+(9, 17, 91, 49000, 1),
+(10, 17, 64, 579000, 1),
+(11, 18, 71, 1349000, 1),
+(12, 18, 70, 1909000, 1),
+(13, 19, 71, 1349000, 1),
+(14, 19, 70, 1909000, 1),
+(15, 20, 91, 49000, 2);
 
 -- --------------------------------------------------------
 
@@ -481,6 +539,16 @@ CREATE TABLE `wishlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`wishlist_id`, `user_id`, `product_id`) VALUES
+(39, 16, 91),
+(40, 16, 115),
+(41, 16, 70),
+(42, 16, 80);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -505,6 +573,12 @@ ALTER TABLE `country`
   ADD PRIMARY KEY (`country_id`);
 
 --
+-- Indexes for table `coupon`
+--
+ALTER TABLE `coupon`
+  ADD PRIMARY KEY (`coupon_id`);
+
+--
 -- Indexes for table `discussion`
 --
 ALTER TABLE `discussion`
@@ -512,14 +586,6 @@ ALTER TABLE `discussion`
   ADD KEY `fk_discussion_product_id` (`product_id`),
   ADD KEY `fk_discussion_user_id` (`user_id`),
   ADD KEY `fk_discussion_seller_id` (`seller_id`);
-
---
--- Indexes for table `history`
---
-ALTER TABLE `history`
-  ADD PRIMARY KEY (`history_id`),
-  ADD KEY `fk_history_user_id` (`user_id`),
-  ADD KEY `fk_history_product_id` (`product_id`);
 
 --
 -- Indexes for table `manifacturer`
@@ -617,8 +683,15 @@ ALTER TABLE `subcategory`
 --
 ALTER TABLE `transaction`
   ADD PRIMARY KEY (`transaction_id`),
-  ADD KEY `fk_transaction_user_id` (`user_id`),
-  ADD KEY `fk_transaction_product_id` (`product_id`);
+  ADD KEY `fk_history_user_id` (`user_id`);
+
+--
+-- Indexes for table `transaction_details`
+--
+ALTER TABLE `transaction_details`
+  ADD PRIMARY KEY (`transaction_details_id`),
+  ADD KEY `fk_transaction_details_product_id` (`product_id`),
+  ADD KEY `fk_transaction_details_transaction_id` (`transaction_id`);
 
 --
 -- Indexes for table `user`
@@ -650,7 +723,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -665,16 +738,16 @@ ALTER TABLE `country`
   MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `coupon`
+--
+ALTER TABLE `coupon`
+  MODIFY `coupon_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `discussion`
 --
 ALTER TABLE `discussion`
   MODIFY `discussion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `history`
---
-ALTER TABLE `history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `manifacturer`
@@ -710,7 +783,7 @@ ALTER TABLE `product_order`
 -- AUTO_INCREMENT for table `product_report`
 --
 ALTER TABLE `product_report`
-  MODIFY `product_report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `product_report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `review`
@@ -734,7 +807,7 @@ ALTER TABLE `review_image`
 -- AUTO_INCREMENT for table `review_report`
 --
 ALTER TABLE `review_report`
-  MODIFY `review_report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `review_report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `sale`
@@ -746,13 +819,19 @@ ALTER TABLE `sale`
 -- AUTO_INCREMENT for table `subcategory`
 --
 ALTER TABLE `subcategory`
-  MODIFY `subcategory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `subcategory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `transaction_details`
+--
+ALTER TABLE `transaction_details`
+  MODIFY `transaction_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -770,7 +849,7 @@ ALTER TABLE `user_image`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- Constraints for dumped tables
@@ -790,13 +869,6 @@ ALTER TABLE `discussion`
   ADD CONSTRAINT `fk_discussion_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_discussion_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_discussion_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `history`
---
-ALTER TABLE `history`
-  ADD CONSTRAINT `fk_history_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_history_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `product`
@@ -870,8 +942,14 @@ ALTER TABLE `subcategory`
 -- Constraints for table `transaction`
 --
 ALTER TABLE `transaction`
-  ADD CONSTRAINT `fk_transaction_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_transaction_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `transaction_details`
+--
+ALTER TABLE `transaction_details`
+  ADD CONSTRAINT `fk_transaction_details_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_transaction_details_transaction_id` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user`

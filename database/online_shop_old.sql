@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2023 at 04:21 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- Generation Time: Aug 03, 2023 at 10:28 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,10 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `online_shop`
 --
-
-DROP DATABASE IF EXISTS online_shop;
-CREATE DATABASE IF NOT EXISTS online_shop;
-USE online_shop;
 
 -- --------------------------------------------------------
 
@@ -103,13 +99,6 @@ CREATE TABLE `discussion` (
   `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `discussion`
---
-
-INSERT INTO `discussion` (`discussion_id`, `product_id`, `user_id`, `seller_id`, `date`) VALUES
-(10, 62, 16, 28, '15-07-2023');
-
 -- --------------------------------------------------------
 
 --
@@ -120,8 +109,17 @@ CREATE TABLE `history` (
   `history_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `history`
+--
+
+INSERT INTO `history` (`history_id`, `user_id`, `product_id`, `quantity`, `date`) VALUES
+(4, 16, 91, 3, '22-07-2023'),
+(5, 16, 115, 1, '22-07-2023');
 
 -- --------------------------------------------------------
 
@@ -155,6 +153,18 @@ INSERT INTO `manifacturer` (`manifacturer_id`, `manifacturer_name`, `slug`) VALU
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `manifacturer_image`
+--
+
+CREATE TABLE `manifacturer_image` (
+  `manifacturer_image_id` int(11) NOT NULL,
+  `image_name` varchar(100) NOT NULL,
+  `manifacturer_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `product`
 --
 
@@ -180,14 +190,14 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `product_name`, `seller_id`, `category_id`, `subcategory_id`, `price`, `stock`, `description`, `manifacturer_id`, `variant`, `weight`, `date`, `sold`, `report`) VALUES
-(62, 'Adilette Aqua Slides', 28, 3, 5, 380000, 36, 'POST-SWIM SLIDES WITH ENHANCED CUSHIONING\r\nRinse off after the pool in these shower-friendly sandals. Keeping it simple, the smooth slip-ons reveal their adidas DNA with signature 3-Stripes. Soft cushioning rewards tired feet with plush comfort.\r\n\r\nSPECIFICATIONS :\r\n- Regular fit\r\n- One-piece moulded EVA upper\r\n- Soft Cloudfoam footbed\r\n- Product code: F35550\r\n- Slip-on construction\r\n- EVA outsole\r\n- Lightweight feel; Quick-drying material', 12, '1', 1, '14-07-2023', 3, 0),
+(62, 'Adilette Aqua Slides', 28, 3, 5, 380000, 36, 'POST-SWIM SLIDES WITH ENHANCED CUSHIONING\r\nRinse off after the pool in these shower-friendly sandals. Keeping it simple, the smooth slip-ons reveal their adidas DNA with signature 3-Stripes. Soft cushioning rewards tired feet with plush comfort.\r\n\r\nSPECIFICATIONS :\r\n- Regular fit\r\n- One-piece moulded EVA upper\r\n- Soft Cloudfoam footbed\r\n- Product code: F35550\r\n- Slip-on construction\r\n- EVA outsole\r\n- Lightweight feel; Quick-drying material', 12, '1', 1, '14-07-2023', 4, 0),
 (64, 'ADILS / LINNMON', 28, 7, 1, 579000, 36, 'Padu padankan pilihan permukaan meja dan kaki - atau pilih kombinasi yang siap pakai. Kuat dan ringan, dibuat dengan teknik yang menggunakan sedikit bahan mentah, mengurangi pengaruh negatif pada lingkungan.\r\n\r\nDaun meja\r\nAtas: Fibreboard, Cat akrilik\r\nRangka: Particleboard, Tepi plastik\r\nBahan pengisi: Isian kertas berstruktur sarang lebah (min. 70% didaur ulang)\r\nBawah: Fibreboard\r\nKaki\r\nBahan dasar: Baja, Dilapisi serbuk epoksi/poliester\r\nKaki: Plastik polipropilena', 18, '1', 2, '14-07-2023', 0, 0),
 (70, 'Nike Air Force 1 \'07 LV8', 28, 3, 5, 1909000, 5, 'The radiance lives on in the Air Force 1 \'07 LV8. Crossing hardwood comfort with off-court flair, these kicks add a touch of crafty style to a hoops original. Mixed materials and era-echoing \'80s construction add nothing-but-net style.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 0, 0),
 (71, 'Nike Air Max Impact 4', 28, 3, 5, 1349000, 13, 'Elevate your game and your hops. Charged with Max Air cushioning in the heel, this lightweight, secure shoe helps you get off the ground confidently and land comfortably. Plus, rubber wraps up the sides for added durability and stability.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 0, 0),
 (80, 'Utopia Kitchen 11 Inch Nonstick Frying Pan', 28, 4, 17, 250000, 15, 'The wobble-free bakelite handle is ergonomically designed and riveted strongly to the pan so you can have a safe cooking experience without worrying about the handle getting loose ever\r\nThe induction bottom of the frying pan is suitable for all types of cooking; including electric and ceramic cook tops\r\nFormed with multi-layered nonstick and top rated aluminum alloy which is used for highly durable professional grade frying pans\r\nHigh quality nonstick interior allows for easier cooking and cleanup; PFOA, lead and Cadmium-free\r\nFor hand cleaning, first use a paper towel, wooden, or plastic spatula to remove off any loose food from the pan; then use a soft nylon scrubber, sponge, or paper towel sprinkled with a few drops of dish-washing soap to wipe the nonstick surface clean', 25, '1', 1, '14-07-2023', 0, 0),
-(87, 'Hollyone Artificial Snake Plant Potted Faux Sansevieria Trifasciata Plants, 13\" Tropical Fake Plants', 28, 7, 2, 199000, 16, 'PREMIUM QUALITY\r\nRealistic artificial sansevieria plants are made of eco-friendly polyester material. Each fake Snake Plant with pot leaf is thick, upright, solid, has its own elegant arc, gives you a touch like a leathery. \"Hollyone\" brand assurance is worthy of your trust.\r\n\r\nPERFECT SIZE\r\nFaux snake plant height approximately: 13.2\", pots: 4.5\"W x 4.1\"H. Please read the measurement more attentively. It\'s a really good size for placing on a tabletop or on the floor. A matte white planter balances the sturdy leaves with the base of the plant, simulation soil makes it looks real enough.\r\n\r\nMAINTENANCE FREE\r\nDecorative 12 full leaves faux plants are a practical alternative to living plants. Our small fake snake plant artificial looks like you\'ve been babied it for years, but never need water or sun. The first choice of housewarming gift! Or present for your friends, family, and loved ones.', 18, '1', 0, '14-07-2023', 0, 0),
-(91, 'Reese\'s Puffs', 28, 11, 22, 49000, 147, 'The perfect combination of chocolate and peanut butter flavor in every crunchy bite\r\nSweet and crunchy corn puffs made with real REESE\'S peanut butter\r\nKids breakfast food that provides 15 g of whole grains per serving (at least 48 g recommended daily)\r\nPour REESE\'S PUFFS into your bowl for an epic breakfast cereal or take along the whole box for a sweet and crunchy snack\r\nCONTAINS: 11.5 oz box', 27, '1', 0, '14-07-2023', 0, 0),
-(113, 'test', 28, 9, 18, 1000, 1, 'dawdawd', 3, '1', 0, '14-07-2023', 0, 0);
+(87, 'Hollyone Artificial Snake Plant Potted Faux Sansevieria Trifasciata Plants, 13', 28, 7, 1, 199000, 16, 'PREMIUM QUALITY\r\nRealistic artificial sansevieria plants are made of eco-friendly polyester material. Each fake Snake Plant with pot leaf is thick, upright, solid, has its own elegant arc, gives you a touch like a leathery. \"Hollyone\" brand assurance is worthy of your trust.\r\n\r\nPERFECT SIZE\r\nFaux snake plant height approximately: 13.2\", pots: 4.5\"W x 4.1\"H. Please read the measurement more attentively. It\'s a really good size for placing on a tabletop or on the floor. A matte white planter balances the sturdy leaves with the base of the plant, simulation soil makes it looks real enough.\r\n\r\nMAINTENANCE FREE\r\nDecorative 12 full leaves faux plants are a practical alternative to living plants. Our small fake snake plant artificial looks like you\'ve been babied it for years, but never need water or sun. The first choice of housewarming gift! Or present for your friends, family, and loved ones.', 18, '1', 0, '14-07-2023', 0, 0),
+(91, 'Reese\'s Puffs', 28, 11, 22, 49000, 147, 'The perfect combination of chocolate and peanut butter flavor in every crunchy bite\r\nSweet and crunchy corn puffs made with real REESE\'S peanut butter\r\nKids breakfast food that provides 15 g of whole grains per serving (at least 48 g recommended daily)\r\nPour REESE\'S PUFFS into your bowl for an epic breakfast cereal or take along the whole box for a sweet and crunchy snack\r\nCONTAINS: 11.5 oz box', 27, '1', 0, '14-07-2023', 3, 0),
+(115, 'Xbox Series S', 36, 15, 40, 6000000, 35, 'Experience next-gen speed and performance with our largest digital library yet. Enjoy more dynamic worlds, faster load times, and add Xbox Game Pass Ultimate (membership sold separately) to play new games on day one. Plus, enjoy hundreds of high-quality games like Minecraft, Forza Horizon 5, and Halo Infinite with friends on console, PC, and cloud.', 22, '1', 0, '21-07-2023', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -212,10 +222,28 @@ INSERT INTO `product_image` (`id`, `image_name`, `product_id`, `image_index`) VA
 (34, '1684146099.png', 70, 1),
 (35, '1684146152.png', 71, 1),
 (37, '1686983118.jpg', 80, 1),
-(41, '1688181838._AC_SL1500_', 87, 1),
 (68, '64a8105a30c81.jpg', 91, 1),
 (69, '64a8105a9bbc3.jpg', 91, 2),
-(70, '64b23c9502045.jpg', 113, 1);
+(72, '64ba907d088c4.jpg', 115, 1),
+(73, '64ba907d168ce.jpg', 115, 2),
+(74, '64ba907d24a22.jpg', 115, 3),
+(75, '64ba907d361c5.jpg', 115, 4),
+(76, '64ba907d4ae9c.jpg', 115, 5),
+(77, '64ba907d539a9.jpg', 115, 6),
+(95, '64c4b60336d42.jpg', 87, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_order`
+--
+
+CREATE TABLE `product_order` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `date` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -254,8 +282,14 @@ CREATE TABLE `review` (
 INSERT INTO `review` (`review_id`, `product_id`, `user_id`, `rating`, `review`, `date`, `report`) VALUES
 (18, 62, 18, 3, '3 stars', '2023-06-21', 0),
 (19, 64, 18, 1, '1 star', '2023-06-21', 0),
-(103, 80, 18, 5, 'UPLOAD', '2023-06-30', 0),
-(105, 80, 28, 5, 'top', '15-07-2023', 0);
+(103, 80, 18, 5, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea omnis blanditiis aliquam ex quae! Consequuntur quia placeat fugiat deserunt, exercitationem minus maiores optio adipisci quidem consequatur quaerat veritatis officiis aliquid eos, magnam tenetur ducimus, nulla vel eveniet error. Vero error voluptas sed tenetur nam provident officiis hic consequatur non? Excepturieeeeeeeee', '30-06-2023', 0),
+(105, 80, 16, 5, 'top', '15-07-2023', 0),
+(107, 80, 18, 4, 'ok', '25-07-2023', 0),
+(108, 115, 18, 5, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum id architecto laboriosam. Cumque, nulla pariatur doloribus unde neque dolor quam ipsam labore asperiores suscipit minima, odio fugit consequuntur sapiente nostrum.', '27-07-2023', 0),
+(109, 62, 16, 5, 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo aspernatur unde cumque. Vel alias enim tenetur, vitae cumque minus provident nobis quasi expedita veniam deserunt illum eveniet illo, praesentium amet itaque placeat nostrum maxime? Tenetur repellat cumque architecto nobis in repellendus quasi inventore a corporis ullam! Molestiae totam beatae necessitatibus.', '29-07-2023', 0),
+(110, 62, 17, 1, 'bad', '03-08-2023', 0),
+(111, 62, 20, 5, 'best', '03-08-2023', 0),
+(112, 62, 26, 4, 'Good! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate labore quaerat eum asperiores, provident nam fuga et minima molestiae, natus nemo, ipsa laboriosam in blanditiis. Ab consequatur cupiditate dolore vero.', '03-08-2023', 0);
 
 -- --------------------------------------------------------
 
@@ -278,16 +312,16 @@ CREATE TABLE `review_helpful` (
 CREATE TABLE `review_image` (
   `review_image_id` int(11) NOT NULL,
   `image_name` varchar(100) NOT NULL,
-  `review_id` int(11) NOT NULL
+  `review_id` int(11) NOT NULL,
+  `image_index` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `review_image`
 --
 
-INSERT INTO `review_image` (`review_image_id`, `image_name`, `review_id`) VALUES
-(17, '649ed9c94bdcf.jpg', 103),
-(18, '649ed9c962209.png', 103);
+INSERT INTO `review_image` (`review_image_id`, `image_name`, `review_id`, `image_index`) VALUES
+(36, '64c4af3b842cc.jpg', 103, 1);
 
 -- --------------------------------------------------------
 
@@ -320,7 +354,7 @@ CREATE TABLE `sale` (
 --
 
 INSERT INTO `sale` (`id`, `product_id`, `sale`) VALUES
-(7, 80, 15);
+(7, 80, 50);
 
 -- --------------------------------------------------------
 
@@ -396,20 +430,21 @@ CREATE TABLE `user` (
   `address` varchar(500) NOT NULL,
   `country_id` int(11) NOT NULL,
   `postal_code` int(11) NOT NULL,
-  `telephone` varchar(100) NOT NULL
+  `phone` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_name`, `role`, `email`, `password`, `address`, `country_id`, `postal_code`, `telephone`) VALUES
-(16, 'User1', 'user', 'user1@user.com', '$2y$10$GtYTk7dsgDr3W96pZDBUqO6DMkMCC3nIvhMkG9dnVKB.o94mj6/Ya', 'Jl. Jalan No. 0', 1, 65141, '08123456789'),
+INSERT INTO `user` (`user_id`, `user_name`, `role`, `email`, `password`, `address`, `country_id`, `postal_code`, `phone`) VALUES
+(16, 'User1', 'user', 'user1@user.com', '$2y$10$GtYTk7dsgDr3W96pZDBUqO6DMkMCC3nIvhMkG9dnVKB.o94mj6/Ya', 'Jl. Jalan No. 0', 1, 65141, '8123456789'),
 (17, 'User2', 'user', 'user2@user.com', '$2y$10$gZmQMloIoQtAoJ3NrgdMFOkn0zTNUpvNxo30G7GsRRd8z.mftZkBC', 'Jl. Jalan', 1, 0, '123'),
-(18, 'Karisma', 'admin', 'karisma@karisma.com', '$2y$10$CKKJx7i5ZISxJQXoCcCAXuahHZLqNoBPyRLs66xIY.3cZ22i9V9hS', 'Jl. Watu Gong No.18, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur 65145', 1, 0, '123'),
-(20, 'User3', 'user', 'user3@gmail.com', '$2y$10$KlNwNC8ump/EPFjTuBM/GeCpkRNHZbXrNxXdlpx8C8Gdi.BQ/DJwW', 'Jl. Jalan no. 0', 1, 0, '08123456789'),
+(18, 'Karisma', 'admin', 'karisma@karisma.com', '$2y$10$CKKJx7i5ZISxJQXoCcCAXuahHZLqNoBPyRLs66xIY.3cZ22i9V9hS', 'Jl. Watu Gong No.18, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur', 1, 65145, '8123456789'),
+(20, 'User3', 'user', 'user3@user.com', '$2y$10$KlNwNC8ump/EPFjTuBM/GeCpkRNHZbXrNxXdlpx8C8Gdi.BQ/DJwW', 'Jl. Jalan no. 0', 1, 0, '8123456789'),
 (26, 'User4', 'user', 'user4@user.com', '$2y$10$JMzYAe7TQ2tAuTFT395M4OPxHVNZRkd3xfmMikQ.NV0mm42mIF2xq', 'Jl. Jalan', 1, 0, '12312323212'),
-(28, 'Seller1', 'seller', 'seller1@seller.com', '$2y$10$dhswu6xxr8joZ60Uq4VCJu/AI9OZoKZqFBRXnIXLILUQguWmKM3D.', 'Jl. Jalan Jalan Aja', 4, 0, '123123123132');
+(28, 'Seller1', 'seller', 'seller1@seller.com', '$2y$10$dhswu6xxr8joZ60Uq4VCJu/AI9OZoKZqFBRXnIXLILUQguWmKM3D.', 'Jl. Jalan Jalan Aja', 2, 12345, '123123123132'),
+(36, 'Seller2', 'seller', 'seller2@seller.com', '$2y$10$d4vPchrNLLy6hITA1pUkU.9/YQt8VHku0YDNXCWCbdaGhgiEFoET.', 'Jl. Dasan Pesawat', 1, 1234, '08123456789');
 
 -- --------------------------------------------------------
 
@@ -429,7 +464,9 @@ CREATE TABLE `user_image` (
 
 INSERT INTO `user_image` (`id`, `user_image`, `user_id`) VALUES
 (18, '1684313889.png', 16),
-(20, '1686815359.png', 18);
+(20, '1686815359.png', 18),
+(22, '1691048376.jpg', 20),
+(23, '1691048799.jpg', 26);
 
 -- --------------------------------------------------------
 
@@ -442,14 +479,6 @@ CREATE TABLE `wishlist` (
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `wishlist`
---
-
-INSERT INTO `wishlist` (`wishlist_id`, `user_id`, `product_id`) VALUES
-(30, 16, 60),
-(31, 28, 80);
 
 --
 -- Indexes for dumped tables
@@ -500,6 +529,12 @@ ALTER TABLE `manifacturer`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
+-- Indexes for table `manifacturer_image`
+--
+ALTER TABLE `manifacturer_image`
+  ADD PRIMARY KEY (`manifacturer_image_id`);
+
+--
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
@@ -515,6 +550,14 @@ ALTER TABLE `product`
 ALTER TABLE `product_image`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_product_image_product_id_product_id` (`product_id`);
+
+--
+-- Indexes for table `product_order`
+--
+ALTER TABLE `product_order`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `fk_product_order_user_id` (`user_id`),
+  ADD KEY `fk_product_order_product_id` (`product_id`);
 
 --
 -- Indexes for table `product_report`
@@ -596,7 +639,8 @@ ALTER TABLE `user_image`
 --
 ALTER TABLE `wishlist`
   ADD PRIMARY KEY (`wishlist_id`),
-  ADD KEY `fk_wishlist_user_id_id` (`user_id`);
+  ADD KEY `fk_wishlist_user_id_id` (`user_id`),
+  ADD KEY `fk_wishlist_product_id` (`product_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -606,7 +650,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -624,13 +668,13 @@ ALTER TABLE `country`
 -- AUTO_INCREMENT for table `discussion`
 --
 ALTER TABLE `discussion`
-  MODIFY `discussion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `discussion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `manifacturer`
@@ -639,16 +683,28 @@ ALTER TABLE `manifacturer`
   MODIFY `manifacturer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
+-- AUTO_INCREMENT for table `manifacturer_image`
+--
+ALTER TABLE `manifacturer_image`
+  MODIFY `manifacturer_image_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `product_image`
 --
 ALTER TABLE `product_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+
+--
+-- AUTO_INCREMENT for table `product_order`
+--
+ALTER TABLE `product_order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `product_report`
@@ -660,7 +716,7 @@ ALTER TABLE `product_report`
 -- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `review_helpful`
@@ -672,7 +728,7 @@ ALTER TABLE `review_helpful`
 -- AUTO_INCREMENT for table `review_image`
 --
 ALTER TABLE `review_image`
-  MODIFY `review_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `review_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `review_report`
@@ -684,7 +740,7 @@ ALTER TABLE `review_report`
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `subcategory`
@@ -702,19 +758,19 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `user_image`
 --
 ALTER TABLE `user_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- Constraints for dumped tables
@@ -756,6 +812,13 @@ ALTER TABLE `product`
 --
 ALTER TABLE `product_image`
   ADD CONSTRAINT `fk_product_image_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `product_order`
+--
+ALTER TABLE `product_order`
+  ADD CONSTRAINT `fk_product_order_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_product_order_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `product_report`
@@ -826,7 +889,8 @@ ALTER TABLE `user_image`
 -- Constraints for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  ADD CONSTRAINT `fk_wishlist_user_id_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_wishlist_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  ADD CONSTRAINT `fk_wishlist_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
