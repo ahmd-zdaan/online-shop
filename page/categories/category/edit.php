@@ -46,7 +46,12 @@ check('login');
 							<li>Page active</li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Edit Category</h1>
+					<h1 class="pt-3">
+						<a href="index.php?page=category_list" style="color:black">
+							<i class="ti-angle-left" style="font-weight:bold; font-size:11pt"></i>
+						</a>
+						Edit Subcategory
+					</h1>
 				</div>
 				<?php
 				$category_id = $_GET['category_id'];
@@ -58,65 +63,57 @@ check('login');
 				?>
 				<form action="" method="POST">
 					<div class="container pb-5">
-						<div class="row">
-							<div class="col-3">
-								<img src="uploads/product/default.jpg" alt="" width="100%">
-							</div>
-							<div class="col">
-								<ul style="list-style: none;" class="pl-0">
-									<li class="mb-4">
-										<label class="form-label">Category</label>
-										<input type="text" name="category" class="form-control" value="<?= $category_name ?>">
-									</li>
-									<li>
-										<label class="form-label">Subcategory</label>
-										<a style="float: right;" class="btn btn-outline-primary btn-sm mb-3" href="index.php?page=subcategory_add&category_id=<?= $category_id ?>">Add Subcategory</a>
-										<table class="table table-striped table-hover table-sm">
-											<thead>
-												<tr>
-													<th scope="col" style="width: 50px">
-														ID
-													</th>
-													<th scope="col">
-														Name
-													</th>
-													<th scope="col" style="width: 100px">
-														Actions
-													</th>
-												</tr>
-											</thead>
-											<tbody>
-												<?php
-												$get_subcategory = get('subcategory', 'WHERE category_id=' . $category_id);
-												foreach ($get_subcategory as $data_subcategory) :
-													$subcategory_id = $data_subcategory['subcategory_id'];
-													$subcategory_name = $data_subcategory['subcategory_name'];
-												?>
-													<tr>
-														<td>
-															<p><?= $subcategory_id ?></p>
-														</td>
-														<td>
-															<p><?= $subcategory_name ?></p>
-														</td>
-														<td class="row">
-															<div class="btn-group btn-group-sm p-0">
-																<a class="btn btn-outline-primary col" href="index.php?page=subcategory_edit&subcategory_id=<?= $subcategory_id ?>">EDIT</a>
-																<a class="btn btn-outline-danger col" href="index.php?page=subcategory_delete&subcategory_id=<?= $subcategory_id ?>" onclick="return confirm('Are you sure you want to DELETE this SUBCATEGORY?')">DELETE</a>
-															</div>
-														</td>
-													</tr>
-												<?php endforeach ?>
-											</tbody>
-										</table>
-									</li>
-									<li class="mt-3">
-										<a type="submit" href="index.php?page=category_list" class="btn_1">BACK</a>
-										<button type="submit" name="submit" class="btn_1">SAVE</button>
-									</li>
-								</ul>
-							</div>
-						</div>
+						<ul style="list-style: none;" class="pl-0">
+							<li class="mb-4">
+								<label class="form-label">Category</label>
+								<input type="text" name="category" class="form-control" value="<?= $category_name ?>">
+							</li>
+							<li>
+								<label class="form-label">Subcategory</label>
+								<a style="float: right;" class="btn btn-outline-primary btn-sm mb-3" href="index.php?page=subcategory_add&category_id=<?= $category_id ?>">Add Subcategory</a>
+								<table class="table table-striped table-hover table-sm">
+									<thead>
+										<tr>
+											<th scope="col" style="width: 50px">
+												ID
+											</th>
+											<th scope="col">
+												Name
+											</th>
+											<th scope="col" style="width: 100px">
+												Actions
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$get_subcategory = get('subcategory', 'WHERE category_id=' . $category_id);
+										foreach ($get_subcategory as $data_subcategory) :
+											$subcategory_id = $data_subcategory['subcategory_id'];
+											$subcategory_name = $data_subcategory['subcategory_name'];
+										?>
+											<tr>
+												<td>
+													<p><?= $subcategory_id ?></p>
+												</td>
+												<td>
+													<p><?= $subcategory_name ?></p>
+												</td>
+												<td class="row">
+													<div class="btn-group btn-group-sm p-0">
+														<a class="btn btn-outline-primary col" href="index.php?page=subcategory_edit&subcategory_id=<?= $subcategory_id ?>">EDIT</a>
+														<a class="btn btn-outline-danger col" href="index.php?page=subcategory_delete&subcategory_id=<?= $subcategory_id ?>" onclick="return confirm('Are you sure you want to DELETE this SUBCATEGORY?')">DELETE</a>
+													</div>
+												</td>
+											</tr>
+										<?php endforeach ?>
+									</tbody>
+								</table>
+							</li>
+							<li class="mt-3">
+								<button type="submit" name="submit" class="btn_1">SAVE</button>
+							</li>
+						</ul>
 					</div>
 				</form>
 				<?php

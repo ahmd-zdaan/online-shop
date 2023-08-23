@@ -54,27 +54,24 @@ $category_id = $data_subcategory['category_id'];
 							<li>Page active</li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Edit Subcategory</h1>
+					<h1 class="pt-3">
+						<a href="index.php?page=category_edit&category_id=<?= $category_id ?>" style="color:black">
+							<i class="ti-angle-left" style="font-weight:bold; font-size:11pt"></i>
+						</a>
+						Edit Subcategory
+					</h1>
 				</div>
 				<form action="" method="POST">
 					<div class="container pb-5">
-						<div class="row">
-							<div class="col-3">
-								<img src="uploads/product/default.jpg" alt="" width="100%">
-							</div>
-							<div class="col">
-								<ul style="list-style: none;" class="pl-0">
-									<li class="mb-2">
-										<label class="form-label">Subcategory Name</label>
-										<input type="text" name="subcategory" value="<?= $subcategory_name ?>" class="form-control">
-									</li>
-									<li class="mt-3">
-										<a type="submit" href="index.php?page=category_edit&category_id=<?= $category_id ?>" class="btn_1">BACK</a>
-										<button type="submit" name="submit" class="btn_1">SAVE</button>
-									</li>
-								</ul>
-							</div>
-						</div>
+						<ul style="list-style: none;" class="pl-0">
+							<li class="mb-2">
+								<label class="form-label">Subcategory Name</label>
+								<input type="text" name="subcategory" value="<?= $subcategory_name ?>" class="form-control" style="width:700px">
+							</li>
+							<li class="mt-3">
+								<button type="submit" name="submit" class="btn_1">SAVE</button>
+							</li>
+						</ul>
 					</div>
 				</form>
 

@@ -52,7 +52,6 @@
 							<li>Transaction</li>
 						</ul>
 					</div>
-					<a href="index.php" style="text-decoration:underline;">&lt; Back</a>
 					<h1 class="pt-3">Transactions</h1>
 				</div>
 				<div class="mb-5">

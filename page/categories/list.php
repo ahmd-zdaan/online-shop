@@ -48,7 +48,12 @@ check('login')
 					</div>
 					<div class="row">
 						<div class="col-6">
-							<h1 class="pt-3">Category List</h1>
+							<h1 class="pt-3">
+								<a href="index.php?page=admin" style="color:black">
+									<i class="ti-angle-left" style="font-weight:bold; font-size:11pt"></i>
+								</a>
+								Categories and Subcategories
+							</h1>
 						</div>
 						<div class="col-6 text-right">
 							<a href="index.php?page=category_add" class="btn_1">ADD CATEGORY</a>

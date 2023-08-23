@@ -2,12 +2,9 @@
 check('login');
 
 $user_email = $_SESSION['email'];
-
 $get_user = get('user', 'WHERE email="' . $user_email . '"');
 $data_user = mysqli_fetch_assoc($get_user);
-
 $user_id = $data_user['user_id'];
-$user_name = $data_user['user_name'];
 ?>
 
 <!DOCTYPE html>
@@ -39,19 +36,29 @@ $user_name = $data_user['user_name'];
 	<link href="css/custom.css" rel="stylesheet">
 </head>
 
+<style>
+	.products_carousel .owl-item {
+		width: 190px !important;
+	}
+
+	.owl-item img {
+		width: 190px;
+		height: 190px;
+		object-fit: scale-down;
+	}
+</style>
+
 <body>
 	<div id="page">
 		<main class="bg_gray">
 			<div class="container margin_30">
-				<div class="page_header mb-3">
+				<div class="page_header">
 					<div class="breadcrumbs">
 						<ul>
 							<li><a href="index.php">Home</a></li>
-							<li><a href="index.php?page=view_profile"><?= $user_name ?></a></li>
 							<li>Wishlist</li>
 						</ul>
 					</div>
-					<a href="index.php" style="text-decoration:underline;">&lt; Back</a>
 					<h1 class="pt-3">Your Wishlist</h1>
 				</div>
 				<?php
@@ -164,10 +171,10 @@ $user_name = $data_user['user_name'];
 				<?php else : ?>
 					<div class="text-center my-5 py-5">
 						<img src="img/empty.png" alt="empty">
-						<h3 class="mt-4">Nothing to see here</h3>
+						<h3 class="mt-4 mb-1">Nothing to see here</h3>
 						<p class="mb-5 pb-5">You have not wishlisted any products</p>
 					</div>
-					<div class="container mt-5 p-5" style="background-color: white;">
+					<div class="container p-5" style="background-color: white;">
 						<div class="mb-4">
 							<h3 class="m-0">Create Your Dream Wishlist</h3>
 							<p style="font-size:large;">Explore and Save Your Favorite Products</p>
@@ -200,16 +207,14 @@ $user_name = $data_user['user_name'];
 										<figure>
 											<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 												<?php
-												$result = get('product_image', 'WHERE product_id=' . $product_id);
+												$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 												if (mysqli_num_rows($result) > 0) :
 													$data = mysqli_fetch_assoc($result);
 													$image_name = $data['image_name'];
 												?>
-													<img src="uploads/product/<?= $image_name ?>" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
-												<?php
-												else :
-												?>
-													<img src="img/products/product_placeholder_square_medium.jpg" width="100%" style="width: 250px; height: 250px; object-fit: scale-down;">
+													<img src="uploads/product/<?= $image_name ?>">
+												<?php else : ?>
+													<img src="img/products/product_placeholder_square_medium.jpg">
 												<?php endif ?>
 											</a>
 										</figure>

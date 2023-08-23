@@ -48,7 +48,12 @@ check('login')
 					</div>
 					<div class="row">
 						<div class="col">
-							<h1 class="py-3">Coupon Codes List</h1>
+							<h1 class="py-3">
+								<a href="index.php?page=admin" style="color:black">
+									<i class="ti-angle-left" style="font-weight:bold; font-size:11pt"></i>
+								</a>
+								Coupon Codes
+							</h1>
 						</div>
 						<div class="col mt-3 text-right">
 							<a href="index.php?page=coupon_add" class="btn btn-primary btn-sm">Add New a Coupon Code</a>
