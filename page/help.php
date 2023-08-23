@@ -41,7 +41,7 @@
                             <li>Help and Support</li>
                         </ul>
                     </div>
-                    <h1>Help and Support</h1>
+                    <h1 class="pt-3">Help and Support</h1>
                 </div>
                 <div class="container margin_90_65">
                     <div class="main_title">
