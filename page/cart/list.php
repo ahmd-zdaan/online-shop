@@ -1,5 +1,10 @@
 <?php
-check('login')
+check('login');
+
+$email = $_SESSION['email'];
+$result = get('user', 'WHERE email="' . $email . '"');
+$data = mysqli_fetch_assoc($result);
+$user_id = $data['user_id'];
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +39,18 @@ check('login')
 	<link href="css/custom.css" rel="stylesheet">
 </head>
 
+<style>
+	.products_carousel .owl-item {
+		width: 190px !important;
+	}
+
+	.owl-item img {
+		width: 190px;
+		height: 190px;
+		object-fit: scale-down;
+	}
+</style>
+
 <body>
 	<div id="page">
 		<main class="bg_gray">
@@ -45,15 +62,14 @@ check('login')
 							<li><a href="#">Cart</a></li>
 						</ul>
 					</div>
-					<h1 class="pt-3">Cart</h1>
+					<h1>
+						<a href="index.php" style="color:black">
+							<i class="ti-angle-left" style="font-weight:bold; font-size:11pt"></i>
+						</a>
+						Your Cart
+					</h1>
 				</div>
 				<?php
-				$email = $_SESSION['email'];
-
-				$result = get('user', 'WHERE email="' . $email . '"');
-				$data = mysqli_fetch_assoc($result);
-				$user_id = $data['user_id'];
-
 				$get_cart = get('cart', 'WHERE user_id=' . $user_id);
 				if (mysqli_num_rows($get_cart) > 0) :
 					$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' GROUP BY product_id', '*,SUM(quantity) AS total_quantity');
@@ -255,15 +271,15 @@ check('login')
 				</div>
 			</div>
 		<?php else : ?>
-			<div class="text-center my-5 pb-5">
+			<div class="text-center my-5 py-5">
 				<img src="img/empty.png" alt="empty">
-				<h3 class="mt-4">Nothing to see here</h3>
-				<p class="mb-5 pb-5">You have not added any products to your cart</p>
+				<h3 class="mt-4 mb-1">Nothing to see here</h3>
+				<p class="mb-5 pb-5">You have not added any products into your cart</p>
 			</div>
-			<div class="container margin_60_35 mt-5 pb-0" style="background-color: white;">
-				<div class="main_title">
-					<h3 class="m-0">Products You Might Like</h3>
-					<p style="font-size:large;">Browse and Discover Millions of Products</p>
+			<div class="container p-5" style="background-color: white;">
+				<div class="mb-4">
+					<h3 class="m-0">Fill up your cart</h3>
+					<p style="font-size:large;">Browse Thousands of Products</p>
 				</div>
 				<div class="owl-carousel owl-theme products_carousel">
 					<?php
@@ -293,14 +309,14 @@ check('login')
 								<figure>
 									<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
 										<?php
-										$result = get('product_image', 'WHERE product_id=' . $product_id);
+										$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
 										if (mysqli_num_rows($result) > 0) :
 											$data = mysqli_fetch_assoc($result);
 											$image_name = $data['image_name'];
 										?>
-											<img src="uploads/product/<?= $image_name ?>" class="lazy" alt="Image" width="100%">
+											<img src="uploads/product/<?= $image_name ?>">
 										<?php else : ?>
-											<img src="img/products/product_placeholder_square_medium.jpg" class="lazy" alt="Image" width="100%">
+											<img src="img/products/product_placeholder_square_medium.jpg">
 										<?php endif ?>
 									</a>
 								</figure>
@@ -364,8 +380,16 @@ check('login')
 									</p>
 								</div>
 								<ul>
-									<li><a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-									<li><a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
+									<li>
+										<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+											<i class="ti-heart"></i>
+										</a>
+									</li>
+									<li>
+										<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+											<i class="ti-shopping-cart"></i>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</div>

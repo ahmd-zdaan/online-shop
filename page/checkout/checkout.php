@@ -1,4 +1,5 @@
 <?php
+
 namespace Midtrans;
 
 require_once 'vendor/Midtrans.php';
@@ -161,7 +162,7 @@ function printExampleWarningMessage()
 					<div class="col-3 p-0">
 						<div class="step first payments">
 							<h3>Methods</h3>
-							<div class="box_general px-4 pb-3">
+							<div class="box_general px-4 pb-3" style="background-color:#fff">
 								<ul class="mb-3">
 									<li>
 										<label class="container_radio">Standard shipping
@@ -192,9 +193,7 @@ function printExampleWarningMessage()
 							<div class="box_general summary px-4 pb-3" style="font-size:11pt">
 								<ul class="mb-4" style="border:none">
 									<?php
-									$subtotal_price = 0;
-
-									foreach ($item_details as $item) :
+									foreach ($_POST['items'] as $item) :
 										$product_id = $item['id'];
 										$price = $item['price'];
 										$price_sale = $item['price_sale'];
@@ -236,12 +235,15 @@ function printExampleWarningMessage()
 									<?php
 									endforeach;
 
-									$coupon_name = $_POST['details']['coupon_name'];
-									$gross = $_POST['details']['gross'];
-									$promo = $_POST['details']['promo'];
-									$promo_price = $_POST['details']['promo_price'];
+									if (isset($_POST['details']['coupon_name'])) {
+										$coupon_name = $_POST['details']['coupon_name'];
+										$promo = $_POST['details']['promo'];
+										$promo_price = $_POST['details']['promo_price'];
+									}
+
 									$shipping_price = $_POST['details']['shipping_price'];
 									$subtotal_price = $_POST['details']['subtotal_price'];
+									$gross = $_POST['details']['gross'];
 									?>
 								</ul>
 								<hr class="hr border-3 m-0 mb-3">
