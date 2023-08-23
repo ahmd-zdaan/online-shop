@@ -64,7 +64,11 @@ include_once 'config/connect.php';
 		text-decoration: underline;
 	}
 
-	.discuss strong {
+	header.version_1 .main_nav ul.top_tools>li a strong {
+		background-color: #083487;
+		color: #fff !important;
+
+		font-size: 10px;
 		font-size: 0.625rem;
 		font-weight: 700;
 		width: 16px;
@@ -73,15 +77,33 @@ include_once 'config/connect.php';
 		display: block;
 		text-align: center;
 		position: absolute;
-		bottom: 12px;
+		bottom: 10px;
+		right: -3px;
+		line-height: 17px !important;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		-ms-border-radius: 50%;
+		border-radius: 50%;
+	}
+
+	.discuss strong {
+		background-color: #083487;
+		color: #fff !important;
+
+		font-size: 0.625rem;
+		font-weight: 700;
+		width: 16px;
+		height: 16px;
+		text-indent: 0;
+		display: block;
+		text-align: center;
+		position: absolute;
+		bottom: 10px;
 		right: -7px;
 		line-height: 17px !important;
 		-moz-border-radius: 50%;
 		-ms-border-radius: 50%;
 		border-radius: 50%;
-
-		background-color: #083487;
-		color: #fff !important;
 	}
 </style>
 
@@ -173,7 +195,8 @@ include_once 'config/connect.php';
 								?>
 										<li>
 											<div class="dropdown dropdown-cart">
-												<a href="index.php?page=cart_list" class="cart_bt">
+												<a href="index.php?page=cart_list" style="padding-top:8px">
+													<i class="ti-shopping-cart" style="font-size:21pt"></i>
 													<?php
 													$result = get('cart', 'WHERE user_id=' . $user_id);
 													if (mysqli_fetch_assoc($result) > 0) :
@@ -286,14 +309,15 @@ include_once 'config/connect.php';
 																<span style="float: right"><?= rupiah($total_price) ?></span>
 															</div>
 														</div>
-														<a href="index.php?page=cart_list" class="btn_1 outline mt-3">View Cart</a>
-														<a href="index.php?page=checkout" class="btn_1 mt-1">Checkout</a>
+														<a href="index.php?page=cart_list" class="btn_1 mt-2">View Cart</a>
 													</div>
 												<?php endif ?>
 											</div>
 										</li>
 										<li>
-											<a href="index.php?page=wishlist_list" class="wishlist"></a>
+											<a href="index.php?page=wishlist_list" style="padding-top:8px">
+												<i class="ti-heart" style="font-size:18pt"></i>
+											</a>
 										</li>
 									<?php else : ?>
 										<li>
@@ -482,9 +506,15 @@ include_once 'config/connect.php';
 						<h3 data-target="#collapse_3">Details</h3>
 						<div class="collapse dont-collapse-sm contacts" id="collapse_3">
 							<ul>
-								<li class="mb-1"><i class="ti-home"></i>12345 Jl. Jalan no. 0<br>Malang - Indonesia</li>
-								<li class="mb-1"><i class="ti-headphone-alt"></i>+00 123-456-789</li>
-								<li class="mb-1"><i class="ti-email"></i><a href="#">online@shop.com</a></li>
+								<li class="mb-1">
+									<i class="ti-home"></i>12345 Jl. Jalan no. 0<br>Malang - Indonesia
+								</li>
+								<!-- <li class="mb-1">
+									<i class="ti-headphone-alt"></i>+00 123-456-789
+								</li> -->
+								<li class="mb-1">
+									<i class="ti-email"></i><a href="#">online@shop.com</a>
+								</li>
 							</ul>
 						</div>
 					</div>
@@ -505,16 +535,16 @@ include_once 'config/connect.php';
 								<h5>Follow Us</h5>
 								<ul>
 									<li>
-										<a href="#0">
+										<a href="https://www.youtube.com/">
 											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/youtube_icon.svg" alt="" class="lazy">
 										</a>
 									</li>
 									<li>
-										<a href="#0">
+										<a href="https://www.instagram.com/">
 											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/instagram_icon.svg" alt="" class="lazy">
 										</a>
 									</li>
-									<li>
+									<!-- <li>
 										<a href="#0">
 											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/facebook_icon.svg" alt="" class="lazy">
 										</a>
@@ -523,7 +553,7 @@ include_once 'config/connect.php';
 										<a href="#0">
 											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/twitter_icon.svg" alt="" class="lazy">
 										</a>
-									</li>
+									</li> -->
 								</ul>
 							</div>
 						</div>
@@ -533,7 +563,7 @@ include_once 'config/connect.php';
 				<div class="row add_bottom_25">
 					<div class="col-lg-6">
 						<ul class="footer-selector clearfix">
-							<li>
+							<!-- <li>
 								<div class="styled-select lang-selector">
 									<select>
 										<option value="en" selected style="color:black">English</option>
@@ -556,7 +586,7 @@ include_once 'config/connect.php';
 										<option value="eur" style="color:black">(EUR) Euro</option>
 									</select>
 								</div>
-							</li>
+							</li> -->
 							<li><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/cards_all.svg" alt="" width="198" height="30" class="lazy"></li>
 						</ul>
 					</div>
