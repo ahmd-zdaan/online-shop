@@ -62,12 +62,7 @@ $user_id = $data['user_id'];
 							<li><a href="#">Cart</a></li>
 						</ul>
 					</div>
-					<h1>
-						<a href="index.php" style="color:black">
-							<i class="ti-angle-left" style="font-weight:bold; font-size:11pt"></i>
-						</a>
-						Your Cart
-					</h1>
+					<h1 class="pt-3">Your Cart</h1>
 				</div>
 				<?php
 				$get_cart = get('cart', 'WHERE user_id=' . $user_id);
