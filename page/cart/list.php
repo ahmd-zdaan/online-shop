@@ -103,6 +103,11 @@ $user_id = $data['user_id'];
 									$data = mysqli_fetch_assoc($result);
 									$product_name = $data['product_name'];
 									$price = $data['price'];
+
+									if (strlen($product_name) > 50) {
+										$product_name = substr($product_name, 0, 47);
+										$product_name .= '...';
+									}
 								?>
 									<tr>
 										<td>
@@ -376,14 +381,36 @@ $user_id = $data['user_id'];
 								</div>
 								<ul>
 									<li>
-										<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
-											<i class="ti-heart"></i>
-										</a>
+										<?php
+										if (isset($_SESSION['email'])) :
+											$get_wishlist = get('wishlist', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
+											if (mysqli_num_rows($get_wishlist) > 0) :
+										?>
+												<a href="index.php?page=wishlist_delete&product_id=<?= $product_id ?>" class="tooltip-1" title="Remove from Wishlist" onclick="return confirm('Are you sure to REMOVE this product from your WISHLIST?')" data-toggle="tooltip" data-placement="left">
+													<i class="ti-heart-broken"></i>
+												</a>
+											<?php else : ?>
+												<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" title="Add to Wishlist" data-toggle="tooltip" data-placement="left">
+													<i class="ti-heart"></i>
+												</a>
+											<?php endif ?>
+										<?php endif ?>
 									</li>
 									<li>
-										<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
-											<i class="ti-shopping-cart"></i>
-										</a>
+										<?php
+										if (isset($user_id)) :
+											$get_cart = get('cart', 'WHERE user_id=' . $user_id . ' AND product_id=' . $product_id);
+											if (mysqli_num_rows($get_cart) > 0) :
+										?>
+												<a href="index.php?page=cart_delete&product_id=<?= $product_id ?>" class="tooltip-1" title="Remove from Cart" data-toggle="tooltip" data-placement="left" onclick="return confirm('Are you sure you want to REMOVE this PRODUCT from your cart?')">
+													<i class="ti-shopping-cart-full"></i>
+												</a>
+											<?php else : ?>
+												<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" title="Add to Cart" data-toggle="tooltip" data-placement="left">
+													<i class="ti-shopping-cart"></i>
+												</a>
+											<?php endif ?>
+										<?php endif ?>
 									</li>
 								</ul>
 							</div>
