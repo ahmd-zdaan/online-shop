@@ -1,5 +1,12 @@
 <?php
 include_once 'config/connect.php';
+
+if (isset($_SESSION['email'])) {
+	$check_account = get('user', 'WHERE email="' . $_SESSION['email'] . '"');
+	if (mysqli_num_rows($check_account) == 0) {
+		log_out();
+	}
+}
 ?>
 
 <!DOCTYPE html>
