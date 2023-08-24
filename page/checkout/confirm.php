@@ -43,6 +43,9 @@ foreach ($get_cart as $data_cart) {
     $query = 'UPDATE product SET sold=' . $sold . ' WHERE product_id=' . $product_id;
     mysqli_query($connect, $query);
 
+    $query = 'UPDATE user SET purchased=' . $sold . ' WHERE user_id=' . $user_id;
+    mysqli_query($connect, $query);
+
     $query = "DELETE FROM cart WHERE product_id=" . $product_id . " AND user_id=" . $user_id;
     mysqli_query($connect, $query);
 
@@ -50,4 +53,4 @@ foreach ($get_cart as $data_cart) {
     mysqli_query($connect, $query);
 }
 
-echo "<script>window.location.href = 'index.php?page=cart_list'</script>";
+echo "<script>window.location.href = 'index.php?page=transaction_list'</script>";
