@@ -56,7 +56,9 @@ function register($user_name, $role, $email, $password, $confirmPassword, $addre
                 'address' => $address,
                 'country_id' => $country_id,
                 'postal_code' => $postal_code,
-                'phone' => $phone
+                'phone' => $phone,
+                'purchased' => 0,
+                'date' => date("d-m-Y")
             ]);
             if ($result) {
                 $_SESSION['email'] = $email;
@@ -177,10 +179,4 @@ function dateConvert($input)
     $output = $day . ' ' . $month . ', ' . $year;
 
     return $output;
-}
-
-function cutFromEnd($string, $value)
-{
-    $result = rtrim($string, substr($string, -$value));
-    return $result;
 }
