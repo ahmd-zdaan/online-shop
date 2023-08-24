@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 18, 2023 at 10:23 AM
+-- Generation Time: Aug 24, 2023 at 10:30 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -33,6 +33,15 @@ CREATE TABLE `cart` (
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `user_id`, `product_id`, `quantity`) VALUES
+(134, 17, 62, 2),
+(135, 16, 62, 2),
+(141, 20, 80, 1);
 
 -- --------------------------------------------------------
 
@@ -190,7 +199,7 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `product_name`, `seller_id`, `category_id`, `subcategory_id`, `price`, `stock`, `description`, `manifacturer_id`, `variant`, `weight`, `date`, `sold`, `report`) VALUES
-(62, 'Adilette Aqua Slides', 28, 3, 5, 380000, 36, 'POST-SWIM SLIDES WITH ENHANCED CUSHIONING\r\nRinse off after the pool in these shower-friendly sandals. Keeping it simple, the smooth slip-ons reveal their adidas DNA with signature 3-Stripes. Soft cushioning rewards tired feet with plush comfort.\r\n\r\nSPECIFICATIONS :\r\n- Regular fit\r\n- One-piece moulded EVA upper\r\n- Soft Cloudfoam footbed\r\n- Product code: F35550\r\n- Slip-on construction\r\n- EVA outsole\r\n- Lightweight feel; Quick-drying material', 12, '1', 1, '14-07-2023', 8, 0),
+(62, 'Adilette Aqua Slides', 28, 3, 5, 380000, 36, 'POST-SWIM SLIDES WITH ENHANCED CUSHIONING\r\nRinse off after the pool in these shower-friendly sandals. Keeping it simple, the smooth slip-ons reveal their adidas DNA with signature 3-Stripes. Soft cushioning rewards tired feet with plush comfort.\r\n\r\nSPECIFICATIONS :\r\n- Regular fit\r\n- One-piece moulded EVA upper\r\n- Soft Cloudfoam footbed\r\n- Product code: F35550\r\n- Slip-on construction\r\n- EVA outsole\r\n- Lightweight feel; Quick-drying material', 12, '1', 1, '14-07-2023', 9, 0),
 (64, 'ADILS / LINNMON', 28, 7, 1, 579000, 36, 'Padu padankan pilihan permukaan meja dan kaki - atau pilih kombinasi yang siap pakai. Kuat dan ringan, dibuat dengan teknik yang menggunakan sedikit bahan mentah, mengurangi pengaruh negatif pada lingkungan.\r\n\r\nDaun meja\r\nAtas: Fibreboard, Cat akrilik\r\nRangka: Particleboard, Tepi plastik\r\nBahan pengisi: Isian kertas berstruktur sarang lebah (min. 70% didaur ulang)\r\nBawah: Fibreboard\r\nKaki\r\nBahan dasar: Baja, Dilapisi serbuk epoksi/poliester\r\nKaki: Plastik polipropilena', 18, '1', 2, '14-07-2023', 1, 0),
 (70, 'Nike Air Force 1 \'07 LV8', 28, 3, 5, 1909000, 5, 'The radiance lives on in the Air Force 1 \'07 LV8. Crossing hardwood comfort with off-court flair, these kicks add a touch of crafty style to a hoops original. Mixed materials and era-echoing \'80s construction add nothing-but-net style.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 2, 0),
 (71, 'Nike Air Max Impact 4', 28, 3, 5, 1349000, 13, 'Elevate your game and your hops. Charged with Max Air cushioning in the heel, this lightweight, secure shoe helps you get off the ground confidently and land comfortably. Plus, rubber wraps up the sides for added durability and stability.', 3, 'EU 39, EU 40, EU 41, EU 42, EU 43', 1, '14-07-2023', 2, 0),
@@ -291,8 +300,8 @@ CREATE TABLE `review` (
 --
 
 INSERT INTO `review` (`review_id`, `product_id`, `user_id`, `rating`, `review`, `date`, `report`) VALUES
-(18, 62, 18, 3, '3 stars', '2023-06-21', 0),
-(19, 64, 18, 1, '1 star', '2023-06-21', 0),
+(18, 62, 18, 3, '3 stars', '21-06-2023', 0),
+(19, 64, 18, 1, '1 star', '21-06-2023', 0),
 (103, 80, 18, 5, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea omnis blanditiis aliquam ex quae! Consequuntur quia placeat fugiat deserunt, exercitationem minus maiores optio adipisci quidem consequatur quaerat veritatis officiis aliquid eos, magnam tenetur ducimus, nulla vel eveniet error. Vero error voluptas sed tenetur nam provident officiis hic consequatur non? Excepturieeeeeeeee', '30-06-2023', 0),
 (105, 80, 16, 1, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Necessitatibus, perferendis minima nisi mollitia placeat magnam.', '15-07-2023', 0),
 (107, 80, 18, 4, 'ok', '25-07-2023', 0),
@@ -420,7 +429,7 @@ INSERT INTO `subcategory` (`subcategory_id`, `subcategory_name`, `category_id`) 
 (40, 'Console', 15),
 (41, 'Video Game', 15),
 (42, 'Shirt', 3),
-(43, 'pants', 3);
+(43, 'Pants', 3);
 
 -- --------------------------------------------------------
 
@@ -443,7 +452,8 @@ INSERT INTO `transaction` (`transaction_id`, `user_id`, `date`) VALUES
 (17, 17, '10-08-2023'),
 (18, 20, '10-08-2023'),
 (19, 16, '12-08-2023'),
-(20, 16, '14-08-2023');
+(20, 16, '14-08-2023'),
+(21, 18, '18-08-2023');
 
 -- --------------------------------------------------------
 
@@ -471,7 +481,8 @@ INSERT INTO `transaction_details` (`transaction_details_id`, `transaction_id`, `
 (12, 18, 70, 1909000, 1),
 (13, 19, 71, 1349000, 1),
 (14, 19, 70, 1909000, 1),
-(15, 20, 91, 49000, 2);
+(15, 20, 91, 49000, 2),
+(16, 21, 62, 380000, 1);
 
 -- --------------------------------------------------------
 
@@ -488,21 +499,23 @@ CREATE TABLE `user` (
   `address` varchar(500) NOT NULL,
   `country_id` int(11) NOT NULL,
   `postal_code` int(11) NOT NULL,
-  `phone` varchar(100) NOT NULL
+  `phone` varchar(100) NOT NULL,
+  `purchased` int(11) NOT NULL,
+  `date` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_name`, `role`, `email`, `password`, `address`, `country_id`, `postal_code`, `phone`) VALUES
-(16, 'User1', 'user', 'user1@user.com', '$2y$10$GtYTk7dsgDr3W96pZDBUqO6DMkMCC3nIvhMkG9dnVKB.o94mj6/Ya', 'Jl. Jalan No. 0', 1, 65141, '8123456789'),
-(17, 'User2', 'user', 'user2@user.com', '$2y$10$gZmQMloIoQtAoJ3NrgdMFOkn0zTNUpvNxo30G7GsRRd8z.mftZkBC', 'Jl. Jalan', 1, 0, '123'),
-(18, 'Karisma', 'admin', 'karisma@karisma.com', '$2y$10$CKKJx7i5ZISxJQXoCcCAXuahHZLqNoBPyRLs66xIY.3cZ22i9V9hS', 'Jl. Watu Gong No.18, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur', 1, 65145, '8123456789'),
-(20, 'User3', 'user', 'user3@user.com', '$2y$10$KlNwNC8ump/EPFjTuBM/GeCpkRNHZbXrNxXdlpx8C8Gdi.BQ/DJwW', 'Jl. Jalan no. 0', 1, 0, '8123456789'),
-(26, 'User4', 'user', 'user4@user.com', '$2y$10$JMzYAe7TQ2tAuTFT395M4OPxHVNZRkd3xfmMikQ.NV0mm42mIF2xq', 'Jl. Jalan', 1, 0, '12312323212'),
-(28, 'Seller1', 'seller', 'seller1@seller.com', '$2y$10$dhswu6xxr8joZ60Uq4VCJu/AI9OZoKZqFBRXnIXLILUQguWmKM3D.', 'Jl. Jalan Jalan Aja', 2, 12345, '123123123132'),
-(36, 'Seller2', 'seller', 'seller2@seller.com', '$2y$10$d4vPchrNLLy6hITA1pUkU.9/YQt8VHku0YDNXCWCbdaGhgiEFoET.', 'Jl. Dasan Pesawat', 1, 1234, '08123456789');
+INSERT INTO `user` (`user_id`, `user_name`, `role`, `email`, `password`, `address`, `country_id`, `postal_code`, `phone`, `purchased`, `date`) VALUES
+(16, 'User1', 'user', 'user1@user.com', '$2y$10$GtYTk7dsgDr3W96pZDBUqO6DMkMCC3nIvhMkG9dnVKB.o94mj6/Ya', 'Jl. Jalan No. 0', 1, 65141, '8123456789', 3, '01-01-2023'),
+(17, 'User2', 'user', 'user2@user.com', '$2y$10$gZmQMloIoQtAoJ3NrgdMFOkn0zTNUpvNxo30G7GsRRd8z.mftZkBC', 'Jl. Jalan', 1, 98765, '123', 23, '02-02-2023'),
+(18, 'Karisma', 'admin', 'karisma@karisma.com', '$2y$10$CKKJx7i5ZISxJQXoCcCAXuahHZLqNoBPyRLs66xIY.3cZ22i9V9hS', 'Jl. Watu Gong No.18, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur', 1, 65145, '8123456789', 68, '03-03-2023'),
+(20, 'User3', 'user', 'user3@user.com', '$2y$10$KlNwNC8ump/EPFjTuBM/GeCpkRNHZbXrNxXdlpx8C8Gdi.BQ/DJwW', 'Jl. Jalan no. 0', 1, 0, '8123456789', 0, '04-04-2023'),
+(26, 'User4', 'user', 'user4@user.com', '$2y$10$JMzYAe7TQ2tAuTFT395M4OPxHVNZRkd3xfmMikQ.NV0mm42mIF2xq', 'Jl. Jalan', 1, 13579, '12312323212', 1, '05-05-2023'),
+(28, 'Seller1', 'seller', 'seller1@seller.com', '$2y$10$dhswu6xxr8joZ60Uq4VCJu/AI9OZoKZqFBRXnIXLILUQguWmKM3D.', 'Jl. Jalan Jalan Aja', 2, 12345, '123123123132', 16, '06-06-2023'),
+(36, 'Seller2', 'seller', 'seller2@seller.com', '$2y$10$d4vPchrNLLy6hITA1pUkU.9/YQt8VHku0YDNXCWCbdaGhgiEFoET.', 'Jl. Dasan Pesawat', 1, 1234, '08123456789', 0, '07-07-2023');
 
 -- --------------------------------------------------------
 
@@ -723,7 +736,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -825,13 +838,13 @@ ALTER TABLE `subcategory`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `transaction_details`
 --
 ALTER TABLE `transaction_details`
-  MODIFY `transaction_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `transaction_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -849,7 +862,7 @@ ALTER TABLE `user_image`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Constraints for dumped tables
