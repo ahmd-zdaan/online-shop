@@ -38,6 +38,16 @@
 	.product:hover {
 		text-decoration: underline;
 	}
+
+	.products_carousel .owl-item {
+		width: 190px !important;
+	}
+
+	.owl-item img {
+		width: 190px;
+		height: 190px;
+		object-fit: scale-down;
+	}
 </style>
 
 <body>
@@ -171,29 +181,137 @@
 							$collapse_id++;
 						endforeach
 						?>
+					<?php else : ?>
+						<div class="text-center my-5 py-5">
+							<img src="img/empty.png" alt="empty">
+							<h3 class="mt-4 mb-1">Nothing to see here</h3>
+							<p class="mb-5 pb-5">You have not added any products into your cart</p>
+						</div>
+						<div class="container p-5" style="background-color: white;">
+							<div class="mb-4">
+								<h3 class="m-0">Create Your Dream Wishlist</h3>
+								<p style="font-size:large;">Explore and Save Your Favorite Products</p>
+							</div>
+							<div class="owl-carousel owl-theme products_carousel">
+								<?php
+								$result = get('product');
+								foreach ($result as $data) :
+									$product_id = $data['product_id'];
+									$product_name = $data['product_name'];
+									$category_id = $data['category_id'];
+									$subcategory_id = $data['subcategory_id'];
+									$price = $data['price'];
+									$sold = $data['sold'];
+									$description = $data['description'];
+								?>
+									<div class="item">
+										<div class="grid_item">
+											<?php
+											$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+											if (mysqli_num_rows($get_sale) > 0) :
+												$data_sale = mysqli_fetch_assoc($get_sale);
+												$sale = $data_sale['sale'];
+												$price_sale = $price - $price * (int) $sale / 100;
+											?>
+												<span class="ribbon off">-
+													<?= $sale ?>
+												</span>
+											<?php endif ?>
+											<figure>
+												<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+													<?php
+													$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+													if (mysqli_num_rows($result) > 0) :
+														$data = mysqli_fetch_assoc($result);
+														$image_name = $data['image_name'];
+													?>
+														<img src="uploads/product/<?= $image_name ?>">
+													<?php else : ?>
+														<img src="img/products/product_placeholder_square_medium.jpg">
+													<?php endif ?>
+												</a>
+											</figure>
+											<div class="rating">
+												<?php
+												$get_review = get('review', 'WHERE product_id="' . $product_id . '"', 'sum(rating)');
+												$data_review = mysqli_fetch_assoc($get_review);
+												$total_rating = (int)$data_review['sum(rating)'];
+
+												$get_review = get('review', 'WHERE product_id="' . $product_id . '"', 'count(rating)');
+												$data_review = mysqli_fetch_assoc($get_review);
+												$count_rating = (int)$data_review['count(rating)'];
+
+												if ($count_rating > 0) {
+													$average_rating = round($total_rating / $count_rating);
+
+													for ($i = $average_rating; $i > 0; $i--) {
+														echo '<i class="icon-star voted"></i>';
+													}
+												}
+
+												if ($count_rating == 0) {
+													echo '<p class="mb-0">No review</p>';
+												} else {
+													$n = 5 - $average_rating;
+													for ($i = $n; $i > 0; $i--) {
+														echo '<i class="icon-star"></i>';
+													}
+													echo '<em class="ml-1" style="color:#9d9d9d">(' . $count_rating . ')</em>';
+												}
+												?>
+											</div>
+											<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+												<h3>
+													<?= $product_name ?>
+												</h3>
+											</a>
+											<div class="price_box mb-0">
+												<?php
+												$get_sale = get('sale', 'WHERE product_id=' . $product_id);
+												if (mysqli_num_rows($get_sale) > 0) :
+													$data_sale = mysqli_fetch_assoc($get_sale);
+													$sale = $data_sale['sale'];
+													$price_sale = $price - $price * (int) $sale / 100;
+												?>
+													<span class="new_price">
+														<?= rupiah($price_sale) ?>
+													</span>
+													<span class="old_price" style="font-size:small">
+														<?= rupiah($price) ?>
+													</span>
+												<?php else : ?>
+													<span class="new_price">
+														<?= rupiah($price) ?>
+													</span>
+												<?php endif ?>
+											</div>
+											<div>
+												<p style="color: #9d9d9d;" class="mb-3">
+													<?= $sold ?> sold • 0 discussions
+												</p>
+											</div>
+											<ul>
+												<li>
+													<a href="index.php?page=wishlist_add&product_id=<?= $product_id ?>" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+														<i class="ti-heart"></i>
+													</a>
+												</li>
+												<li>
+													<a href="index.php?page=cart_add&product_id=<?= $product_id ?>&quantity=1" class="tooltip-1" data-toggle="tooltip" data-placement="left" title="Add to cart">
+														<i class="ti-shopping-cart"></i>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								<?php endforeach ?>
+							</div>
+						</div>
 					<?php endif ?>
 				</div>
 			</div>
 		</main>
 	</div>
-
-	<script>
-		function readMore(i) {
-			let dots = document.getElementById("dots");
-			let moreText = document.getElementById("more");
-			let btnText = document.getElementById("readmore" + i);
-
-			if (dots.style.display == "none") {
-				dots.style.display = "inline";
-				btnText.innerHTML = "read more";
-				moreText.style.display = "none";
-			} else {
-				dots.style.display = "none";
-				btnText.innerHTML = "read less";
-				moreText.style.display = "inline";
-			}
-		}
-	</script>
 </body>
 
 </html>
