@@ -6,8 +6,15 @@ $get_user = get('user', 'WHERE email="' . $email . '"');
 $data_user = mysqli_fetch_assoc($get_user);
 $user_id = $data_user['user_id'];
 
+$shipping_price = $_GET['shipping_price'];
+$subtotal_price = $_GET['subtotal_price'];
+$gross = $_GET['gross'];
+
 insert('transaction', [
     'user_id' => $user_id,
+    'shipping_price' => $shipping_price,
+    'subtotal_price' => $subtotal_price,
+    'gross' => $gross,
     'date' => date("d-m-Y")
 ]);
 
