@@ -23,22 +23,13 @@
 	<link href="css/style.css" rel="stylesheet">
 
 	<!-- SPECIFIC CSS -->
-	<!-- <link href="css/product_page.css" rel="stylesheet"> -->
-	<!-- <link href="css/cart.css" rel="stylesheet"> -->
+	<link href="css/cart.css" rel="stylesheet">
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
 </head>
 
 <style>
-	#more {
-		display: none;
-	}
-
-	.product:hover {
-		text-decoration: underline;
-	}
-
 	.products_carousel .owl-item {
 		width: 190px !important;
 	}
@@ -47,6 +38,34 @@
 		width: 190px;
 		height: 190px;
 		object-fit: scale-down;
+	}
+
+	.items li {
+		list-style: none;
+	}
+
+	.items .item {
+		float: left;
+	}
+
+	.items .item span {
+		color: black;
+	}
+
+	.price li {
+		list-style: none;
+		font-size: 11pt;
+		font-weight: 500;
+	}
+
+	.price li span {
+		float: left;
+	}
+
+	.price .total {
+		color: red;
+		font-size: 16pt;
+		font-weight: bold;
 	}
 </style>
 
@@ -79,6 +98,9 @@
 
 						foreach ($get_transaction as $transaction_data) :
 							$transaction_id = $transaction_data['transaction_id'];
+							$shipping_price = $transaction_data['shipping_price'];
+							$subtotal_price = $transaction_data['subtotal_price'];
+							$gross = $transaction_data['gross'];
 							$date = $transaction_data['date'];
 						?>
 							<div class="accordion" id="accordionExample">
@@ -91,6 +113,7 @@
 											foreach ($get_details as $data_details) {
 												$details_product_id = $data_details['product_id'];
 												$details_price = $data_details['price'];
+												$details_quantity = $data_details['quantity'];
 
 												$get_product = get('product', 'WHERE product_id=' . $details_product_id);
 												$data_product = mysqli_fetch_assoc($get_product);
@@ -117,62 +140,74 @@
 									$total_price = $data_details['SUM(price)'];
 									?>
 									<div class="mt-4">
-										<ul class="p-0" style="list-style-type:none">
-											<?php
-											$get_details = get('transaction_details', 'WHERE transaction_id=' . $transaction_id);
-											foreach ($get_details as $data_details) :
-												$details_product_id = $data_details['product_id'];
-												$details_price = $data_details['price'];
-												$details_quantity = $data_details['quantity'];
+										<div class="my-3 text-right">
+											<div class="row">
+												<div class="col">
+													<ul class="p-0">
+														<?php
+														$get_details = get('transaction_details', 'WHERE transaction_id=' . $transaction_id);
+														foreach ($get_details as $data_details) :
+															$details_product_id = $data_details['product_id'];
+															$details_price = $data_details['price'];
+															$details_quantity = $data_details['quantity'];
 
-												$get_product = get('product', 'WHERE product_id=' . $details_product_id);
-												$data_product = mysqli_fetch_assoc($get_product);
+															$get_product = get('product', 'WHERE product_id=' . $details_product_id);
+															$data_product = mysqli_fetch_assoc($get_product);
 
-												$product_id = $data_product['product_id'];
-												$product_name = $data_product['product_name'];
-												$category_id = $data_product['category_id'];
-												$subcategory_id = $data_product['subcategory_id'];
-												$description = $data_product['description'];
+															$product_id = $data_product['product_id'];
+															$product_name = $data_product['product_name'];
+															$category_id = $data_product['category_id'];
+															$subcategory_id = $data_product['subcategory_id'];
+															$description = $data_product['description'];
 
-												$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
-												$data = mysqli_fetch_assoc($result);
-												$category_name = $data['category_name'];
+															$result = get('category', 'WHERE category_id=' . $category_id, 'category_name');
+															$data = mysqli_fetch_assoc($result);
+															$category_name = $data['category_name'];
 
-												$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id);
-												$data = mysqli_fetch_assoc($result);
-												$subcategory_name = $data['subcategory_name'];
-											?>
-												<li>
-													<div class="row" style="font-size:11pt">
-														<div class="col">
-															<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
-																<?php
-																$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
-																if (mysqli_num_rows($result) > 0) :
-																	$data = mysqli_fetch_assoc($result);
-																	$image_name = $data['image_name'];
-																?>
-																	<img src="uploads/product/<?= $image_name ?>" alt="product_image" style="width:50px; height:50px; object-fit:scale-down">
-																<?php else : ?>
-																	<img src="uploads/product/default.jpg" alt="product_image" style="width:50px; height:50px; object-fit:scale-down">
-																<?php endif ?>
-															</a>
-															<span style="font-weight:bold; color:#004cd7"><?= $details_quantity ?>x</span>
-															<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
-																<span class="hover-underline" style="color:black"><?= $product_name ?></span>
-															</a>
-														</div>
-														<div class="col-3 text-right">
-															<p class="m-0" style="float:right; font-weight:bold"><?= rupiah($details_price) ?></p>
-															<p class="m-0 mr-2" style="float:right">(<?= $details_quantity ?>x <?= rupiah($details_price) ?>)</p>
-														</div>
-													</div>
-												</li>
-											<?php endforeach ?>
-										</ul>
-										<div class="my-3 text-right" style="font-weight:bold">
-											<span class="m-0" style="color:red; font-size:large">Total</span>
-											<h4 class="m-0" style="color:red"><?= rupiah($total_price) ?></h4>
+															$result = get('subcategory', 'WHERE subcategory_id=' . $subcategory_id);
+															$data = mysqli_fetch_assoc($result);
+															$subcategory_name = $data['subcategory_name'];
+														?>
+															<li style="list-style:none; clear:both">
+																<ul class="items">
+																	<li class="item">
+																		<span style="font-weight:bold; color:#004cd7"><?= $details_quantity ?>x</span>
+																		<a href="index.php?page=product_view&product_id=<?= $product_id ?>">
+																			<?php
+																			$result = get('product_image', 'WHERE product_id=' . $product_id . ' ORDER BY image_index DESC');
+																			if (mysqli_num_rows($result) > 0) :
+																				$data = mysqli_fetch_assoc($result);
+																				$image_name = $data['image_name'];
+																			?>
+																				<img src="uploads/product/<?= $image_name ?>" alt="product_image" style="width:50px; height:50px; object-fit:scale-down">
+																			<?php else : ?>
+																				<img src="uploads/product/default.jpg" alt="product_image" style="width:50px; height:50px; object-fit:scale-down">
+																			<?php endif ?>
+																			<span class="hover-underline"><?= $product_name ?></span>
+																		</a>
+																	</li>
+																	<li>
+																		(<?= $details_quantity ?>x <?= rupiah($details_price) ?>)<span class="ml-2" style="font-weight:bold"><?= rupiah($subtotal_price) ?></span>
+																	</li>
+																</ul>
+															</li>
+														<?php endforeach ?>
+													</ul>
+												</div>
+												<div class="col-4">
+													<ul class="price">
+														<li>
+															<span>Shipping</span><?= rupiah($shipping_price) ?>
+														</li>
+														<li>
+															<span>Subtotal</span><?= rupiah($subtotal_price) ?>
+														</li>
+														<li class="my-4 total">
+															<span>TOTAL</span><?= rupiah($gross) ?>
+														</li>
+													</ul>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
