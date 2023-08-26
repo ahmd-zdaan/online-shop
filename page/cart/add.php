@@ -20,8 +20,9 @@ if (mysqli_num_rows($get_cart) > 0) {
 	$data_cart = mysqli_fetch_assoc($get_cart);
 
 	$cart_quantity = $data_cart['quantity'];
+	$cart_quantity += $quantity;
 
-	$query = 'UPDATE cart SET quantity="' . $cart_quantity + $quantity . '" WHERE product_id=' . $product_id;
+	$query = 'UPDATE cart SET quantity=' . $cart_quantity . ' WHERE product_id=' . $product_id;
 	$result = mysqli_query($connect, $query);
 } else {
 	$result = insert('cart', [

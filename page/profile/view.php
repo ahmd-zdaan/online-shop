@@ -195,8 +195,8 @@ $country_name = $table_country['country_name'];
 							<?php else : ?>
 								<div class="text-center my-5">
 									<img src="img/empty.png" alt="empty">
-									<h3 class="mt-4">Nothing to see here</h3>
-									<p>No review has been reported</p>
+									<h3 class="m-0 mt-4">Nothing to see here</h3>
+									<p>No product has been reviewed</p>
 								</div>
 							<?php endif ?>
 						</div>

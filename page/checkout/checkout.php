@@ -219,7 +219,7 @@ function printExampleWarningMessage()
 													</p>
 												</div>
 												<div class="col pl-0">
-													<p class="m-0" style="float:right">
+													<p class="m-0" style="float:right; font-weight:bold">
 														<?= rupiah($total_product) ?>
 													</p>
 													<p class="m-0 mr-2" style="float:right; font-weight:normal">
@@ -322,8 +322,7 @@ function printExampleWarningMessage()
 				snap.pay('<?= $snap_token ?>', {
 					onSuccess: function(result) {
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-						window.location.href = `index.php?page=checkout_confirm&user_id=<?= $user_id ?>&order_id=${result.order_id}`;
-						// window.location.href = 'index.php?page=checkout_confirm&user_id=<?= $user_id ?>';
+						window.location.href = `index.php?page=checkout_confirm&user_id=<?= $user_id ?>&shipping_price=<?= $shipping_price ?>&subtotal_price=<?= $subtotal_price ?>&gross=<?= $gross ?>`;
 					},
 					onPending: function(result) {
 						// document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
