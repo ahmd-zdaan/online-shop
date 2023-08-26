@@ -38,27 +38,21 @@ if (isset($_SESSION['email'])) {
 	?>
 	<title><?= $page ?></title>
 
-	<!-- Bootstrap -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-	<!-- Favicons-->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
 	<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
 	<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
 	<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
 
-	<!-- GOOGLE WEB FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
 
-	<!-- BASE CSS -->
 	<link href="css/bootstrap.custom.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 
-	<!-- SPECIFIC CSS -->
 	<link href="css/home_1.css" rel="stylesheet">
 
-	<!-- YOUR CUSTOM CSS -->
 	<link href="css/custom.css" rel="stylesheet">
 </head>
 
@@ -420,14 +414,8 @@ if (isset($_SESSION['email'])) {
 																Admin
 															</a>
 														</li>
-													<?php endif ?>
-													<!-- <li>
-														<a href="index.php?page=order">
-															<i class="ti-package"></i>
-															Orders
-														</a>
-													</li> -->
-													<?php
+													<?php endif;
+
 													if ($user_role != 'seller') :
 													?>
 														<li>
@@ -479,7 +467,6 @@ if (isset($_SESSION['email'])) {
 								<li class="mb-1"><a href="index.php?page=view_profile">My Profile</a></li>
 								<li class="mb-1"><a href="index.php?page=about">About Us</a></li>
 								<li class="mb-1"><a href="index.php?page=help">Help & FAQ</a></li>
-								<li class="mb-1"><a href="index.php?blog">Blog</a></li>
 							</ul>
 						</div>
 					</div>
@@ -516,11 +503,11 @@ if (isset($_SESSION['email'])) {
 								<li class="mb-1">
 									<i class="ti-home"></i>12345 Jl. Jalan no. 0<br>Malang - Indonesia
 								</li>
-								<!-- <li class="mb-1">
-									<i class="ti-headphone-alt"></i>+00 123-456-789
-								</li> -->
 								<li class="mb-1">
-									<i class="ti-email"></i><a href="#">online@shop.com</a>
+									<i class="ti-headphone-alt"></i>+00 123-456-789
+								</li>
+								<li class="mb-1">
+									<i class="ti-email"></i>online@shop.com
 								</li>
 							</ul>
 						</div>
@@ -551,16 +538,6 @@ if (isset($_SESSION['email'])) {
 											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/instagram_icon.svg" alt="" class="lazy">
 										</a>
 									</li>
-									<!-- <li>
-										<a href="#0">
-											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/facebook_icon.svg" alt="" class="lazy">
-										</a>
-									</li>
-									<li>
-										<a href="#0">
-											<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/twitter_icon.svg" alt="" class="lazy">
-										</a>
-									</li> -->
 								</ul>
 							</div>
 						</div>
@@ -570,30 +547,6 @@ if (isset($_SESSION['email'])) {
 				<div class="row add_bottom_25">
 					<div class="col-lg-6">
 						<ul class="footer-selector clearfix">
-							<!-- <li>
-								<div class="styled-select lang-selector">
-									<select>
-										<option value="en" selected style="color:black">English</option>
-										<option value="in" style="color:black">Bahasa Indonesia</option>
-										<option value="cn" style="color:black">中国</option>
-										<option value="fr" style="color:black">French</option>
-										<option value="es" style="color:black">Spanish</option>
-										<option value="de" style="color:black">German</option>
-										<option value="jp" style="color:black">日本語</option>
-										<option value="sa" style="color:black">العربية</option>
-										<option value="ru" style="color:black">Russian</option>
-									</select>
-								</div>
-							</li>
-							<li>
-								<div class="styled-select currency-selector">
-									<select>
-										<option value="usd" selected style="color:black">(USD) US Dollars</option>
-										<option value="idr" style="color:black">(IDR) Indonesian Rupiah</option>
-										<option value="eur" style="color:black">(EUR) Euro</option>
-									</select>
-								</div>
-							</li> -->
 							<li><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="img/cards_all.svg" alt="" width="198" height="30" class="lazy"></li>
 						</ul>
 					</div>
@@ -606,7 +559,7 @@ if (isset($_SESSION['email'])) {
 								<a href="index.php?page=help">Help and FAQ</a>
 							</li>
 							<li>
-								<span>&copy; 2023 Online_Shop</span>
+								<span>&copy; 2023 Online Shop</span>
 							</li>
 						</ul>
 					</div>
