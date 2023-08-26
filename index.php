@@ -292,7 +292,7 @@ if (isset($_SESSION['email'])) {
 														$shipping_price = 17000;
 														$total_price = $subtotal_price + $shipping_price;
 														?>
-														<div class="row mt-4">
+														<div class="row mt-4" style="font-weight:bold">
 															<div class="col-6">
 																<p class="m-0">Subtotal</p>
 																<p class="m-0">Shipping</p>
@@ -302,7 +302,7 @@ if (isset($_SESSION['email'])) {
 																<span style="float: right"><?= rupiah($shipping_price) ?></span>
 															</div>
 														</div>
-														<div style="font-size: large; font-weight:bold;" class="mt-2 row">
+														<div style="font-size:large; font-weight:bold; color:red" class="mt-2 row">
 															<div class="col-6">
 																<p class="m-0">Total</p>
 															</div>

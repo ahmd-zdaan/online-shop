@@ -21,5 +21,5 @@
 ### Payments
 - Cerdit
     - Card Number: 4811 1111 1111 1114
-    - Expiration Date: 01/2025
+    - Expiration Date: 12/2025
     - CVV: 123
